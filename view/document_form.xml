@@ -6,6 +6,8 @@
     <field name="code"/>
     <label name="queue"/>
     <field name="queue"/>
+    <label name="content"/>
+    <field name="content"/>
     <field name="pages" colspan="4"/>
     <group col="-1" colspan="4" id="buttons">
       <label name="state"/>

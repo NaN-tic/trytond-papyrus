@@ -32,19 +32,6 @@ def move_file(queue, filename, directory=None):
         os.remove(destination)
     shutil.move(os.path.join(queue.directory, filename), to_directory)
 
-def is_merge_file(filename):
-    oformat = subprocess.check_output(['identify', '-format', '"%m"', filename])
-    if oformat.decode("utf-8").replace('"', '') in _IDENTIFY_FORMATS:
-        return True
-    return False
-
-def with_root(func):
-    @wraps(func)
-    def wrapper(self, *args, **kwargs):
-        with Transaction().set_user(0):
-            return func(self, *args, **kwargs)
-    return wrapper
-
 
 class Queue(ModelSQL, ModelView):
     'Document Queue'
@@ -93,6 +80,8 @@ class Queue(ModelSQL, ModelView):
     @ModelView.button
     def process(cls, queues):
         Page = Pool().get('papyrus.page')
+        # TODO: Check if there can be a race condition if two users click on
+        # process button at the same time
 
         to_create = []
         queue_files = {}
@@ -101,7 +90,7 @@ class Queue(ModelSQL, ModelView):
             files = []
             for file_name in sorted(glob.glob(queue.directory + '/*.*')):
                 fname = os.path.basename(file_name)
-                # check taht file_name don't exist in processed directory
+                # check that file_name doesn't exist in processed directory
                 processed_fname = os.path.join(processed_dir, fname)
                 count = 0
                 check_file = True
@@ -141,7 +130,7 @@ class QueueModel(ModelSQL):
 
 
 class Document(Workflow, ModelSQL, ModelView):
-    'Document'
+    'Papyrus Document'
     __name__ = 'papyrus.document'
     _rec_name = 'code'
     code = fields.Char('Code', required=True,
@@ -157,6 +146,7 @@ class Document(Workflow, ModelSQL, ModelView):
             ('pending', 'Pending'),
             ('processed', 'Processed'),
         ], 'State', required=True, readonly=True)
+    content = fields.Function(fields.Binary('Content'), 'get_content')
     pages = fields.One2Many('papyrus.page', 'document', 'Pages', add_remove=[
             ('document', '=', None),
             ('queue', '=', Eval('queue')),
@@ -185,79 +175,71 @@ class Document(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def copy(cls, documents):
+        # TODO
         pass
 
-    @classmethod
-    @Workflow.transition('processed')
-    def proceed(cls, documents):
-        pass
+    def get_content(self):
+        to_merge = []
+        for page in self.pages:
+            if not page.attachment:
+                continue
+            fname = os.path.join(
+                get_directory(page.queue, 'processed'), page.filename)
+            to_merge.append(fname)
+
+        if to_merge:
+            odir = get_directory(self.queue, 'processed')
+            output = '%s%s.pdf' % (odir, self.code)
+            to_merge.insert(0, 'convert')
+            to_merge.append(output)
+            subprocess.check_call(to_merge)
+            with open(output, "rb") as f:
+                return f.read()
+
+    def get_record(self):
+        record = None
+        for model in self.queue.models:
+            Model = Pool().get(model.model)
+            default = ''.join([i[:1].upper()
+                for i in Model.__name__.split('.')])
+            prefix = config_.get('papyrus',
+                Model.__name__.replace('.', '_'), default=default)
+            # TODO search by field name or rec_name (code, reference...)
+
+            records = Model.search([
+                ('rec_name', '=', self.code.replace(prefix, '', 1)),
+                ], limit=1)
+            if records:
+                record, = records
+                break
+        return record
+
+    def get_attachment(self, record):
+        Attachment = Pool().get('ir.attachment')
+
+        attachment = Attachment()
+        attachment.name = '%s.pdf' % self.code
+        attachment.resource = '%s,%s' % (record.__name__, record.id)
+        attachment.type = 'data'
+        attachment.data = self.content
+        return attachment
 
     @classmethod
     @ModelView.button
-    @with_root
+    @Workflow.transition('processed')
     def process(cls, documents):
-        Attachment = Pool().get('ir.attachment')
-
-        to_create = []
         for document in documents:
             if document.state != 'pending':
                 continue
 
-            record = None
-            for model in document.queue.models:
-                Model = Pool().get(model.model)
-                default = ''.join([i[:1].upper()
-                    for i in Model.__name__.split('.')])
-                prefix = config_.get('papyrus',
-                    Model.__name__.replace('.', '_'), default=default)
-                # TODO search by field name or rec_name (code, reference...)
-
-                records = Model.search([
-                    ('rec_name', '=', document.code.replace(prefix, '', 1)),
-                    ], limit=1)
-                if records:
-                    record, = records
-                    break
-
+            record = document.get_record()
             if not record:
                 continue
 
-            to_merge = []
-            for page in document.pages:
-                if not page.attachment:
-                    continue
-                fname = os.path.join(
-                    get_directory(page.queue, 'processed'), page.filename)
-                if is_merge_file(fname):
-                    to_merge.append(fname)
-                else:
-                    attachment = Attachment()
-                    attachment.name = page.filename
-                    attachment.resource = '%s,%s' % (record.__name__, record.id)
-                    attachment.type = 'data'
-                    attachment.data = page.attachment
-                    to_create.append(attachment._save_values)
-
-            if to_merge:
-                odir = get_directory(document.queue, 'processed')
-                output = '%s%s.pdf' % (odir, document.code)
-                to_merge.insert(0, 'convert')
-                to_merge.append(output)
-
-                subprocess.check_call(to_merge)
-
-                attachment = Attachment()
-                attachment.name = '%s.pdf' % document.code
-                attachment.resource = '%s,%s' % (record.__name__, record.id)
-                attachment.type = 'data'
-                attachment.data = page.attachment
-                with open(output, "rb") as f:
-                    attachment.data = f.read()
-                to_create.append(attachment._save_values)
-
-        if to_create:
-            Attachment.create(to_create)
-        cls.proceed(documents)
+            attachment = document.get_attachment(record)
+            # We save record by record because if we saved in batch at the
+            # end we would be using a lot of memory
+            attachment.save()
 
     @classmethod
     def attach_documents(cls):
@@ -268,11 +250,11 @@ class Document(Workflow, ModelSQL, ModelView):
 
 class Page(sequence_ordered(), Workflow, ModelSQL, ModelView,
         datamatrix.DataMatrixMixin):
-    'Document Page'
+    'Papyrus Page'
     __name__ = 'papyrus.page'
     _rec_name = 'filename'
-    attachment = fields.Function(fields.Binary('Attachment',
-        filename='filename'), 'get_attachment', setter='set_attachment')
+    content = fields.Function(fields.Binary('Attachment',
+        filename='filename'), 'get_content', setter='set_content')
     document = fields.Many2One('papyrus.document', 'Document',
         states={
             'readonly': (Eval('state') == 'processed'),
@@ -313,10 +295,11 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView,
 
     @classmethod
     def copy(cls, pages):
+        # TODO
         pass
 
     @classmethod
-    def get_attachment(cls, pages, name):
+    def get_content(cls, pages, name):
         contents = {}
         converter = fields.Binary.cast
 
@@ -333,7 +316,7 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView,
         return contents
 
     @classmethod
-    def set_attachment(cls, pages, name, value):
+    def set_content(cls, pages, name, value):
         if not value:
             return
 
@@ -354,12 +337,8 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView,
         return document
 
     @classmethod
-    @Workflow.transition('processed')
-    def proceed(cls, pages):
-        pass
-
-    @classmethod
     @ModelView.button
+    @Workflow.transition('processed')
     def process(cls, pages):
         Document = Pool().get('papyrus.document')
 

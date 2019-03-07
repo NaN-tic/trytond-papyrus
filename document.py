@@ -6,9 +6,8 @@ import os
 import os.path
 import shutil
 import subprocess
-from functools import wraps
-from trytond.model import ModelSQL, ModelView, Workflow, fields, sequence_ordered
-from trytond.transaction import Transaction
+from trytond.model import (ModelSQL, ModelView, Workflow, fields,
+    sequence_ordered)
 from trytond.pool import Pool
 from trytond.pyson import Bool, Eval
 from trytond.config import config as config_
@@ -20,8 +19,8 @@ __all__ = ['Queue', 'QueueModel', 'Document', 'Page']
 _IDENTIFY_FORMATS = ['PNG', 'JPG', 'JPEG', 'GIF', 'PDF']
 
 def get_directory(queue, type):
-    if getattr(queue, type+'_directory'):
-        return getattr(queue, type+'_directory')
+    if getattr(queue, type + '_directory'):
+        return getattr(queue, type + '_directory')
     return os.path.join(queue.directory, type)
 
 def move_file(queue, filename, directory=None):

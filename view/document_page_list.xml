@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+     copyright notices and license terms. -->
+<tree sequence="sequence">
+    <field name="queue"/>
+    <field name="document"/>
+    <field name="filename"/>
+    <field name="state"/>
+    <button name="process" tree_invisible="1"/>
+</tree>

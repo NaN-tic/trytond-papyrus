@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+     copyright notices and license terms. -->
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="page_sequence"/>
+    <field name="page_sequence"/>
+    <label name="directory"/>
+    <field name="directory"/>
+    <label name="processed_directory"/>
+    <field name="processed_directory"/>
+    <label name="scheduler"/>
+    <field name="scheduler"/>
+    <separator name="models" colspan="4"/>
+    <field name="models" colspan="4"/>
+    <group col="-1" colspan="4" id="buttons">
+        <button name="process" icon="tryton-ok"/>
+    </group>
+</form>

@@ -18,15 +18,23 @@ class Box(object):
         self.box = None
 
 
-class DataMatrixMixin(object):
+class DataMatrix:
 
-    # Spawn process and return STDOUT
+    @staticmethod
+    def scan(filename):
+        content = DataMatrix.spawn('dmtxread', '--newline', '--verbose',
+            '--milliseconds=10000', filename)
+        return DataMatrix.parse_output(content)
+
+    @staticmethod
     def spawn(command, *args):
+        # Spawn process and return STDOUT
         command = [command] + list(args)
         process = subprocess.Popen(command , stdout=subprocess.PIPE)
         content = process.communicate()[0]
         return content
 
+    @staticmethod
     def parse_output(content):
         # Each datamatrix is a line of the output
         nextText = False

@@ -13,7 +13,7 @@ from trytond.pyson import Bool, Eval
 from trytond.config import config as config_
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
-from . import datamatrix
+from .datamatrix import DataMatrix
 
 __all__ = ['Queue', 'QueueModel', 'Document', 'Page']
 _IDENTIFY_FORMATS = ['PNG', 'JPG', 'JPEG', 'GIF', 'PDF']
@@ -248,8 +248,7 @@ class Document(Workflow, ModelSQL, ModelView):
             cls.process(documents)
 
 
-class Page(sequence_ordered(), Workflow, ModelSQL, ModelView,
-        datamatrix.DataMatrixMixin):
+class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
     'Papyrus Page'
     __name__ = 'papyrus.page'
     _rec_name = 'filename'
@@ -329,55 +328,51 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView,
             with open(fname, 'wb') as fp:
                 fp.write(value)
 
-    def get_document(code):
+    def scan(self):
+        filename = os.path.join(
+            get_directory(self.queue, 'processed'), self.filename)
+        return DataMatrix.scan(filename)
+
+    def get_document(self, previous):
         Document = Pool().get('papyrus.document')
+
+        boxes = self.scan()
+        if not boxes or not boxes[0].text:
+            previous.pages += (self,)
+            return previous
+        code = boxes[0].text
 
         document = Document()
         document.code = code
+        document.pages = (self,)
         return document
 
     @classmethod
     @ModelView.button
     @Workflow.transition('processed')
     def process(cls, pages):
-        Document = Pool().get('papyrus.document')
+        to_save = []
+        # Loop over pages grouping by queue
+        queues = set([x.queue.id for x in pages])
+        for queue_id in queues:
+            previous = None
+            for page in pages:
+                if page.queue.id != queue_id:
+                    continue
+                if page.state != 'pending':
+                    continue
 
-        documents = dict(((d.code, d.queue), d) for d in Document.search(
-            [('state', '=', 'pending')]))
+                document = page.get_document(previous)
+                if not document:
+                    continue
+
+                if document != previous:
+                    to_save.append(document)
+                previous = document
 
         to_save = []
-        for page in pages:
-            if page.state != 'pending':
-                continue
-
-            fname = os.path.join(
-                get_directory(page.queue, 'processed'), page.filename)
-            content = cls.spawn('dmtxread', '--newline', '--verbose',
-                '--milliseconds=10000', fname)
-            boxes = cls.parse_output(content)
-            if not boxes or not boxes[0].text:
-                continue
-
-            code = boxes[0].text
-            qcode = (code, page.queue)
-            if documents.get(qcode):
-                document = documents[qcode]
-                document.pages += (page,)
-            else:
-                document = cls.get_document(code)
-                document.queue = page.queue
-                document.pages = (page,)
-            documents[qcode] = document
-
-        to_save = []
-        for _, document in documents.items():
-            if not document.pages:
-                continue
-            to_save.append(document)
-
         if to_save:
             Document.save(to_save)
-            cls.proceed(pages)
 
     @classmethod
     def create_documents(cls):

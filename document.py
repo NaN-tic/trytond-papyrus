@@ -252,7 +252,7 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
     'Papyrus Page'
     __name__ = 'papyrus.page'
     _rec_name = 'filename'
-    content = fields.Function(fields.Binary('Attachment',
+    content = fields.Function(fields.Binary('Content',
         filename='filename'), 'get_content', setter='set_content')
     document = fields.Many2One('papyrus.document', 'Document',
         states={

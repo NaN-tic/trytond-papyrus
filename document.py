@@ -6,6 +6,7 @@ import os
 import os.path
 import shutil
 import subprocess
+import json
 from trytond.model import (ModelSQL, ModelView, Workflow, fields,
     sequence_ordered)
 from trytond.pool import Pool
@@ -146,6 +147,7 @@ class Document(Workflow, ModelSQL, ModelView):
             ('pending', 'Pending'),
             ('processed', 'Processed'),
         ], 'State', required=True, readonly=True)
+    reference = fields.Char('Reference')
     content = fields.Function(fields.Binary('Content'), 'get_content')
     pages = fields.One2Many('papyrus.page', 'document', 'Pages', add_remove=[
             ('document', '=', None),
@@ -274,6 +276,7 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
             ('pending', 'Pending'),
             ('processed', 'Processed'),
             ], 'State', required=True, readonly=True)
+    data = fields.Text('Data', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -333,19 +336,23 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
             get_directory(self.queue, 'processed'), self.filename)
         return DataMatrix.scan(filename)
 
+    @staticmethod
+    def get_prefixes():
+        return []
+
     def get_document(self, previous):
         Document = Pool().get('papyrus.document')
 
         boxes = self.scan()
-        if not boxes or not boxes[0].text:
-            previous.pages += (self,)
-            return previous
-        code = boxes[0].text
-
-        document = Document()
-        document.code = code
-        document.pages = (self,)
-        return document
+        self.data = json.encode(boxes)
+        for box in boxes:
+            if box.text and box.text.startswith(self.get_prefixes()):
+                document = Document()
+                document.reference = box.text
+                document.pages = (self,)
+                return document
+        previous.pages += (self,)
+        return previous
 
     @classmethod
     @ModelView.button

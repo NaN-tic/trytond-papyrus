@@ -9,7 +9,7 @@ from trytond.config import config as config_
 
 PREFIX = config_.get('papyrus', 'account_invoice', default='AI')
 
-__all__ = ['Invoice', 'InvoicePapyrus']
+__all__ = ['Invoice', 'InvoicePapyrus', 'Page']
 
 
 class Invoice(metaclass=PoolMeta):
@@ -41,3 +41,11 @@ class InvoicePapyrus(JasperReport):
         else:
             data['parameters'] = parameters
         return super(InvoicePapyrus, cls).execute(ids, data)
+
+
+class Page(metaclass=PoolMeta):
+    __name__ = 'papyrus.page'
+
+    @classmethod
+    def get_prefixes(cls):
+        return super(Page, cls).get_prefixes() + ['AI-']

@@ -12,6 +12,8 @@
     <field name="document"/>
     <label name="sequence"/>
     <field name="sequence"/>
+    <separator name="data" colspan="4"/>
+    <field name="data" colspan="4"/>
     <group col="-1" colspan="4" id="buttons">
       <label name="state"/>
       <field name="state"/>

@@ -14,6 +14,7 @@ def register():
         module='papyrus', type_='model')
     Pool.register(
         invoice.Invoice,
+        invoice.Page,
         depends=['account_invoice'],
         module='papyrus', type_='model')
     Pool.register(

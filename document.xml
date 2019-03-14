@@ -254,7 +254,7 @@
         </record>
 
         <!-- Menus -->
-        <menuitem id="menu_papyrus" name="Documents" sequence="1"/>
+        <menuitem id="menu_papyrus" name="Papyrus" sequence="1"/>
         <record model="ir.ui.menu-res.group" id="menu_papyrus_group_papyrus">
           <field name="menu" ref="menu_papyrus"/>
           <field name="group" ref="group_papyrus"/>

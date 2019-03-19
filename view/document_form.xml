@@ -32,6 +32,8 @@
         <page string="Extra" id="extra">
             <label name="content"/>
             <field name="content"/>
+            <label name="filename"/>
+            <field name="filename"/>
         </page>
     </notebook>
     <group col="-1" colspan="6" id="buttons">

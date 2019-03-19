@@ -174,8 +174,11 @@ class Document(Workflow, ModelSQL, ModelView):
     content = fields.Function(fields.Binary('Content'), 'get_content')
     text = fields.Function(fields.Text('Text'), 'get_text')
     filename = fields.Char('File Name', readonly=True)
-    image = fields.Function(fields.Binary('Image'), 'get_image')
-    current_page = fields.Integer('Current Page')
+    image = fields.Function(fields.Binary('Image'), 'on_change_with_image')
+    current_page = fields.Integer('Current Page', domain=[
+            ('current_page', '>=', 1),
+            ('current_page', '<=', Eval('page_count')),
+            ])
     page_count = fields.Function(fields.Integer('Page Count'), 'get_page_count')
     pages = fields.One2Many('papyrus.page', 'document', 'Pages', add_remove=[
             ('document', '=', None),
@@ -199,12 +202,12 @@ class Document(Workflow, ModelSQL, ModelView):
                     'invisible': Eval('state') == 'processed',
                     },
                 'previous_page': {
-                    #'readonly': Eval('current_page') >= 1,
+                    'readonly': Eval('current_page', 1) <= 1,
                     'icon': 'tryton-back',
                     },
                 'next_page': {
-                    # TODO: Set appropriate maximum
-                    #'readonly': Eval('current_page') <= 100,
+                    'readonly': (Eval('current_page', 1) >=
+                        Eval('page_count', 1)),
                     'icon': 'tryton-forward',
                     },
                 })
@@ -256,6 +259,13 @@ class Document(Workflow, ModelSQL, ModelView):
         out = out.decode('utf8')
         return out
 
+    @fields.depends('current_page', 'page_count')
+    def on_change_current_page(self):
+        if self.current_page < 1:
+            self.current_page = 1
+        elif self.current_page > self.page_count:
+            self.current_page = self.page_count
+
     @staticmethod
     def to_jpg(pdf_binary):
         path = '/'.join(pdf_binary.file_path.split('/')[:-1])
@@ -268,7 +278,8 @@ class Document(Workflow, ModelSQL, ModelView):
                 pdf_binary.file_path + '[0]', jpg_path])
         return (jpg_path, jpg_name)
 
-    def get_image(self, name):
+    @fields.depends('current_page', 'queue', 'filename')
+    def on_change_with_image(self, name=None):
         if not self.filename:
             return
 

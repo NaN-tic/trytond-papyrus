@@ -133,8 +133,8 @@ class QueueModel(ModelSQL):
 class Document(Workflow, ModelSQL, ModelView):
     'Papyrus Document'
     __name__ = 'papyrus.document'
-    _rec_name = 'code'
-    code = fields.Char('Code', required=True,
+    _rec_name = 'number'
+    number = fields.Char('Number', required=True,
         states={
             'readonly': (Bool(Eval('pages'))),
         }, depends=['pages'])
@@ -164,7 +164,7 @@ class Document(Workflow, ModelSQL, ModelView):
                 ('pending', 'processed'),
                 ('processed', 'pending'),
                 ))
-        cls._order.insert(0, ('code', 'DESC'))
+        cls._order.insert(0, ('number', 'DESC'))
         cls._buttons.update({
                 'process': {
                     'invisible': Eval('state') == 'processed',
@@ -191,7 +191,7 @@ class Document(Workflow, ModelSQL, ModelView):
 
         if to_merge:
             odir = get_directory(self.queue, 'processed')
-            output = '%s%s.pdf' % (odir, self.code)
+            output = '%s%s.pdf' % (odir, self.number)
             to_merge.insert(0, 'convert')
             to_merge.append(output)
             subprocess.check_call(to_merge)
@@ -206,10 +206,10 @@ class Document(Workflow, ModelSQL, ModelView):
                 for i in Model.__name__.split('.')])
             prefix = config_.get('papyrus',
                 Model.__name__.replace('.', '_'), default=default)
-            # TODO search by field name or rec_name (code, reference...)
+            # TODO search by field name or rec_name (number, reference...)
 
             records = Model.search([
-                ('rec_name', '=', self.code.replace(prefix, '', 1)),
+                ('rec_name', '=', self.number.replace(prefix, '', 1)),
                 ], limit=1)
             if records:
                 record, = records
@@ -220,7 +220,7 @@ class Document(Workflow, ModelSQL, ModelView):
         Attachment = Pool().get('ir.attachment')
 
         attachment = Attachment()
-        attachment.name = '%s.pdf' % self.code
+        attachment.name = '%s.pdf' % self.number
         attachment.resource = '%s,%s' % (record.__name__, record.id)
         attachment.type = 'data'
         attachment.data = self.content

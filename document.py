@@ -7,6 +7,7 @@ import os.path
 import shutil
 import subprocess
 import json
+import tempfile
 from trytond.model import (ModelSQL, ModelView, Workflow, fields,
     sequence_ordered)
 from trytond.pool import Pool
@@ -49,6 +50,10 @@ class Queue(ModelSQL, ModelView):
     scheduler = fields.Boolean('Scheduler')
     models = fields.Many2Many('papyrus.queue.model', 'queue', 'model', 'Models',
         help='Models that search to attach documents')
+    type = fields.Selection([
+            ('document', 'Document'),
+            ('page', 'Page'),
+            ], 'Type', required=True)
 
     @classmethod
     def __setup__(cls):
@@ -67,10 +72,21 @@ class Queue(ModelSQL, ModelView):
         Sequence = pool.get('ir.sequence')
 
         page = Page()
-        page.filename = filename
         page.queue = queue
+        page.filename = filename
         page.sequence = Sequence.get_id(queue.page_sequence.id)
         return page
+
+    def get_document(queue, filename):
+        pool = Pool()
+        Document = pool.get('papyrus.document')
+
+        document = Document()
+        # TODO: Use sequence
+        document.number = 'XXX'
+        document.queue = queue
+        document.filename = filename
+        return document
 
     @classmethod
     def import_pages(cls):
@@ -80,11 +96,11 @@ class Queue(ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     def process(cls, queues):
-        Page = Pool().get('papyrus.page')
         # TODO: Check if there can be a race condition if two users click on
         # process button at the same time
 
-        to_create = []
+        pages_to_create = []
+        documents_to_create = []
         queue_files = {}
         for queue in queues:
             processed_dir = get_directory(queue, 'processed')
@@ -107,17 +123,24 @@ class Queue(ModelSQL, ModelView):
                         check_file = False
                     else:
                         check_file = False
-                page = cls.get_page(queue, fname)
-                to_create.append(page._save_values)
+                if queue.type == 'page':
+                    page = cls.get_page(queue, fname)
+                    pages_to_create.append(page._save_values)
+                elif queue.type == 'document':
+                    document = cls.get_document(queue, fname)
+                    documents_to_create.append(document._save_values)
                 files.append(fname)
             queue_files[queue] = files
 
-        if to_create:
-            Page.create(to_create)
-            # TODO move files two phase commit
-            for queue, files in queue_files.items():
-                for file in files:
-                    move_file(queue, file)
+        if pages_to_create:
+            Page.create(pages_to_create)
+        if documents_to_create:
+            Document.create(documents_to_create)
+
+        # TODO move files two phase commit
+        for queue, files in queue_files.items():
+            for file in files:
+                move_file(queue, file)
 
 
 class QueueModel(ModelSQL):
@@ -149,13 +172,19 @@ class Document(Workflow, ModelSQL, ModelView):
         ], 'State', required=True, readonly=True)
     reference = fields.Char('Reference')
     content = fields.Function(fields.Binary('Content'), 'get_content')
+    text = fields.Function(fields.Text('Text'), 'get_text')
+    filename = fields.Char('File Name', readonly=True)
+    image = fields.Function(fields.Binary('Image'), 'get_image')
+    current_page = fields.Integer('Current Page')
+    page_count = fields.Function(fields.Integer('Page Count'), 'get_page_count')
     pages = fields.One2Many('papyrus.page', 'document', 'Pages', add_remove=[
             ('document', '=', None),
             ('queue', '=', Eval('queue')),
         ], order=[('sequence', 'ASC')],
         states={
             'readonly': (Eval('state') != 'processed'),
-        }, depends=['state', 'queue'])
+            'invisible': Bool(Eval('filename')),
+        }, depends=['state', 'queue', 'filename'])
 
     @classmethod
     def __setup__(cls):
@@ -169,6 +198,15 @@ class Document(Workflow, ModelSQL, ModelView):
                 'process': {
                     'invisible': Eval('state') == 'processed',
                     },
+                'previous_page': {
+                    #'readonly': Eval('current_page') >= 1,
+                    'icon': 'tryton-back',
+                    },
+                'next_page': {
+                    # TODO: Set appropriate maximum
+                    #'readonly': Eval('current_page') <= 100,
+                    'icon': 'tryton-forward',
+                    },
                 })
 
     @staticmethod
@@ -180,7 +218,18 @@ class Document(Workflow, ModelSQL, ModelView):
         # TODO
         pass
 
-    def get_content(self):
+    def get_full_path(self):
+        return os.path.join(get_directory(self.queue, 'processed'),
+            self.filename)
+
+    def get_content(self, name):
+        if self.filename:
+            fname = self.get_full_path()
+            if os.path.isfile(fname):
+                with open(fname, 'rb') as fp:
+                    return fp.read()
+            return
+
         to_merge = []
         for page in self.pages:
             if not page.attachment:
@@ -197,6 +246,59 @@ class Document(Workflow, ModelSQL, ModelView):
             subprocess.check_call(to_merge)
             with open(output, "rb") as f:
                 return f.read()
+
+    def get_text(self, name):
+        if not self.filename:
+            return
+        out, err = subprocess.Popen( ['/usr/bin/pdftotext', '-layout', '-enc',
+                'UTF-8', self.get_full_path(), '-'],
+            stdout=subprocess.PIPE).communicate()
+        out = out.decode('utf8')
+        return out
+
+    @staticmethod
+    def to_jpg(pdf_binary):
+        path = '/'.join(pdf_binary.file_path.split('/')[:-1])
+
+        jpg_name = pdf_binary.name[:-4] + '.jpg'
+        jpg_path = path + '/' + jpg_name
+
+        subprocess.call(["convert", '-quality', '90', '-density', '200x200',
+                '-background', 'white', '-alpha', 'remove',
+                pdf_binary.file_path + '[0]', jpg_path])
+        return (jpg_path, jpg_name)
+
+    def get_image(self, name):
+        if not self.filename:
+            return
+
+        processed_dir = get_directory(self.queue, 'processed')
+        _, jpg_path = tempfile.mkstemp(suffix='.jpg')
+
+        filename = os.path.join(processed_dir, self.filename)
+        filename += '[%d]' % ((self.current_page or 1) - 1)
+
+        # Adding '[0]' to source filename in convert, extracts only the first
+        # page of the PDF file
+        subprocess.call(["convert", '-quality', '90', '-density', '200x200',
+                '-background', 'white', '-alpha', 'remove', filename,
+                jpg_path])
+        with open(jpg_path, 'rb') as f:
+            res = f.read()
+        os.unlink(jpg_path)
+        return res
+
+    def get_page_count(self, name):
+        if not self.filename:
+            return len(self.pages)
+        out, err = subprocess.Popen( ['/usr/bin/pdfinfo',
+                self.get_full_path()], stdout=subprocess.PIPE).communicate()
+        out = out.decode('utf-8')
+        out = [x for x in out.splitlines() if x.startswith('Pages:')]
+        if not out:
+            return 0
+        out = out[0]
+        return int(out.split(':')[-1].strip())
 
     def get_record(self):
         record = None
@@ -242,6 +344,22 @@ class Document(Workflow, ModelSQL, ModelView):
             # We save record by record because if we saved in batch at the
             # end we would be using a lot of memory
             attachment.save()
+
+    @classmethod
+    @ModelView.button
+    def previous_page(cls, documents):
+        for document in documents:
+            if document.current_page > 1:
+                document.current_page -= 1
+        cls.save(documents)
+
+    @classmethod
+    @ModelView.button
+    def next_page(cls, documents):
+        for document in documents:
+            if document.current_page < document.page_count:
+                document.current_page += 1
+        cls.save(documents)
 
     @classmethod
     def attach_documents(cls):

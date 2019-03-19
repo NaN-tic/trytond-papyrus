@@ -177,6 +177,24 @@
             <field name="button" ref="document_process_button"/>
             <field name="group" ref="group_papyrus_admin"/>
         </record>
+        <record model="ir.model.button" id="document_next_page_button">
+            <field name="name">next_page</field>
+            <field name="string">Next Page</field>
+            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="document_next_page_button_group_papyrus_admin">
+            <field name="button" ref="document_next_page_button"/>
+            <field name="group" ref="group_papyrus_admin"/>
+        </record>
+        <record model="ir.model.button" id="document_previous_page_button">
+            <field name="name">previous_page</field>
+            <field name="string">Previous Page</field>
+            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="document_previous_page_button_group_papyrus_admin">
+            <field name="button" ref="document_previous_page_button"/>
+            <field name="group" ref="group_papyrus_admin"/>
+        </record>
 
         <!-- papyrus.page -->
         <record model="ir.ui.view" id="papyrus_page_view_form">

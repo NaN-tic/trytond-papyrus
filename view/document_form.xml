@@ -10,7 +10,24 @@
     <field name="queue"/>
     <label name="content"/>
     <field name="content"/>
-    <field name="pages" colspan="4"/>
+    <notebook>
+        <page name="image">
+            <field name="image" widget="image" height="700" width="550" colspan="2"/>
+            <group id="current_page" xfill="0" xexpand="0" col="3">
+                <button name="previous_page" xfill="0" xexpand="0" colspan="3"/>
+                <field name="current_page" xfill="0" xexpand="0"/>
+                <label string="/" id="/"/>
+                <field name="page_count" xfill="0" xexpand="0"/>
+                <button name="next_page" xfill="0" xexpand="0" colspan="3"/>
+            </group>
+        </page>
+        <page name="text">
+            <field name="text" colspan="4"/>
+        </page>
+        <page name="pages">
+            <field name="pages" colspan="4"/>
+        </page>
+    </notebook>
     <group col="-1" colspan="4" id="buttons">
       <label name="state"/>
       <field name="state"/>

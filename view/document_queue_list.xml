@@ -3,5 +3,6 @@
      copyright notices and license terms. -->
 <tree>
     <field name="name"/>
+    <field name="type"/>
     <field name="scheduler" tree_invisible="1"/>
 </tree>

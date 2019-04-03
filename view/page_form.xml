@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+     copyright notices and license terms. -->
+<form col="6">
+    <label name="filename"/>
+    <field name="filename"/>
+    <label name="document"/>
+    <field name="document"/>
+    <label name="queue"/>
+    <field name="queue"/>
+    <notebook colspan="6">
+        <page name="image">
+            <field name="image" widget="image" height="700" width="550" colspan="4"/>
+        </page>
+        <page name="text">
+            <field name="text" colspan="4"/>
+        </page>
+        <page name="boxes">
+            <field name="boxes" colspan="4"/>
+        </page>
+        <page string="Extra" id="extra">
+            <label name="data"/>
+            <field name="data"/>
+            <label name="sequence"/>
+            <field name="sequence"/>
+        </page>
+    </notebook>
+    <group col="-1" colspan="6" id="buttons">
+      <label name="state"/>
+      <field name="state"/>
+      <button name="pending"/>
+      <button name="inspect"/>
+      <button name="process"/>
+    </group>
+</form>

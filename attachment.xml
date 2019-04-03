@@ -1,0 +1,49 @@
+<tryton>
+    <data>
+        <record model="ir.ui.view" id="ir_attachment_view_form">
+            <field name="model">ir.attachment</field>
+            <field name="inherit" ref="ir.attachment_view_form"/>
+            <field name="name">ir_attachment_form</field>
+        </record>
+        <record model="ir.ui.view" id="attachment_view_form">
+            <field name="model">ir.attachment</field>
+            <field name="type">form</field>
+            <field name="name">attachment_form</field>
+        </record>
+        <record model="ir.ui.view" id="attachment_view_tree">
+            <field name="model">ir.attachment</field>
+            <field name="type">tree</field>
+            <field name="name">attachment_list</field>
+        </record>
+        <record model="ir.action.act_window" id="act_attachment_form">
+            <field name="name">Attachments</field>
+            <field name="type">ir.action.act_window</field>
+            <field name="res_model">ir.attachment</field>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_attachment_form_view1">
+            <field name="sequence" eval="1"/>
+            <field name="view" ref="attachment_view_tree"/>
+            <field name="act_window" ref="act_attachment_form"/>
+        </record>
+        <record model="ir.action.act_window.view"
+            id="act_attachment_form_view2">
+            <field name="sequence" eval="2"/>
+            <field name="view" ref="attachment_view_form"/>
+            <field name="act_window" ref="act_attachment_form"/>
+        </record>
+        <menuitem name="Attachments" parent="menu_papyrus"
+            action="act_attachment_form" id="menu_attachment_form" sequence="10"/>
+
+        <record model="ir.model.button" id="attachment_next_page_button">
+            <field name="name">next_page</field>
+            <field name="string">Next Page</field>
+            <field name="model" search="[('model', '=', 'ir.attachment')]"/>
+        </record>
+        <record model="ir.model.button" id="attachment_previous_page_button">
+            <field name="name">previous_page</field>
+            <field name="string">Previous Page</field>
+            <field name="model" search="[('model', '=', 'ir.attachment')]"/>
+        </record>
+    </data>
+</tryton>

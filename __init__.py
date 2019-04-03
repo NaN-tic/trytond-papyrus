@@ -4,17 +4,21 @@
 from trytond.pool import Pool
 from . import document
 from . import invoice
+from . import attachment
 
 def register():
     Pool.register(
         document.Queue,
-        document.QueueModel,
         document.Document,
         document.Page,
+        document.DocumentBox,
+        document.PageBox,
+        attachment.Attachment,
         module='papyrus', type_='model')
     Pool.register(
         invoice.Invoice,
         invoice.Page,
+        invoice.Document,
         depends=['account_invoice'],
         module='papyrus', type_='model')
     Pool.register(

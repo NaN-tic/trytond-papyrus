@@ -3,13 +3,13 @@
 # the full copyright notices and license terms.
 from trytond.pool import PoolMeta
 from trytond.model import ModelView
-from trytond.pyson import Eval
+from trytond.pool import Pool
 from trytond.modules.jasper_reports.jasper import JasperReport
 from trytond.config import config as config_
 
-PREFIX = config_.get('papyrus', 'account_invoice', default='AI')
+PREFIX = config_.get('papyrus', 'account_invoice', default='AI-')
 
-__all__ = ['Invoice', 'InvoicePapyrus', 'Page']
+__all__ = ['Invoice', 'InvoicePapyrus', 'Page', 'Document']
 
 
 class Invoice(metaclass=PoolMeta):
@@ -17,7 +17,7 @@ class Invoice(metaclass=PoolMeta):
 
     @classmethod
     def __setup__(cls):
-        super(Invoice, cls).__setup__()
+        super().__setup__()
         cls._buttons.update({
                 'barcode': {},
                 })
@@ -40,7 +40,7 @@ class InvoicePapyrus(JasperReport):
             data['parameters'].update(parameters)
         else:
             data['parameters'] = parameters
-        return super(InvoicePapyrus, cls).execute(ids, data)
+        return super().execute(ids, data)
 
 
 class Page(metaclass=PoolMeta):
@@ -48,4 +48,21 @@ class Page(metaclass=PoolMeta):
 
     @classmethod
     def get_prefixes(cls):
-        return super(Page, cls).get_prefixes() + ['AI-']
+        return super().get_prefixes() + [PREFIX]
+
+
+class Document(metaclass=PoolMeta):
+    __name__ = 'papyrus.document'
+
+    def get_record(self):
+        Invoice = Pool().get('account.invoice')
+        res = super().get_record()
+        if res:
+            return res
+        if self.reference and self.reference.startswith(PREFIX):
+            id = self.reference[len(PREFIX):]
+            records = Invoice.search([
+                    ('id', '=', id),
+                    ], limit=1)
+            if records:
+                return records[0]

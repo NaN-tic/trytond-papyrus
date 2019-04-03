@@ -1,0 +1,11 @@
+<tree>
+    <field name="page"/>
+    <field name="x0"/>
+    <field name="y0"/>
+    <field name="x1"/>
+    <field name="y1"/>
+    <field name="width"/>
+    <field name="height"/>
+    <field name="text"/>
+    <field name="type"/>
+</tree>

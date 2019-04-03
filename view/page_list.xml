@@ -6,5 +6,7 @@
     <field name="document"/>
     <field name="filename"/>
     <field name="state"/>
+    <button name="pending" tree_invisible="1"/>
+    <button name="inspect" tree_invisible="1"/>
     <button name="process" tree_invisible="1"/>
 </tree>

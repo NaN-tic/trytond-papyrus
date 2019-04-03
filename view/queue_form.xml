@@ -8,15 +8,18 @@
     <field name="type"/>
     <label name="page_sequence"/>
     <field name="page_sequence"/>
-    <label name="directory"/>
-    <field name="directory"/>
-    <label name="processed_directory"/>
-    <field name="processed_directory"/>
+    <newline/>
+    <label name="document_sequence"/>
+    <field name="document_sequence"/>
+    <newline/>
+    <label name="source_directory"/>
+    <field name="source_directory"/>
+    <label name="storage_directory"/>
+    <field name="storage_directory"/>
     <label name="scheduler"/>
     <field name="scheduler"/>
-    <separator name="models" colspan="4"/>
-    <field name="models" colspan="4"/>
     <group col="-1" colspan="4" id="buttons">
-        <button name="process" icon="tryton-ok"/>
+        <button name="process"/>
+        <button name="clean"/>
     </group>
 </form>

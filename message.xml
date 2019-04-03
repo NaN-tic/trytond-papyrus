@@ -6,5 +6,11 @@ this repository contains the full copyright notices and license terms. -->
       <record model="ir.message" id="cannot_save_file">
           <field name="text">Can not save "%(filename)s".</field>
       </record>
+      <record model="ir.message" id="document_copy_forbidden">
+          <field name="text">Papyrus Documents cannot be duplicated.</field>
+      </record>
+      <record model="ir.message" id="page_copy_forbidden">
+          <field name="text">Papyrus Pages cannot be duplicated.</field>
+      </record>
     </data>
 </tryton>

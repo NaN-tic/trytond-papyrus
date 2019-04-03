@@ -27,7 +27,7 @@
         </record>
 
         <record model="ir.sequence.type" id="sequence_type_papyrus_page">
-            <field name="name">Document Page</field>
+            <field name="name">Papyrus Page</field>
             <field name="code">papyrus.page</field>
         </record>
         <record model="ir.sequence.type-res.group" id="sequence_type_papyrus_page_group_admin">
@@ -39,16 +39,29 @@
             <field name="group" ref="group_papyrus_admin"/>
         </record>
 
+        <record model="ir.sequence.type" id="sequence_type_papyrus_document">
+            <field name="name">Papyrus Document</field>
+            <field name="code">papyrus.document</field>
+        </record>
+        <record model="ir.sequence.type-res.group" id="sequence_type_papyrus_document_group_admin">
+            <field name="sequence_type" ref="sequence_type_papyrus_document"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+        <record model="ir.sequence.type-res.group" id="sequence_type_papyrus_document_group_document_admin">
+            <field name="sequence_type" ref="sequence_type_papyrus_document"/>
+            <field name="group" ref="group_papyrus_admin"/>
+        </record>
+
         <!-- papyrus.queue -->
         <record model="ir.ui.view" id="papyrus_queue_view_form">
             <field name="model">papyrus.queue</field>
             <field name="type">form</field>
-            <field name="name">document_queue_form</field>
+            <field name="name">queue_form</field>
         </record>
         <record model="ir.ui.view" id="papyrus_queue_view_list">
             <field name="model">papyrus.queue</field>
             <field name="type">tree</field>
-            <field name="name">document_queue_list</field>
+            <field name="name">queue_list</field>
         </record>
         <record model="ir.action.act_window" id="act_papyrus_queue">
             <field name="name">Document Queue</field>
@@ -89,6 +102,15 @@
             <field name="button" ref="queue_process_button"/>
             <field name="group" ref="group_papyrus_admin"/>
         </record>
+        <record model="ir.model.button" id="queue_clean_button">
+            <field name="name">clean</field>
+            <field name="string">Clean</field>
+            <field name="model" search="[('model', '=', 'papyrus.queue')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="queue_clean_button_group_papyrus_admin">
+            <field name="button" ref="queue_clean_button"/>
+            <field name="group" ref="group_papyrus_admin"/>
+        </record>
 
         <!-- papyrus.document -->
         <record model="ir.ui.view" id="papyrus_document_view_form">
@@ -124,12 +146,10 @@
             <field name="count" eval="True"/>
             <field name="act_window" ref="act_papyrus_document"/>
         </record>
-        <record model="ir.action.act_window.domain" id="act_document_form_domain_processed">
-            <field name="name">Processed</field>
+        <record model="ir.action.act_window.domain" id="act_document_form_domain_inspected">
+            <field name="name">Inspected</field>
             <field name="sequence" eval="20"/>
-            <field name="domain"
-                eval="[('state', '=', 'processed')]"
-                pyson="1"/>
+            <field name="domain" eval="[('state', '=', 'inspected')]" pyson="1"/>
             <field name="act_window" ref="act_papyrus_document"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_document_form_domain_all">
@@ -168,44 +188,81 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+        <record model="ir.model.button" id="document_pending_button">
+            <field name="name">pending</field>
+            <field name="string">Pending</field>
+            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="document_pending_button_group_papyrus">
+            <field name="button" ref="document_pending_button"/>
+            <field name="group" ref="group_papyrus"/>
+        </record>
+        <record model="ir.model.button" id="document_inspect_button">
+            <field name="name">inspect</field>
+            <field name="string">Inspect</field>
+            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="document_inspect_button_group_papyrus">
+            <field name="button" ref="document_inspect_button"/>
+            <field name="group" ref="group_papyrus"/>
+        </record>
         <record model="ir.model.button" id="document_process_button">
             <field name="name">process</field>
             <field name="string">Process</field>
             <field name="model" search="[('model', '=', 'papyrus.document')]"/>
         </record>
-        <record model="ir.model.button-res.group" id="document_process_button_group_papyrus_admin">
+        <record model="ir.model.button-res.group" id="document_process_button_group_papyrus">
             <field name="button" ref="document_process_button"/>
-            <field name="group" ref="group_papyrus_admin"/>
+            <field name="group" ref="group_papyrus"/>
         </record>
         <record model="ir.model.button" id="document_next_page_button">
             <field name="name">next_page</field>
             <field name="string">Next Page</field>
             <field name="model" search="[('model', '=', 'papyrus.document')]"/>
         </record>
-        <record model="ir.model.button-res.group" id="document_next_page_button_group_papyrus_admin">
+        <record model="ir.model.button-res.group" id="document_next_page_button_group_papyrus">
             <field name="button" ref="document_next_page_button"/>
-            <field name="group" ref="group_papyrus_admin"/>
+            <field name="group" ref="group_papyrus"/>
         </record>
         <record model="ir.model.button" id="document_previous_page_button">
             <field name="name">previous_page</field>
             <field name="string">Previous Page</field>
             <field name="model" search="[('model', '=', 'papyrus.document')]"/>
         </record>
-        <record model="ir.model.button-res.group" id="document_previous_page_button_group_papyrus_admin">
+        <record model="ir.model.button-res.group" id="document_previous_page_button_group_papyrus">
             <field name="button" ref="document_previous_page_button"/>
-            <field name="group" ref="group_papyrus_admin"/>
+            <field name="group" ref="group_papyrus"/>
+        </record>
+
+	<!-- papyrus.document.box -->
+        <record model="ir.ui.view" id="papyrus_document_box_view_form">
+            <field name="model">papyrus.document.box</field>
+            <field name="type">form</field>
+            <field name="name">document_box_form</field>
+        </record>
+        <record model="ir.ui.view" id="papyrus_document_box_view_list">
+            <field name="model">papyrus.document.box</field>
+            <field name="type">tree</field>
+            <field name="name">document_box_list</field>
+        </record>
+        <record model="ir.model.access" id="access_papyrus_document_box">
+            <field name="model" search="[('model', '=', 'papyrus.document.box')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
         <!-- papyrus.page -->
         <record model="ir.ui.view" id="papyrus_page_view_form">
             <field name="model">papyrus.page</field>
             <field name="type">form</field>
-            <field name="name">document_page_form</field>
+            <field name="name">page_form</field>
         </record>
         <record model="ir.ui.view" id="papyrus_page_view_list">
             <field name="model">papyrus.page</field>
             <field name="type">tree</field>
-            <field name="name">document_page_list</field>
+            <field name="name">page_list</field>
         </record>
         <record model="ir.action.act_window" id="act_papyrus_page">
             <field name="name">Document Page</field>
@@ -230,12 +287,10 @@
             <field name="count" eval="True"/>
             <field name="act_window" ref="act_papyrus_page"/>
         </record>
-        <record model="ir.action.act_window.domain" id="act_page_form_domain_processed">
-            <field name="name">Processed</field>
+        <record model="ir.action.act_window.domain" id="act_page_form_domain_inspected">
+            <field name="name">Inspected</field>
             <field name="sequence" eval="20"/>
-            <field name="domain"
-                eval="[('state', '=', 'processed')]"
-                pyson="1"/>
+            <field name="domain" eval="[('state', '=', 'inspected')]" pyson="1"/>
             <field name="act_window" ref="act_papyrus_page"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_page_form_domain_all">
@@ -261,14 +316,51 @@
             <field name="perm_delete" eval="True"/>
         </record>
 
+        <record model="ir.model.button" id="page_pending_button">
+            <field name="name">pending</field>
+            <field name="string">Pending</field>
+            <field name="model" search="[('model', '=', 'papyrus.page')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="page_pending_button_group_papyrus">
+            <field name="button" ref="page_pending_button"/>
+            <field name="group" ref="group_papyrus"/>
+        </record>
+        <record model="ir.model.button" id="page_inspect_button">
+            <field name="name">inspect</field>
+            <field name="string">Inspect</field>
+            <field name="model" search="[('model', '=', 'papyrus.page')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="page_inspect_button_group_papyrus">
+            <field name="button" ref="page_inspect_button"/>
+            <field name="group" ref="group_papyrus"/>
+        </record>
         <record model="ir.model.button" id="page_process_button">
             <field name="name">process</field>
             <field name="string">Process</field>
             <field name="model" search="[('model', '=', 'papyrus.page')]"/>
         </record>
-        <record model="ir.model.button-res.group" id="page_process_button_group_papyrus_admin">
+        <record model="ir.model.button-res.group" id="page_process_button_group_papyrus">
             <field name="button" ref="page_process_button"/>
-            <field name="group" ref="group_papyrus_admin"/>
+            <field name="group" ref="group_papyrus"/>
+        </record>
+
+	<!-- papyrus.page.box -->
+        <record model="ir.ui.view" id="papyrus_page_box_view_form">
+            <field name="model">papyrus.page.box</field>
+            <field name="type">form</field>
+            <field name="name">page_box_form</field>
+        </record>
+        <record model="ir.ui.view" id="papyrus_page_box_view_list">
+            <field name="model">papyrus.page.box</field>
+            <field name="type">tree</field>
+            <field name="name">page_box_list</field>
+        </record>
+        <record model="ir.model.access" id="access_papyrus_page_box">
+            <field name="model" search="[('model', '=', 'papyrus.page.box')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="True"/>
         </record>
 
         <!-- Menus -->
@@ -293,8 +385,8 @@
         <menuitem action="act_papyrus_page" id="menu_papyrus_page" parent="menu_papyrus_document" sequence="10" name="Pages"/>
 
         <!-- Cron -->
-        <record model="ir.cron" id="cron_papyrus_import_pages">
-            <field name="name">Papyrus Document Queue</field>
+        <record model="ir.cron" id="cron_process_queue">
+            <field name="name">Papyrus Process Queue</field>
             <field name="request_user" ref="res.user_admin"/>
             <field name="user" ref="res.user_trigger"/>
             <field name="active" eval="True"/>
@@ -303,11 +395,23 @@
             <field name="number_calls">-1</field>
             <field name="repeat_missed" eval="False"/>
             <field name="model">papyrus.queue</field>
-            <field name="function">import_pages</field>
+            <field name="function">cron_process</field>
+        </record>
+        <record model="ir.cron" id="cron_clean_files">
+            <field name="name">Papyrus Clean Files</field>
+            <field name="request_user" ref="res.user_admin"/>
+            <field name="user" ref="res.user_trigger"/>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="number_calls">-1</field>
+            <field name="repeat_missed" eval="False"/>
+            <field name="model">papyrus.queue</field>
+            <field name="function">cron_clean</field>
         </record>
 
-        <record model="ir.cron" id="cron_papyrus_attach_documents">
-            <field name="name">Papyrus Attach Documents</field>
+        <record model="ir.cron" id="cron_inspect_documents">
+            <field name="name">Papyrus Inspect Documents</field>
             <field name="request_user" ref="res.user_admin"/>
             <field name="user" ref="res.user_trigger"/>
             <field name="active" eval="True"/>
@@ -316,11 +420,23 @@
             <field name="number_calls">-1</field>
             <field name="repeat_missed" eval="False"/>
             <field name="model">papyrus.document</field>
-            <field name="function">attach_documents</field>
+            <field name="function">cron_inspect</field>
+        </record>
+        <record model="ir.cron" id="cron_process_documents">
+            <field name="name">Papyrus Process Documents</field>
+            <field name="request_user" ref="res.user_admin"/>
+            <field name="user" ref="res.user_trigger"/>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="number_calls">-1</field>
+            <field name="repeat_missed" eval="False"/>
+            <field name="model">papyrus.document</field>
+            <field name="function">cron_process</field>
         </record>
 
-        <record model="ir.cron" id="cron_papyrus_create_document">
-            <field name="name">Papyrus Create Documents</field>
+        <record model="ir.cron" id="cron_inspect_pages">
+            <field name="name">Papyrus Inspect Pages</field>
             <field name="request_user" ref="res.user_admin"/>
             <field name="user" ref="res.user_trigger"/>
             <field name="active" eval="True"/>
@@ -329,7 +445,19 @@
             <field name="number_calls">-1</field>
             <field name="repeat_missed" eval="False"/>
             <field name="model">papyrus.page</field>
-            <field name="function">create_documents</field>
+            <field name="function">cron_inspect</field>
+        </record>
+        <record model="ir.cron" id="cron_process_pages">
+            <field name="name">Papyrus Process Pages</field>
+            <field name="request_user" ref="res.user_admin"/>
+            <field name="user" ref="res.user_trigger"/>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="number_calls">-1</field>
+            <field name="repeat_missed" eval="False"/>
+            <field name="model">papyrus.page</field>
+            <field name="function">cron_process</field>
         </record>
     </data>
 </tryton>

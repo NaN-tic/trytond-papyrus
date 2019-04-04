@@ -1,0 +1,582 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:ir.attachment,current_page:"
+msgid "Current Page"
+msgstr "Pàgina actual"
+
+msgctxt "field:ir.attachment,image:"
+msgid "Image"
+msgstr "Imatge"
+
+msgctxt "field:ir.attachment,page_count:"
+msgid "Page Count"
+msgstr "Número de pàgines"
+
+msgctxt "field:papyrus.document,boxes:"
+msgid "Boxes"
+msgstr "Caixes"
+
+msgctxt "field:papyrus.document,create_date:"
+msgid "Create Date"
+msgstr "Data de creació"
+
+msgctxt "field:papyrus.document,create_uid:"
+msgid "Create User"
+msgstr "Usuari de creació"
+
+msgctxt "field:papyrus.document,current_page:"
+msgid "Current Page"
+msgstr "Pàgina actual"
+
+msgctxt "field:papyrus.document,data:"
+msgid "Content"
+msgstr "Contingut"
+
+msgctxt "field:papyrus.document,filename:"
+msgid "File Name"
+msgstr "Nom de fitxer"
+
+msgctxt "field:papyrus.document,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:papyrus.document,number:"
+msgid "Number"
+msgstr "Número"
+
+msgctxt "field:papyrus.document,page_count:"
+msgid "Page Count"
+msgstr "Número de pàgines"
+
+msgctxt "field:papyrus.document,pages:"
+msgid "Pages"
+msgstr "Pàgines"
+
+msgctxt "field:papyrus.document,queue:"
+msgid "Queue"
+msgstr "Cua"
+
+msgctxt "field:papyrus.document,rec_name:"
+msgid "Record Name"
+msgstr "Nom del registre"
+
+msgctxt "field:papyrus.document,reference:"
+msgid "Reference"
+msgstr "Referència"
+
+msgctxt "field:papyrus.document,state:"
+msgid "State"
+msgstr "Estat"
+
+msgctxt "field:papyrus.document,write_date:"
+msgid "Write Date"
+msgstr "Data de modificació"
+
+msgctxt "field:papyrus.document,write_uid:"
+msgid "Write User"
+msgstr "Usuari de modificació"
+
+msgctxt "field:papyrus.document.box,create_date:"
+msgid "Create Date"
+msgstr "Data de creació"
+
+msgctxt "field:papyrus.document.box,create_uid:"
+msgid "Create User"
+msgstr "Usuari de creació"
+
+msgctxt "field:papyrus.document.box,document:"
+msgid "Document"
+msgstr "Document"
+
+msgctxt "field:papyrus.document.box,height:"
+msgid "Height"
+msgstr "Alçada"
+
+msgctxt "field:papyrus.document.box,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:papyrus.document.box,rec_name:"
+msgid "Record Name"
+msgstr "Nom del registre"
+
+msgctxt "field:papyrus.document.box,text:"
+msgid "Text"
+msgstr "Text"
+
+msgctxt "field:papyrus.document.box,type:"
+msgid "Type"
+msgstr "Tipus"
+
+msgctxt "field:papyrus.document.box,width:"
+msgid "Width"
+msgstr "Amplada"
+
+msgctxt "field:papyrus.document.box,write_date:"
+msgid "Write Date"
+msgstr "Data de modificació"
+
+msgctxt "field:papyrus.document.box,write_uid:"
+msgid "Write User"
+msgstr "Usuari de modificació"
+
+msgctxt "field:papyrus.document.box,x0:"
+msgid "X0"
+msgstr "X0"
+
+msgctxt "field:papyrus.document.box,x1:"
+msgid "X1"
+msgstr "X1"
+
+msgctxt "field:papyrus.document.box,y0:"
+msgid "Y0"
+msgstr "Y0"
+
+msgctxt "field:papyrus.document.box,y1:"
+msgid "Y1"
+msgstr "Y1"
+
+msgctxt "field:papyrus.page,boxes:"
+msgid "Boxes"
+msgstr "Caixes"
+
+msgctxt "field:papyrus.page,create_date:"
+msgid "Create Date"
+msgstr "Data de creació"
+
+msgctxt "field:papyrus.page,create_uid:"
+msgid "Create User"
+msgstr "Usuari de creació"
+
+msgctxt "field:papyrus.page,data:"
+msgid "Data"
+msgstr "Dades"
+
+msgctxt "field:papyrus.page,document:"
+msgid "Document"
+msgstr "Document"
+
+msgctxt "field:papyrus.page,filename:"
+msgid "File Name"
+msgstr "Nom de fitxer"
+
+msgctxt "field:papyrus.page,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:papyrus.page,image:"
+msgid "Image"
+msgstr "Imatge"
+
+msgctxt "field:papyrus.page,queue:"
+msgid "Queue"
+msgstr "Cua"
+
+msgctxt "field:papyrus.page,rec_name:"
+msgid "Record Name"
+msgstr "Nom del registre"
+
+msgctxt "field:papyrus.page,sequence:"
+msgid "Sequence"
+msgstr "Seqüència"
+
+msgctxt "field:papyrus.page,state:"
+msgid "State"
+msgstr "Estat"
+
+msgctxt "field:papyrus.page,text:"
+msgid "Text"
+msgstr "Text"
+
+msgctxt "field:papyrus.page,write_date:"
+msgid "Write Date"
+msgstr "Data de modificació"
+
+msgctxt "field:papyrus.page,write_uid:"
+msgid "Write User"
+msgstr "Usuari de modificació"
+
+msgctxt "field:papyrus.page.box,create_date:"
+msgid "Create Date"
+msgstr "Data de creació"
+
+msgctxt "field:papyrus.page.box,create_uid:"
+msgid "Create User"
+msgstr "Usuari de creació"
+
+msgctxt "field:papyrus.page.box,extra:"
+msgid "Extra"
+msgstr "Extra"
+
+msgctxt "field:papyrus.page.box,height:"
+msgid "Height"
+msgstr "Alçada"
+
+msgctxt "field:papyrus.page.box,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:papyrus.page.box,page:"
+msgid "Page"
+msgstr "Pàgina"
+
+msgctxt "field:papyrus.page.box,rec_name:"
+msgid "Record Name"
+msgstr "Nom del registre"
+
+msgctxt "field:papyrus.page.box,text:"
+msgid "Text"
+msgstr "Text"
+
+msgctxt "field:papyrus.page.box,type:"
+msgid "Type"
+msgstr "Tipus"
+
+msgctxt "field:papyrus.page.box,width:"
+msgid "Width"
+msgstr "Amplada"
+
+msgctxt "field:papyrus.page.box,write_date:"
+msgid "Write Date"
+msgstr "Data de modificació"
+
+msgctxt "field:papyrus.page.box,write_uid:"
+msgid "Write User"
+msgstr "Usuari de modificació"
+
+msgctxt "field:papyrus.page.box,x0:"
+msgid "X0"
+msgstr "X0"
+
+msgctxt "field:papyrus.page.box,x1:"
+msgid "X1"
+msgstr "X1"
+
+msgctxt "field:papyrus.page.box,y0:"
+msgid "Y0"
+msgstr "Y0"
+
+msgctxt "field:papyrus.page.box,y1:"
+msgid "Y1"
+msgstr "Y1"
+
+msgctxt "field:papyrus.queue,create_date:"
+msgid "Create Date"
+msgstr "Data de creació"
+
+msgctxt "field:papyrus.queue,create_uid:"
+msgid "Create User"
+msgstr "Usuari de creació"
+
+msgctxt "field:papyrus.queue,document_sequence:"
+msgid "Document Sequence"
+msgstr "Seqüència de documents"
+
+msgctxt "field:papyrus.queue,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:papyrus.queue,name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:papyrus.queue,page_sequence:"
+msgid "Page Sequence"
+msgstr "Seqüència de pàgines"
+
+msgctxt "field:papyrus.queue,rec_name:"
+msgid "Record Name"
+msgstr "Nom del registre"
+
+msgctxt "field:papyrus.queue,scheduler:"
+msgid "Scheduler"
+msgstr "Planificador de tasques"
+
+msgctxt "field:papyrus.queue,source_directory:"
+msgid "Source Directory"
+msgstr "Directori origen"
+
+msgctxt "field:papyrus.queue,storage_directory:"
+msgid "Storage Directory"
+msgstr "Directori d'emmagatzematge"
+
+msgctxt "field:papyrus.queue,type:"
+msgid "Type"
+msgstr "Tipus"
+
+msgctxt "field:papyrus.queue,write_date:"
+msgid "Write Date"
+msgstr "Data de modificació"
+
+msgctxt "field:papyrus.queue,write_uid:"
+msgid "Write User"
+msgstr "Usuari de modificació"
+
+msgctxt "help:papyrus.queue,source_directory:"
+msgid "Absolute path directory"
+msgstr "Camí absolut del directori"
+
+msgctxt "help:papyrus.queue,storage_directory:"
+msgid "Absolute path directory"
+msgstr "Camí absolut del directori"
+
+msgctxt "model:ir.action,name:act_attachment_form"
+msgid "Attachments"
+msgstr "Adjunts"
+
+msgctxt "model:ir.action,name:act_document_pages"
+msgid "Pages"
+msgstr "Pàgines"
+
+msgctxt "model:ir.action,name:act_papyrus_document"
+msgid "Document"
+msgstr "Document"
+
+msgctxt "model:ir.action,name:act_papyrus_page"
+msgid "Document Page"
+msgstr "Pàgina de document"
+
+msgctxt "model:ir.action,name:act_papyrus_queue"
+msgid "Document Queue"
+msgstr "Cua de documents"
+
+msgctxt "model:ir.action.act_window.domain,name:act_document_form_domain_all"
+msgid "All"
+msgstr "Tot"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_document_form_domain_inspected"
+msgid "Inspected"
+msgstr "Inspeccionat"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_document_form_domain_pending"
+msgid "Pending"
+msgstr "Pendent"
+
+msgctxt "model:ir.action.act_window.domain,name:act_page_form_domain_all"
+msgid "All"
+msgstr "Tot"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_page_form_domain_inspected"
+msgid "Inspected"
+msgstr "Inspeccionat"
+
+msgctxt "model:ir.action.act_window.domain,name:act_page_form_domain_pending"
+msgid "Pending"
+msgstr "Pendent"
+
+msgctxt "model:ir.cron,name:cron_clean_files"
+msgid "Papyrus Clean Files"
+msgstr "Neteja de fitxers Papyrus"
+
+msgctxt "model:ir.cron,name:cron_inspect_documents"
+msgid "Papyrus Inspect Documents"
+msgstr "Inspecció de documents Papyrus"
+
+msgctxt "model:ir.cron,name:cron_inspect_pages"
+msgid "Papyrus Inspect Pages"
+msgstr "Inspecció de pàgines Papyrus"
+
+msgctxt "model:ir.cron,name:cron_process_documents"
+msgid "Papyrus Process Documents"
+msgstr "Processat de documents Papyrus"
+
+msgctxt "model:ir.cron,name:cron_process_pages"
+msgid "Papyrus Process Pages"
+msgstr "Processat de pàgines Papyrus"
+
+msgctxt "model:ir.cron,name:cron_process_queue"
+msgid "Papyrus Process Queue"
+msgstr "Processat de cua Papyrus"
+
+msgctxt "model:ir.message,text:cannot_save_file"
+msgid "Can not save \"%(filename)s\"."
+msgstr "No s'ha pogut desar \"%(filename)s\"."
+
+msgctxt "model:ir.message,text:document_copy_forbidden"
+msgid "Papyrus Documents cannot be duplicated."
+msgstr "Els documents Papyrus no es poden duplicar."
+
+msgctxt "model:ir.message,text:page_copy_forbidden"
+msgid "Papyrus Pages cannot be duplicated."
+msgstr "Les pàgines Papyrus no es poden duplicar."
+
+msgctxt "model:ir.model.button,string:attachment_next_page_button"
+msgid "Next Page"
+msgstr "Pàgina següent"
+
+msgctxt "model:ir.model.button,string:attachment_previous_page_button"
+msgid "Previous Page"
+msgstr "Pàgina anterior"
+
+msgctxt "model:ir.model.button,string:document_inspect_button"
+msgid "Inspect"
+msgstr "Inspecciona"
+
+msgctxt "model:ir.model.button,string:document_next_page_button"
+msgid "Next Page"
+msgstr "Pàgina següent"
+
+msgctxt "model:ir.model.button,string:document_pending_button"
+msgid "Pending"
+msgstr "Pendent"
+
+msgctxt "model:ir.model.button,string:document_previous_page_button"
+msgid "Previous Page"
+msgstr "Pàgina anterior"
+
+msgctxt "model:ir.model.button,string:document_process_button"
+msgid "Process"
+msgstr "Processa"
+
+msgctxt "model:ir.model.button,string:page_inspect_button"
+msgid "Inspect"
+msgstr "Inspecciona"
+
+msgctxt "model:ir.model.button,string:page_pending_button"
+msgid "Pending"
+msgstr "Pendent"
+
+msgctxt "model:ir.model.button,string:page_process_button"
+msgid "Process"
+msgstr "Procés"
+
+msgctxt "model:ir.model.button,string:queue_clean_button"
+msgid "Clean"
+msgstr "Neteja"
+
+msgctxt "model:ir.model.button,string:queue_process_button"
+msgid "Process"
+msgstr "Processa"
+
+msgctxt "model:ir.sequence.type,name:sequence_type_papyrus_document"
+msgid "Papyrus Document"
+msgstr "Document Papyrus"
+
+msgctxt "model:ir.sequence.type,name:sequence_type_papyrus_page"
+msgid "Papyrus Page"
+msgstr "Pàgina Papyrus"
+
+msgctxt "model:ir.ui.menu,name:menu_attachment_form"
+msgid "Attachments"
+msgstr "Adjunts"
+
+msgctxt "model:ir.ui.menu,name:menu_papyrus"
+msgid "Papyrus"
+msgstr "Papyrus"
+
+msgctxt "model:ir.ui.menu,name:menu_papyrus_configuration"
+msgid "Configuration"
+msgstr "Configuració"
+
+msgctxt "model:ir.ui.menu,name:menu_papyrus_document"
+msgid "Documents"
+msgstr "Documents"
+
+msgctxt "model:ir.ui.menu,name:menu_papyrus_page"
+msgid "Pages"
+msgstr "Pàgines"
+
+msgctxt "model:ir.ui.menu,name:menu_papyrus_queue"
+msgid "Queue"
+msgstr "Cua"
+
+msgctxt "model:papyrus.document,name:"
+msgid "Papyrus Document"
+msgstr "Document Papyrus"
+
+msgctxt "model:papyrus.document.box,name:"
+msgid "Papyrus Document Box"
+msgstr "Caixa de document Papyrus"
+
+msgctxt "model:papyrus.page,name:"
+msgid "Papyrus Page"
+msgstr "Pàgina Papyrus"
+
+msgctxt "model:papyrus.page.box,name:"
+msgid "Papyrus Page Box"
+msgstr "Caixa de pàgina Papyrus"
+
+msgctxt "model:papyrus.queue,name:"
+msgid "Document Queue"
+msgstr "Cua de document"
+
+msgctxt "model:res.group,name:group_papyrus"
+msgid "Papyrus"
+msgstr "Document Papyrus"
+
+msgctxt "model:res.group,name:group_papyrus_admin"
+msgid "Papyrus Administration"
+msgstr "Administrador Papyrus"
+
+msgctxt "selection:papyrus.document,state:"
+msgid "Inspected"
+msgstr "Inspeccionat"
+
+msgctxt "selection:papyrus.document,state:"
+msgid "Pending"
+msgstr "Pendent"
+
+msgctxt "selection:papyrus.document,state:"
+msgid "Processed"
+msgstr "Processat"
+
+msgctxt "selection:papyrus.document.box,type:"
+msgid "Barcode"
+msgstr "Codi de barres"
+
+msgctxt "selection:papyrus.document.box,type:"
+msgid "Text"
+msgstr "Text"
+
+msgctxt "selection:papyrus.page,state:"
+msgid "Inspected"
+msgstr "Inspeccionat"
+
+msgctxt "selection:papyrus.page,state:"
+msgid "Pending"
+msgstr "Pendent"
+
+msgctxt "selection:papyrus.page,state:"
+msgid "Processed"
+msgstr "Processat"
+
+msgctxt "selection:papyrus.page.box,type:"
+msgid "Barcode"
+msgstr "Codi de barres"
+
+msgctxt "selection:papyrus.page.box,type:"
+msgid "Text"
+msgstr "Text"
+
+msgctxt "selection:papyrus.queue,type:"
+msgid "Document"
+msgstr "Document"
+
+msgctxt "selection:papyrus.queue,type:"
+msgid "Page"
+msgstr "Pàgina"
+
+msgctxt "view:ir.attachment:"
+msgid "/"
+msgstr ""
+
+msgctxt "view:ir.attachment:"
+msgid "Last Modification Time"
+msgstr "Hora última modificació"
+
+msgctxt "view:papyrus.document:"
+msgid "/"
+msgstr "/"
+
+msgctxt "view:papyrus.document:"
+msgid "Extra"
+msgstr "Extra"
+
+msgctxt "view:papyrus.page:"
+msgid "Extra"
+msgstr "Extra"

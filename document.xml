@@ -4,7 +4,7 @@
 <tryton>
     <data>
         <record model="res.group" id="group_papyrus_admin">
-            <field name="name">Papyrus Document Administration</field>
+            <field name="name">Papyrus Administration</field>
         </record>
         <record model="res.user-res.group" id="user_admin_group_papyrus_admin">
             <field name="user" ref="res.user_admin"/>
@@ -15,7 +15,7 @@
             <field name="group" ref="group_papyrus_admin"/>
         </record>
         <record model="res.group" id="group_papyrus">
-            <field name="name">Papyrus Document</field>
+            <field name="name">Papyrus</field>
         </record>
         <record model="res.user-res.group" id="user_admin_group_papyrus">
             <field name="user" ref="res.user_admin"/>

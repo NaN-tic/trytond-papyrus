@@ -19,12 +19,14 @@ class Invoice(metaclass=PoolMeta):
     def __setup__(cls):
         super().__setup__()
         cls._buttons.update({
-                'barcode': {},
+                'papyrus_barcode': {
+                    'icon': 'tryton-print',
+                    },
                 })
 
     @classmethod
     @ModelView.button_action('papyrus.report_account_invoice_papyrus')
-    def barcode(cls, invoices):
+    def papyrus_barcode(cls, invoices):
         pass
 
 

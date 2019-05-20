@@ -2,20 +2,21 @@
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
 <tryton>
-  <data depends="account_invoice">
-        <record model="ir.sequence" id="sequence_papyrus_account_invoice">
-            <field name="name">Document Account Invoice</field>
-            <field name="code">papyrus.page</field>
-        </record>
-
+    <data depends="account_invoice">
         <record model="ir.ui.view" id="invoice_view_form">
             <field name="model">account.invoice</field>
             <field name="inherit" ref="account_invoice.invoice_view_form"/>
             <field name="name">invoice_form</field>
         </record>
+        <record model="ir.model.button" id="invoice_papyrus_barcode_button">
+            <field name="name">papyrus_barcode</field>
+            <field name="string">Papyrus Barcode</field>
+            <field name="help">Prints a barcode for you to stick to the paper and later process the document using Papyrus</field>
+            <field name="model" search="[('model', '=', 'account.invoice')]"/>
+        </record>
 
         <record model="ir.action.report" id="report_account_invoice_papyrus">
-            <field name="name">Barcode Document</field>
+            <field name="name">Papyrus Barcode</field>
             <field name="model">account.invoice</field>
             <field name="report_name">account.invoice.papyrus</field>
             <field name="report">papyrus/papyrus.jrxml</field>

@@ -5,6 +5,7 @@ from trytond.pool import Pool
 from . import document
 from . import invoice
 from . import attachment
+from . import stock
 from . import ir
 
 def register():
@@ -26,4 +27,16 @@ def register():
     Pool.register(
         invoice.InvoicePapyrus,
         depends=['account_invoice'],
+        module='papyrus', type_='report')
+    Pool.register(
+        stock.ShipmentIn,
+        stock.ShipmentOutReturn,
+        stock.Page,
+        stock.Document,
+        depends=['stock'],
+        module='papyrus', type_='model')
+    Pool.register(
+        stock.ShipmentInPapyrus,
+        stock.ShipmentOutReturnPapyrus,
+        depends=['stock'],
         module='papyrus', type_='report')

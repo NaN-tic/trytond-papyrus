@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+  <data depends="stock">
+        <record model="ir.ui.view" id="shipment_in_view_form">
+            <field name="model">stock.shipment.in</field>
+            <field name="inherit" ref="stock.shipment_in_view_form"/>
+            <field name="name">shipment_in_form</field>
+        </record>
+        <record model="ir.model.button" id="shipment_in_papyrus_barcode_button">
+            <field name="name">papyrus_barcode</field>
+            <field name="string">Papyrus Barcode</field>
+            <field name="help">Prints a barcode that can be stick to the paper and later process the document using Papyrus</field>
+            <field name="model" search="[('model', '=', 'stock.shipment.in')]"/>
+        </record>
+
+        <record model="ir.action.report" id="report_stock_shipment_in_papyrus">
+            <field name="name">Papyrus Barcode</field>
+            <field name="model">stock.shipment.in</field>
+            <field name="report_name">stock.shipment.in.papyrus</field>
+            <field name="report">papyrus/papyrus.jrxml</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">jrxml</field>
+        </record>
+        <record model="ir.action.keyword" id="report_papyrus_stock_shipment_in_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.shipment.in,-1</field>
+            <field name="action" ref="report_stock_shipment_in_papyrus"/>
+        </record>
+
+        <record model="ir.ui.view" id="shipment_out_return_view_form">
+            <field name="model">stock.shipment.out.return</field>
+            <field name="inherit" ref="stock.shipment_out_return_view_form"/>
+            <field name="name">shipment_out_return_form</field>
+        </record>
+        <record model="ir.model.button" id="shipment_out_return_papyrus_barcode_button">
+            <field name="name">papyrus_barcode</field>
+            <field name="string">Papyrus Barcode</field>
+            <field name="help">Prints a barcode that can be stick to the paper and later process the document using Papyrus</field>
+            <field name="model" search="[('model', '=', 'stock.shipment.out.return')]"/>
+        </record>
+
+        <record model="ir.action.report" id="report_stock_shipment_out_return_papyrus">
+            <field name="name">Papyrus Barcode</field>
+            <field name="model">stock.shipment.out.return</field>
+            <field name="report_name">stock.shipment.out.return.papyrus</field>
+            <field name="report">papyrus/papyrus.jrxml</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">jrxml</field>
+        </record>
+        <record model="ir.action.keyword" id="report_papyrus_stock_shipment_out_return_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.shipment.out.return,-1</field>
+            <field name="action" ref="report_stock_shipment_out_return_papyrus"/>
+        </record>
+    </data>
+</tryton>

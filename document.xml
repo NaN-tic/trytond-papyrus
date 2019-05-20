@@ -10,19 +10,11 @@
             <field name="user" ref="res.user_admin"/>
             <field name="group" ref="group_papyrus_admin"/>
         </record>
-        <record model="res.user-res.group" id="user_trigger_group_papyrus_admin">
-            <field name="user" ref="res.user_trigger"/>
-            <field name="group" ref="group_papyrus_admin"/>
-        </record>
         <record model="res.group" id="group_papyrus">
             <field name="name">Papyrus</field>
         </record>
         <record model="res.user-res.group" id="user_admin_group_papyrus">
             <field name="user" ref="res.user_admin"/>
-            <field name="group" ref="group_papyrus"/>
-        </record>
-        <record model="res.user-res.group" id="user_trigger_group_papyrus">
-            <field name="user" ref="res.user_trigger"/>
             <field name="group" ref="group_papyrus"/>
         </record>
 
@@ -386,78 +378,36 @@
 
         <!-- Cron -->
         <record model="ir.cron" id="cron_process_queue">
-            <field name="name">Papyrus Process Queue</field>
-            <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="res.user_trigger"/>
-            <field name="active" eval="True"/>
+            <field name="method">papyrus.queue|cron_process</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="number_calls">-1</field>
-            <field name="repeat_missed" eval="False"/>
-            <field name="model">papyrus.queue</field>
-            <field name="function">cron_process</field>
         </record>
         <record model="ir.cron" id="cron_clean_files">
-            <field name="name">Papyrus Clean Files</field>
-            <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="res.user_trigger"/>
-            <field name="active" eval="True"/>
+            <field name="method">papyrus.queue|cron_clean</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="number_calls">-1</field>
-            <field name="repeat_missed" eval="False"/>
-            <field name="model">papyrus.queue</field>
-            <field name="function">cron_clean</field>
         </record>
 
         <record model="ir.cron" id="cron_inspect_documents">
-            <field name="name">Papyrus Inspect Documents</field>
-            <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="res.user_trigger"/>
-            <field name="active" eval="True"/>
+            <field name="method">papyrus.document|cron_inspect</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="number_calls">-1</field>
-            <field name="repeat_missed" eval="False"/>
-            <field name="model">papyrus.document</field>
-            <field name="function">cron_inspect</field>
         </record>
         <record model="ir.cron" id="cron_process_documents">
-            <field name="name">Papyrus Process Documents</field>
-            <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="res.user_trigger"/>
-            <field name="active" eval="True"/>
+            <field name="method">papyrus.document|cron_process</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="number_calls">-1</field>
-            <field name="repeat_missed" eval="False"/>
-            <field name="model">papyrus.document</field>
-            <field name="function">cron_process</field>
         </record>
 
         <record model="ir.cron" id="cron_inspect_pages">
-            <field name="name">Papyrus Inspect Pages</field>
-            <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="res.user_trigger"/>
-            <field name="active" eval="True"/>
+            <field name="method">papyrus.page|cron_inspect</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="number_calls">-1</field>
-            <field name="repeat_missed" eval="False"/>
-            <field name="model">papyrus.page</field>
-            <field name="function">cron_inspect</field>
         </record>
         <record model="ir.cron" id="cron_process_pages">
-            <field name="name">Papyrus Process Pages</field>
-            <field name="request_user" ref="res.user_admin"/>
-            <field name="user" ref="res.user_trigger"/>
-            <field name="active" eval="True"/>
+            <field name="method">papyrus.page|cron_process</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="number_calls">-1</field>
-            <field name="repeat_missed" eval="False"/>
-            <field name="model">papyrus.page</field>
-            <field name="function">cron_process</field>
         </record>
     </data>
 </tryton>

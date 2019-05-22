@@ -356,7 +356,12 @@
         </record>
 
         <!-- Menus -->
-        <menuitem id="menu_papyrus" name="Papyrus" sequence="1"/>
+        <record model="ir.ui.icon" id="galatea_icon">
+            <field name="name">papyrus</field>
+            <field name="path">icons/papyrus.svg</field>
+        </record>
+
+        <menuitem id="menu_papyrus" name="Papyrus" sequence="1" icon="papyrus"/>
         <record model="ir.ui.menu-res.group" id="menu_papyrus_group_papyrus">
           <field name="menu" ref="menu_papyrus"/>
           <field name="group" ref="group_papyrus"/>

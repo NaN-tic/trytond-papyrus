@@ -356,7 +356,7 @@
         </record>
 
         <!-- Menus -->
-        <record model="ir.ui.icon" id="galatea_icon">
+        <record model="ir.ui.icon" id="papyrus_icon">
             <field name="name">papyrus</field>
             <field name="path">icons/papyrus.svg</field>
         </record>

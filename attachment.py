@@ -63,20 +63,18 @@ class Attachment(metaclass=PoolMeta):
     def get_page_count(self, name):
         return tools.page_count(self.get_full_path())
 
-    @fields.depends('current_page', 'queue', 'filename', 'pages')
+    @fields.depends('current_page')
     def on_change_with_image(self, name=None):
-        if not self.filename:
-            return
         return tools.page_image(self.get_full_path(), self.current_page or 1)
 
-    @ModelView.button_change('current_page', 'filename', 'pages')
+    @ModelView.button_change('current_page')
     def previous_page(self):
         # TODO: Check why it doesn't work. Seems to be a GTK client issue
         if self.current_page and self.current_page > 1:
             self.current_page -= 1
         self.image = self.on_change_with_image()
 
-    @ModelView.button_change('current_page', 'page_count', 'filename', 'pages')
+    @ModelView.button_change('current_page', 'page_count')
     def next_page(self):
         # TODO: Check why it doesn't work. Seems to be a GTK client issue
         if self.current_page and self.current_page < self.page_count:

@@ -28,7 +28,7 @@ class ShipmentIn(metaclass=PoolMeta):
                 })
 
     @classmethod
-    @ModelView.button_action('papyrus.report_shipment_in_papyrus')
+    @ModelView.button_action('papyrus.report_stock_shipment_in_papyrus')
     def papyrus_barcode(cls, invoices):
         pass
 
@@ -61,7 +61,7 @@ class ShipmentOutReturn(metaclass=PoolMeta):
                 })
 
     @classmethod
-    @ModelView.button_action('papyrus.report_shipment_out_return_papyrus')
+    @ModelView.button_action('papyrus.report_stock_shipment_out_return_papyrus')
     def papyrus_barcode(cls, invoices):
         pass
 

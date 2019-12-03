@@ -725,6 +725,8 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     def process(cls, pages):
+        Document = Pool().get('papyrus.document')
+
         to_save = []
         to_proceed = []
         # Loop over pages grouping by queue

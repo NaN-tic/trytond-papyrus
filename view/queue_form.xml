@@ -8,6 +8,8 @@
     <field name="type"/>
     <label name="page_sequence"/>
     <field name="page_sequence"/>
+    <label name="image_dpi"/>
+    <field name="image_dpi"/>
     <newline/>
     <label name="document_sequence"/>
     <field name="document_sequence"/>

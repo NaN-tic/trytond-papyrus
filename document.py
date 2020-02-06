@@ -42,6 +42,14 @@ class Queue(ModelSQL, ModelView):
             ('document', 'Document'),
             ('page', 'Page'),
             ], 'Type', required=True)
+    image_dpi = fields.Char('DPI', help='DPI: This value indicates the number '
+        'of pixels per inch that PDFs of documents will generate when they '
+        'come from multiple pages, if the system is unable to get the value '
+        'from the image on the page (usually in files in PDF format). '
+        'Instead, the system respects the number of pixels on the page when '
+        'they are capable of get them (typically JPEG files). Therefore, if '
+        'the system must use this parameter, the resulting PDF size may be '
+        'affected. That is why we recommend using JPEG files for pages.')
 
     @classmethod
     def __setup__(cls):
@@ -322,16 +330,19 @@ class Document(Workflow, ModelSQL, ModelView):
                     return fp.read()
             return
 
-        to_merge = []
+        files = []
         for page in self.pages:
             if not page.data:
                 continue
-            to_merge.append(page.get_full_path())
+            files.append(page.get_full_path())
 
-        if to_merge:
+        if files:
             odir = self.queue.storage_directory
             output = '%s%s.pdf' % (odir, self.number)
-            to_merge.insert(0, 'convert')
+            to_merge = ['convert']
+            if self.queue.image_dpi:
+                to_merge += ['-density', self.queue.image_dpi]
+            to_merge += files
             to_merge.append(output)
             subprocess.check_call(to_merge)
             with open(output, "rb") as f:

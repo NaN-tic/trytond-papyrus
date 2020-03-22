@@ -46,7 +46,7 @@ class Queue(ModelSQL, ModelView):
             'required': Eval('source_type') == 'directory',
         }, depends=['source_type'])
     storage_directory = fields.Char('Storage Directory',
-        help='Absolute path directory')
+        help='Absolute path directory', required=True)
     scheduler = fields.Boolean('Scheduler')
     type = fields.Selection([
             ('document', 'Document'),

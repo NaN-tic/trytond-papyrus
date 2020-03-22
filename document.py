@@ -15,9 +15,14 @@ from trytond.exceptions import UserError
 from trytond.transaction import Transaction
 from . import tools
 from .datamanager import FileDataManager
+from email import message_from_bytes
 
 __all__ = ['Queue', 'Document', 'Page', 'DocumentBox', 'PageBox']
 
+ELECTRONIC_MAIL_STATES = {
+    'invisible': Eval('source_type') != 'electronic_mail',
+    'required': Eval('source_type') == 'electronic_mail',
+}
 
 class Queue(ModelSQL, ModelView):
     'Document Queue'
@@ -33,8 +38,12 @@ class Queue(ModelSQL, ModelView):
         domain=[
             ('code', '=', 'papyrus.document'),
             ], required=True)
-    source_directory = fields.Char('Source Directory', required=True,
-        help='Absolute path directory')
+    source_directory = fields.Char('Source Directory',
+        help='Absolute path directory',
+        states={
+            'invisible': Eval('source_type') != 'directory',
+            'required': Eval('source_type') == 'directory',
+        }, depends=['source_type'])
     storage_directory = fields.Char('Storage Directory',
         help='Absolute path directory')
     scheduler = fields.Boolean('Scheduler')
@@ -50,6 +59,17 @@ class Queue(ModelSQL, ModelView):
         'they are capable of get them (typically JPEG files). Therefore, if '
         'the system must use this parameter, the resulting PDF size may be '
         'affected. That is why we recommend using JPEG files for pages.')
+    source_type = fields.Selection([
+            ('directory', 'Directory'),
+            ('electronic_mail', 'Electronic mail'),
+            ], 'Source')
+    source_inbox = fields.Many2One('electronic.mail.mailbox', 'Source Inbox',
+        states=ELECTRONIC_MAIL_STATES, depends=['source_type'])
+    storage_inbox = fields.Many2One('electronic.mail.mailbox', 'Storage Inbox',
+        states=ELECTRONIC_MAIL_STATES, depends=['source_type'])
+    discarded_inbox = fields.Many2One('electronic.mail.mailbox',
+        'Discarded Inbox', states=ELECTRONIC_MAIL_STATES,
+        depends=['source_type'])
 
     @classmethod
     def __setup__(cls):
@@ -63,9 +83,24 @@ class Queue(ModelSQL, ModelView):
                     },
                 })
 
+    @classmethod
+    def view_attributes(cls):
+        return super().view_attributes() + [
+            ('//group[@id="directory"]', 'states', {
+                'invisible': Eval('source_type') != 'directory',
+                }),
+            ('//group[@id="electronic_mail"]', 'states', {
+                'invisible': Eval('source_type') != 'electronic_mail',
+                }),
+            ]
+
     @staticmethod
     def default_scheduler():
         return True
+
+    @staticmethod
+    def default_source_type():
+        return 'directory'
 
     def get_page(queue, filename):
         pool = Pool()
@@ -102,6 +137,21 @@ class Queue(ModelSQL, ModelView):
         Document = pool.get('papyrus.document')
         Page = pool.get('papyrus.page')
 
+        pages = []
+        documents = []
+        for queue in queues:
+            method = getattr(queue, 'process_%s' % queue.source_type)
+            d, p = method(queue)
+            documents += d
+            pages += p
+
+        if pages:
+            Page.save(pages)
+        if documents:
+            Document.save(documents)
+
+    @classmethod
+    def process_directory(cls, queue):
         transaction = Transaction()
         connection = transaction.connection
         database = transaction.database
@@ -112,49 +162,101 @@ class Queue(ModelSQL, ModelView):
         datamanager = FileDataManager()
         datamanager = transaction.join(datamanager)
 
-        pages_to_create = []
-        documents_to_create = []
+        files = []
+        pages = []
+        documents = []
         queue_files = {}
-        for queue in queues:
-            files = []
-            for file_name in sorted(glob.glob(os.path.join(
-                            queue.source_directory, '*'))):
-                # TODO: If file_name already exists as a record and file does
-                # not exist in destination it means that we can move the file
-                # directly (or just after the transaction finished and the
-                # FileDataManager is being executed)
-                fname = os.path.basename(file_name)
-                # check that file_name doesn't exist in processed directory
-                processed_fname = os.path.join(queue.storage_directory, fname)
-                count = 0
-                check_file = True
-                while check_file:
-                    if os.path.isfile(processed_fname):
-                        count += 1
-                        new_file = '%s-%s' % (count, fname)
-                        processed_fname = os.path.join(queue.storage_directory,
-                            new_file)
-                    elif count > 0:
-                        shutil.move(os.path.join(queue.source_directory, fname),
-                            os.path.join(queue.source_directory, new_file))
-                        fname = new_file
-                        check_file = False
+        for file_name in sorted(glob.glob(os.path.join(
+                        queue.source_directory, '*'))):
+            # TODO: If file_name already exists as a record and file does
+            # not exist in destination it means that we can move the file
+            # directly (or just after the transaction finished and the
+            # FileDataManager is being executed)
+            fname = os.path.basename(file_name)
+            # check that file_name doesn't exist in processed directory
+            processed_fname = os.path.join(queue.storage_directory, fname)
+            count = 0
+            check_file = True
+            while check_file:
+                if os.path.isfile(processed_fname):
+                    count += 1
+                    new_file = '%s-%s' % (count, fname)
+                    processed_fname = os.path.join(queue.storage_directory,
+                        new_file)
+                elif count > 0:
+                    shutil.move(os.path.join(queue.source_directory, fname),
+                        os.path.join(queue.source_directory, new_file))
+                    fname = new_file
+                    check_file = False
+                else:
+                    check_file = False
+            queue.store_file(datamanager, fname)
+            if queue.type == 'page':
+                page = cls.get_page(queue, fname)
+                pages.append(page)
+            elif queue.type == 'document':
+                document = cls.get_document(queue, fname)
+                documents.append(document)
+            files.append(fname)
+        queue_files[queue] = files
+
+        return documents, pages
+
+    @classmethod
+    def process_electronic_mail(cls, queue):
+        pool = Pool()
+        ElectronicMail = pool.get('electronic.mail')
+
+        pages = []
+        documents = []
+        queue_files = {}
+        files = []
+
+        e_mails = ElectronicMail.search([
+            ('mailbox', '=', queue.source_inbox)])
+        for mail in e_mails:
+            mail_file = mail._get_mail(mail) or False
+            email = message_from_bytes(mail_file)
+            attachments = mail.get_attachments(email)
+
+            if not attachments:
+                mail.mailbox = queue.storage_inbox
+                continue
+
+            count = 0
+            for attachment in attachments:
+                count += 1
+                file_name = attachment['filename']
+                name, ext = os.path.splitext(file_name)
+                fname = '%015d' % (mail.id * 100 + count) + ext
+                processed_fname = os.path.join(
+                    queue.storage_directory, fname)
+
+                if queue.type == 'document':
+                    if ext == '.pdf':
+                        with open(processed_fname, 'wb') as f:
+                            f.write(attachment['data'])
+                        document = cls.get_document(queue, fname)
+                        documents.append(document)
+                        mail.mailbox = queue.storage_inbox
                     else:
-                        check_file = False
-                queue.store_file(datamanager, fname)
-                if queue.type == 'page':
-                    page = cls.get_page(queue, fname)
-                    pages_to_create.append(page._save_values)
-                elif queue.type == 'document':
-                    document = cls.get_document(queue, fname)
-                    documents_to_create.append(document._save_values)
+                        mail.mailbox = queue.discarded_inbox
+                elif queue.type == 'page':
+                    if ext in ('.png', '.jpg', '.jpeg', '.tif'):
+                        with open(processed_fname, 'wb') as f:
+                            f.write(attachment['data'])
+                        page = cls.get_page(queue, fname)
+                        pages.append(page)
+                        mail.mailbox = queue.storage_inbox
+                    else:
+                        mail.mailbox = queue.discarded_inbox
+
                 files.append(fname)
             queue_files[queue] = files
 
-        if pages_to_create:
-            Page.create(pages_to_create)
-        if documents_to_create:
-            Document.create(documents_to_create)
+        ElectronicMail.save(e_mails)
+
+        return documents, pages
 
     @classmethod
     def cron_process(cls):
@@ -603,6 +705,7 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
     def copy(cls, pages):
         raise UserError(gettext('papyrus.page_copy_forbidden'))
 
+    @fields.depends('filename', 'queue')
     def get_full_path(self):
         if self.filename:
             return os.path.join(self.queue.storage_directory, self.filename)
@@ -626,7 +729,7 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
             with open(fname, 'wb') as fp:
                 fp.write(value)
 
-    @fields.depends('current_page', 'queue', 'filename')
+    @fields.depends('filename', methods=['get_full_path'])
     def on_change_with_image(self, name=None):
         if not self.filename:
             return

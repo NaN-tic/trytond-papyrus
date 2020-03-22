@@ -13,13 +13,25 @@
     <newline/>
     <label name="document_sequence"/>
     <field name="document_sequence"/>
-    <newline/>
-    <label name="source_directory"/>
-    <field name="source_directory"/>
-    <label name="storage_directory"/>
-    <field name="storage_directory"/>
     <label name="scheduler"/>
     <field name="scheduler"/>
+    <newline/>
+    <label name="storage_directory"/>
+    <field name="storage_directory" colspan="3"/>
+    <label name="source_type"/>
+    <field name="source_type"/>
+    <group string="Electronic Mail" id="electronic_mail" colspan="4">
+        <label name="source_inbox"/>
+        <field name="source_inbox"/>
+        <label name="storage_inbox"/>
+        <field name="storage_inbox"/>
+        <label name="discarded_inbox"/>
+        <field name="discarded_inbox"/>
+    </group>
+    <group string="Directory" id="directory" colspan="4">
+        <label name="source_directory"/>
+        <field name="source_directory"/>
+    </group>
     <group col="-1" colspan="4" id="buttons">
         <button name="process"/>
         <button name="clean"/>

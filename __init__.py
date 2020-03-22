@@ -8,35 +8,37 @@ from . import attachment
 from . import stock
 from . import ir
 
+module = 'papyrus'
+
 def register():
     Pool.register(
+        attachment.Attachment,
         document.Queue,
         document.Document,
         document.Page,
         document.DocumentBox,
         document.PageBox,
-        attachment.Attachment,
         ir.Cron,
-        module='papyrus', type_='model')
+        module=module, type_='model')
     Pool.register(
         invoice.Invoice,
         invoice.Page,
         invoice.Document,
         depends=['account_invoice'],
-        module='papyrus', type_='model')
+        module=module, type_='model')
     Pool.register(
         invoice.InvoicePapyrus,
         depends=['account_invoice'],
-        module='papyrus', type_='report')
+        module=module, type_='report')
     Pool.register(
         stock.ShipmentIn,
         stock.ShipmentOutReturn,
         stock.Page,
         stock.Document,
         depends=['stock'],
-        module='papyrus', type_='model')
+        module=module, type_='model')
     Pool.register(
         stock.ShipmentInPapyrus,
         stock.ShipmentOutReturnPapyrus,
         depends=['stock'],
-        module='papyrus', type_='report')
+        module=module, type_='report')

@@ -18,14 +18,6 @@ msgctxt "field:papyrus.document,boxes:"
 msgid "Boxes"
 msgstr "Caixes"
 
-msgctxt "field:papyrus.document,create_date:"
-msgid "Create Date"
-msgstr "Data de creació"
-
-msgctxt "field:papyrus.document,create_uid:"
-msgid "Create User"
-msgstr "Usuari de creació"
-
 msgctxt "field:papyrus.document,current_page:"
 msgid "Current Page"
 msgstr "Pàgina actual"
@@ -37,10 +29,6 @@ msgstr "Contingut"
 msgctxt "field:papyrus.document,filename:"
 msgid "File Name"
 msgstr "Nom de fitxer"
-
-msgctxt "field:papyrus.document,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:papyrus.document,image:"
 msgid "Image"
@@ -62,10 +50,6 @@ msgctxt "field:papyrus.document,queue:"
 msgid "Queue"
 msgstr "Cua"
 
-msgctxt "field:papyrus.document,rec_name:"
-msgid "Record Name"
-msgstr "Nom del registre"
-
 msgctxt "field:papyrus.document,reference:"
 msgid "Reference"
 msgstr "Referència"
@@ -78,22 +62,6 @@ msgctxt "field:papyrus.document,text:"
 msgid "Text"
 msgstr "Text"
 
-msgctxt "field:papyrus.document,write_date:"
-msgid "Write Date"
-msgstr "Data de modificació"
-
-msgctxt "field:papyrus.document,write_uid:"
-msgid "Write User"
-msgstr "Usuari de modificació"
-
-msgctxt "field:papyrus.document.box,create_date:"
-msgid "Create Date"
-msgstr "Data de creació"
-
-msgctxt "field:papyrus.document.box,create_uid:"
-msgid "Create User"
-msgstr "Usuari de creació"
-
 msgctxt "field:papyrus.document.box,document:"
 msgid "Document"
 msgstr "Document"
@@ -101,14 +69,6 @@ msgstr "Document"
 msgctxt "field:papyrus.document.box,height:"
 msgid "Height"
 msgstr "Alçada"
-
-msgctxt "field:papyrus.document.box,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:papyrus.document.box,rec_name:"
-msgid "Record Name"
-msgstr "Nom del registre"
 
 msgctxt "field:papyrus.document.box,text:"
 msgid "Text"
@@ -121,14 +81,6 @@ msgstr "Tipus"
 msgctxt "field:papyrus.document.box,width:"
 msgid "Width"
 msgstr "Amplada"
-
-msgctxt "field:papyrus.document.box,write_date:"
-msgid "Write Date"
-msgstr "Data de modificació"
-
-msgctxt "field:papyrus.document.box,write_uid:"
-msgid "Write User"
-msgstr "Usuari de modificació"
 
 msgctxt "field:papyrus.document.box,x0:"
 msgid "X0"
@@ -150,14 +102,6 @@ msgctxt "field:papyrus.page,boxes:"
 msgid "Boxes"
 msgstr "Caixes"
 
-msgctxt "field:papyrus.page,create_date:"
-msgid "Create Date"
-msgstr "Data de creació"
-
-msgctxt "field:papyrus.page,create_uid:"
-msgid "Create User"
-msgstr "Usuari de creació"
-
 msgctxt "field:papyrus.page,data:"
 msgid "Data"
 msgstr "Dades"
@@ -170,10 +114,6 @@ msgctxt "field:papyrus.page,filename:"
 msgid "File Name"
 msgstr "Nom de fitxer"
 
-msgctxt "field:papyrus.page,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:papyrus.page,image:"
 msgid "Image"
 msgstr "Imatge"
@@ -181,14 +121,6 @@ msgstr "Imatge"
 msgctxt "field:papyrus.page,queue:"
 msgid "Queue"
 msgstr "Cua"
-
-msgctxt "field:papyrus.page,rec_name:"
-msgid "Record Name"
-msgstr "Nom del registre"
-
-msgctxt "field:papyrus.page,sequence:"
-msgid "Sequence"
-msgstr "Seqüència"
 
 msgctxt "field:papyrus.page,state:"
 msgid "State"
@@ -198,22 +130,6 @@ msgctxt "field:papyrus.page,text:"
 msgid "Text"
 msgstr "Text"
 
-msgctxt "field:papyrus.page,write_date:"
-msgid "Write Date"
-msgstr "Data de modificació"
-
-msgctxt "field:papyrus.page,write_uid:"
-msgid "Write User"
-msgstr "Usuari de modificació"
-
-msgctxt "field:papyrus.page.box,create_date:"
-msgid "Create Date"
-msgstr "Data de creació"
-
-msgctxt "field:papyrus.page.box,create_uid:"
-msgid "Create User"
-msgstr "Usuari de creació"
-
 msgctxt "field:papyrus.page.box,extra:"
 msgid "Extra"
 msgstr "Extra"
@@ -222,17 +138,9 @@ msgctxt "field:papyrus.page.box,height:"
 msgid "Height"
 msgstr "Alçada"
 
-msgctxt "field:papyrus.page.box,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:papyrus.page.box,page:"
 msgid "Page"
 msgstr "Pàgina"
-
-msgctxt "field:papyrus.page.box,rec_name:"
-msgid "Record Name"
-msgstr "Nom del registre"
 
 msgctxt "field:papyrus.page.box,text:"
 msgid "Text"
@@ -245,14 +153,6 @@ msgstr "Tipus"
 msgctxt "field:papyrus.page.box,width:"
 msgid "Width"
 msgstr "Amplada"
-
-msgctxt "field:papyrus.page.box,write_date:"
-msgid "Write Date"
-msgstr "Data de modificació"
-
-msgctxt "field:papyrus.page.box,write_uid:"
-msgid "Write User"
-msgstr "Usuari de modificació"
 
 msgctxt "field:papyrus.page.box,x0:"
 msgid "X0"
@@ -270,21 +170,13 @@ msgctxt "field:papyrus.page.box,y1:"
 msgid "Y1"
 msgstr "Y1"
 
-msgctxt "field:papyrus.queue,create_date:"
-msgid "Create Date"
-msgstr "Data de creació"
-
-msgctxt "field:papyrus.queue,create_uid:"
-msgid "Create User"
-msgstr "Usuari de creació"
+msgctxt "field:papyrus.queue,discarded_inbox:"
+msgid "Discarded Inbox"
+msgstr "Bústia de descartats"
 
 msgctxt "field:papyrus.queue,document_sequence:"
 msgid "Document Sequence"
 msgstr "Seqüència de documents"
-
-msgctxt "field:papyrus.queue,id:"
-msgid "ID"
-msgstr "ID"
 
 msgctxt "field:papyrus.queue,image_dpi:"
 msgid "DPI"
@@ -298,10 +190,6 @@ msgctxt "field:papyrus.queue,page_sequence:"
 msgid "Page Sequence"
 msgstr "Seqüència de pàgines"
 
-msgctxt "field:papyrus.queue,rec_name:"
-msgid "Record Name"
-msgstr "Nom del registre"
-
 msgctxt "field:papyrus.queue,scheduler:"
 msgid "Scheduler"
 msgstr "Planificador de tasques"
@@ -310,21 +198,25 @@ msgctxt "field:papyrus.queue,source_directory:"
 msgid "Source Directory"
 msgstr "Directori origen"
 
+msgctxt "field:papyrus.queue,source_inbox:"
+msgid "Source Inbox"
+msgstr "Bústia d'origen"
+
+msgctxt "field:papyrus.queue,source_type:"
+msgid "Source"
+msgstr "Origen"
+
 msgctxt "field:papyrus.queue,storage_directory:"
 msgid "Storage Directory"
 msgstr "Directori d'emmagatzematge"
 
+msgctxt "field:papyrus.queue,storage_inbox:"
+msgid "Storage Inbox"
+msgstr "Bústia d'emmagatzematge"
+
 msgctxt "field:papyrus.queue,type:"
 msgid "Type"
 msgstr "Tipus"
-
-msgctxt "field:papyrus.queue,write_date:"
-msgid "Write Date"
-msgstr "Data de modificació"
-
-msgctxt "field:papyrus.queue,write_uid:"
-msgid "Write User"
-msgstr "Usuari de modificació"
 
 msgctxt "help:papyrus.queue,image_dpi:"
 msgid ""
@@ -373,6 +265,18 @@ msgctxt "model:ir.action,name:act_papyrus_queue"
 msgid "Document Queue"
 msgstr "Cua de documents"
 
+msgctxt "model:ir.action,name:report_account_invoice_papyrus"
+msgid "Papyrus Barcode"
+msgstr ""
+
+msgctxt "model:ir.action,name:report_stock_shipment_in_papyrus"
+msgid "Papyrus Barcode"
+msgstr ""
+
+msgctxt "model:ir.action,name:report_stock_shipment_out_return_papyrus"
+msgid "Papyrus Barcode"
+msgstr ""
+
 msgctxt "model:ir.action.act_window.domain,name:act_document_form_domain_all"
 msgid "All"
 msgstr "Tot"
@@ -412,6 +316,25 @@ msgctxt "model:ir.message,text:page_copy_forbidden"
 msgid "Papyrus Pages cannot be duplicated."
 msgstr "Les pàgines Papyrus no es poden duplicar."
 
+msgctxt "model:ir.model.button,help:invoice_papyrus_barcode_button"
+msgid ""
+"Prints a barcode for you to stick to the paper and later process the "
+"document using Papyrus"
+msgstr ""
+
+msgctxt "model:ir.model.button,help:shipment_in_papyrus_barcode_button"
+msgid ""
+"Prints a barcode that can be stick to the paper and later process the "
+"document using Papyrus"
+msgstr ""
+
+msgctxt ""
+"model:ir.model.button,help:shipment_out_return_papyrus_barcode_button"
+msgid ""
+"Prints a barcode that can be stick to the paper and later process the "
+"document using Papyrus"
+msgstr ""
+
 msgctxt "model:ir.model.button,string:attachment_next_page_button"
 msgid "Next Page"
 msgstr "Pàgina següent"
@@ -440,6 +363,10 @@ msgctxt "model:ir.model.button,string:document_process_button"
 msgid "Process"
 msgstr "Processa"
 
+msgctxt "model:ir.model.button,string:invoice_papyrus_barcode_button"
+msgid "Papyrus Barcode"
+msgstr ""
+
 msgctxt "model:ir.model.button,string:page_inspect_button"
 msgid "Inspect"
 msgstr "Inspecciona"
@@ -459,6 +386,15 @@ msgstr "Neteja"
 msgctxt "model:ir.model.button,string:queue_process_button"
 msgid "Process"
 msgstr "Processa"
+
+msgctxt "model:ir.model.button,string:shipment_in_papyrus_barcode_button"
+msgid "Papyrus Barcode"
+msgstr ""
+
+msgctxt ""
+"model:ir.model.button,string:shipment_out_return_papyrus_barcode_button"
+msgid "Papyrus Barcode"
+msgstr ""
 
 msgctxt "model:ir.sequence.type,name:sequence_type_papyrus_document"
 msgid "Papyrus Document"
@@ -584,6 +520,14 @@ msgctxt "selection:papyrus.page.box,type:"
 msgid "Text"
 msgstr "Text"
 
+msgctxt "selection:papyrus.queue,source_type:"
+msgid "Directory"
+msgstr "Directori"
+
+msgctxt "selection:papyrus.queue,source_type:"
+msgid "Electronic mail"
+msgstr "Correu electrònic"
+
 msgctxt "selection:papyrus.queue,type:"
 msgid "Document"
 msgstr "Document"
@@ -611,3 +555,11 @@ msgstr "Extra"
 msgctxt "view:papyrus.page:"
 msgid "Extra"
 msgstr "Extra"
+
+msgctxt "view:papyrus.queue:"
+msgid "Directory"
+msgstr "Directori"
+
+msgctxt "view:papyrus.queue:"
+msgid "Electronic Mail"
+msgstr "Correu electrònic"

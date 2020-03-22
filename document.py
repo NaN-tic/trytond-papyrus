@@ -33,6 +33,7 @@ class Queue(ModelSQL, ModelView):
             ('code', '=', 'papyrus.page'),
             ], states={
             'required': Eval('type') == 'page',
+            'invisible': Eval('type') != 'page',
             }, depends=['type'])
     document_sequence = fields.Many2One('ir.sequence', 'Document Sequence',
         domain=[
@@ -51,7 +52,9 @@ class Queue(ModelSQL, ModelView):
             ('document', 'Document'),
             ('page', 'Page'),
             ], 'Type', required=True)
-    image_dpi = fields.Char('DPI', help='DPI: This value indicates the number '
+    image_dpi = fields.Char('DPI', states={
+            'invisible': Eval('type') != 'page',
+            }, depends=['type'], help='DPI: This value indicates the number '
         'of pixels per inch that PDFs of documents will generate when they '
         'come from multiple pages, if the system is unable to get the value '
         'from the image on the page (usually in files in PDF format). '
@@ -62,7 +65,7 @@ class Queue(ModelSQL, ModelView):
     source_type = fields.Selection([
             ('directory', 'Directory'),
             ('electronic_mail', 'Electronic mail'),
-            ], 'Source')
+            ], 'Source', required=True)
     source_inbox = fields.Many2One('electronic.mail.mailbox', 'Source Inbox',
         states=ELECTRONIC_MAIL_STATES, depends=['source_type'])
     storage_inbox = fields.Many2One('electronic.mail.mailbox', 'Storage Inbox',

@@ -212,25 +212,23 @@ class Queue(ModelSQL, ModelView):
 
         pages = []
         documents = []
-        queue_files = {}
-        files = []
-
-        e_mails = ElectronicMail.search([
-            ('mailbox', '=', queue.source_inbox)])
-        for mail in e_mails:
+        mails = ElectronicMail.search([
+                ('mailbox', '=', queue.source_inbox),
+                ])
+        for mail in mails:
             mail_file = mail._get_mail(mail) or False
             email = message_from_bytes(mail_file)
             attachments = mail.get_attachments(email)
 
+            mail.mailbox = queue.discarded_inbox
             if not attachments:
-                mail.mailbox = queue.storage_inbox
                 continue
 
             count = 0
             for attachment in attachments:
                 count += 1
                 file_name = attachment['filename']
-                name, ext = os.path.splitext(file_name)
+                _, ext = os.path.splitext(file_name)
                 fname = '%015d' % (mail.id * 100 + count) + ext
                 processed_fname = os.path.join(
                     queue.storage_directory, fname)
@@ -242,8 +240,6 @@ class Queue(ModelSQL, ModelView):
                         document = cls.get_document(queue, fname)
                         documents.append(document)
                         mail.mailbox = queue.storage_inbox
-                    else:
-                        mail.mailbox = queue.discarded_inbox
                 elif queue.type == 'page':
                     if ext in ('.png', '.jpg', '.jpeg', '.tif'):
                         with open(processed_fname, 'wb') as f:
@@ -251,14 +247,8 @@ class Queue(ModelSQL, ModelView):
                         page = cls.get_page(queue, fname)
                         pages.append(page)
                         mail.mailbox = queue.storage_inbox
-                    else:
-                        mail.mailbox = queue.discarded_inbox
 
-                files.append(fname)
-            queue_files[queue] = files
-
-        ElectronicMail.save(e_mails)
-
+        ElectronicMail.save(mails)
         return documents, pages
 
     @classmethod

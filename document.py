@@ -73,6 +73,7 @@ class Queue(ModelSQL, ModelView):
     discarded_inbox = fields.Many2One('electronic.mail.mailbox',
         'Discarded Inbox', states=ELECTRONIC_MAIL_STATES,
         depends=['source_type'])
+    company = fields.Many2One('company.company', "Company")
 
     @classmethod
     def __setup__(cls):
@@ -123,6 +124,7 @@ class Queue(ModelSQL, ModelView):
         document = Document()
         document.queue = queue
         document.filename = filename
+        document.company = queue.company
         return document
 
     def store_file(self, datamanager, filename):
@@ -344,6 +346,7 @@ class Document(Workflow, ModelSQL, ModelView):
             'readonly': (Eval('state') != 'processed'),
             'invisible': Bool(Eval('filename')),
             }, depends=['state', 'queue', 'filename'])
+    company = fields.Many2One('company.company', "Company")
 
     @classmethod
     def __setup__(cls):
@@ -413,8 +416,9 @@ class Document(Workflow, ModelSQL, ModelView):
     def copy(cls, documents):
         raise UserError(gettext('papyrus.document_copy_forbidden'))
 
+    @fields.depends('filename', 'queue')
     def get_full_path(self):
-        if self.filename:
+        if self.filename and self.queue:
             return os.path.join(self.queue.storage_directory, self.filename)
 
     def get_data(self, name):
@@ -452,7 +456,8 @@ class Document(Workflow, ModelSQL, ModelView):
         elif self.current_page > self.page_count:
             self.current_page = self.page_count
 
-    @fields.depends('current_page', 'queue', 'filename', 'pages')
+    @fields.depends('current_page', 'filename', 'pages',
+        methods=['get_full_path'])
     def on_change_with_image(self, name=None):
         if not self.filename:
             pages = self.pages or []
@@ -460,8 +465,10 @@ class Document(Workflow, ModelSQL, ModelView):
             if page >= 0 and page < len(pages):
                 return self.pages[page].image
             return
-        res = tools.page_image(self.get_full_path(), self.current_page or 1)
-        return res
+        path = self.get_full_path()
+        if path:
+            res = tools.page_image(path, self.current_page or 1)
+            return res
 
     def get_page_count(self, name):
         if not self.filename:
@@ -592,14 +599,20 @@ class Document(Workflow, ModelSQL, ModelView):
         documents = cls.search([('state', '=', 'inspected')])
         cls.process(documents)
 
-    @ModelView.button_change('current_page', 'filename', 'pages')
+    # TODO: When this issue is implemented https://bugs.tryton.org/issue8331
+    # the "hardcoded" fields will no longer be needed.
+    @ModelView.button_change('current_page', 'page_count', 'pages', 'filename',
+        'queue')
     def previous_page(self):
         # TODO: Check why it doesn't work. Seems to be a GTK client issue
         if self.current_page > 1:
             self.current_page -= 1
         self.image = self.on_change_with_image()
 
-    @ModelView.button_change('current_page', 'page_count', 'filename', 'pages')
+    # TODO: When this issue is implemented https://bugs.tryton.org/issue8331
+    # the hardcoded fields will no longer be needed.
+    @ModelView.button_change('current_page', 'page_count', 'filename', 'pages',
+        'queue')
     def next_page(self):
         # TODO: Check why it doesn't work. Seems to be a GTK client issue
         if self.current_page < self.page_count:

@@ -6,6 +6,8 @@
     <field name="name"/>
     <label name="type"/>
     <field name="type"/>
+    <label name="company"/>
+    <field name="company"/>
     <label name="page_sequence"/>
     <field name="page_sequence"/>
     <label name="image_dpi"/>

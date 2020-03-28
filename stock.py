@@ -11,9 +11,6 @@ IN_PREFIX = config_.get('papyrus', 'stock_shipment_in', default='SI-')
 OUT_RETURN_PREFIX = config_.get('papyrus', 'stock_shipment_out_return',
     default='SOR-')
 
-__all__ = ['ShipmentIn', 'ShipmentOutReturn', 'ShipmentInPapyrus',
-    'ShipmentOutReturn', 'Page', 'Document']
-
 
 class ShipmentIn(metaclass=PoolMeta):
     __name__ = 'stock.shipment.in'

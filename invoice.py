@@ -9,8 +9,6 @@ from trytond.config import config as config_
 
 PREFIX = config_.get('papyrus', 'account_invoice', default='AI-')
 
-__all__ = ['Invoice', 'InvoicePapyrus', 'Page', 'Document']
-
 
 class Invoice(metaclass=PoolMeta):
     __name__ = 'account.invoice'

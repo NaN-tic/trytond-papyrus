@@ -14,6 +14,8 @@ Imports::
     >>> from proteus import Model, Wizard
     >>> from trytond.tests.tools import activate_modules
     >>> today = datetime.date.today()
+    >>> from trytond.modules.company.tests.tools import create_company, \
+    ...     get_company
 
 Install account_invoice::
 
@@ -39,6 +41,11 @@ Create directories::
     >>> storage_dir = os.path.join(temp_dir, 'storage')
     >>> os.mkdir(source_dir)
     >>> os.mkdir(storage_dir)
+
+Create company::
+
+    >>> _ = create_company()
+    >>> company = get_company()
 
 Add documents to source::
 
@@ -105,6 +112,7 @@ Create document queue::
 
     >>> Queue = Model.get('papyrus.queue')
     >>> queue = Queue()
+    >>> queue.company = company
     >>> queue.type = 'document'
     >>> queue.document_sequence = document_sequence
     >>> queue.name = 'Document Queue'

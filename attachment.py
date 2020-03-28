@@ -7,8 +7,6 @@ from trytond.filestore import filestore
 from trytond.ir.attachment import store_prefix
 from . import tools
 
-__all__ = ['Attachment']
-
 
 # We need a cache when files are stored in a cloud filestore
 cache_directory = config.get('papyrus', 'cache_directory')
@@ -46,8 +44,11 @@ class Attachment(metaclass=PoolMeta):
                     },
                 })
 
+    @fields.depends('file_id', 'data')
     def get_full_path(self):
         if config.get('database', 'class'):
+            if not self.data:
+                return
             # TODO: Remove cache periodically
             # Cache objects when they're stored in a cloud FileStore
             dirname = os.path.join(cache_directory, 'ir.attachment')
@@ -57,15 +58,19 @@ class Attachment(metaclass=PoolMeta):
             with open(path, 'w') as f:
                 f.write(self.data)
         else:
+            if not self.file_id:
+                return
             path = filestore._filename(self.file_id, store_prefix)
         return path
 
     def get_page_count(self, name):
         return tools.page_count(self.get_full_path())
 
-    @fields.depends('current_page')
+    @fields.depends('current_page', methods=['get_full_path'])
     def on_change_with_image(self, name=None):
-        return tools.page_image(self.get_full_path(), self.current_page or 1)
+        path = self.get_full_path()
+        if path:
+            return tools.page_image(path, self.current_page or 1)
 
     @ModelView.button_change('current_page')
     def previous_page(self):

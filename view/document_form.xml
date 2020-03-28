@@ -9,19 +9,21 @@
     <label name="queue"/>
     <field name="queue"/>
     <notebook colspan="6">
-        <page name="image">
-            <hpaned colspan="4" id="image_paned">
-                <child id="image">
-                    <field name="image" widget="image" height="700" width="550" colspan="2"/>
-                    <group id="current_page" xfill="0" xexpand="0" col="3">
-                        <button name="previous_page" colspan="3"/>
-                        <field name="current_page" xfill="0" xexpand="0"/>
-                        <label string="/" id="/"/>
-                        <field name="page_count" xfill="0" xexpand="0"/>
-                        <button name="next_page" colspan="3"/>
-                    </group>
-                </child>
-            </hpaned>
+        <page string="Image" id="image">
+            <group colspan="2" id="image">
+                <group id="current_page" xfill="0" xexpand="0" col="6" colspan="4">
+                    <button name="previous_page" />
+                    <field name="current_page" xfill="1" xexpand="0"/>
+                    <label string="/" id="/"/>
+                    <field name="page_count" xfill="0" xexpand="0"/>
+                    <button name="next_page"/>
+                </group>
+                <field name="image" widget="image" height="700" width="550" colspan="4"/>
+            </group>
+            <group id="extra" colspan="2">
+              <label name="company"/>
+              <field name="company"/>
+            </group>
         </page>
         <page name="text">
             <field name="text" colspan="4"/>

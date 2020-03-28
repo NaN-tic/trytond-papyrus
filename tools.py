@@ -95,7 +95,9 @@ def tesseract(filename):
 def get_type(filename):
     content = subprocess.check_output(['identify', '-format', '"%m"', filename])
     content = content.decode('utf-8').replace('"', '')
-    return content
+    # Return only the first 3 characters as identify may return type for each
+    # page of the document
+    return content[:3]
 
 def datamatrix(filename, Box):
     """

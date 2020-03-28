@@ -3,7 +3,6 @@ import sys
 import shutil
 import logging
 
-__all__ = ['FileDataManager']
 
 logger = logging.getLogger(__name__)
 

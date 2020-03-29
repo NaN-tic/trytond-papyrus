@@ -6,6 +6,7 @@
     <field name="reference"/>
     <field name="queue"/>
     <field name="state"/>
+    <field name="company"/>
     <field name="filename" tree_invisible="1"/>
     <button name="pending" tree_invisible="1"/>
     <button name="inspect" tree_invisible="1"/>

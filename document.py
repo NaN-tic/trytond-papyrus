@@ -106,25 +106,25 @@ class Queue(ModelSQL, ModelView):
     def default_source_type():
         return 'directory'
 
-    def get_page(queue, filename):
+    def get_page(self, filename):
         pool = Pool()
         Page = pool.get('papyrus.page')
         Sequence = pool.get('ir.sequence')
 
         page = Page()
-        page.queue = queue
+        page.queue = self
         page.filename = filename
-        page.sequence = Sequence.get_id(queue.page_sequence.id)
+        page.sequence = Sequence.get_id(self.page_sequence.id)
         return page
 
-    def get_document(queue, filename):
+    def get_document(self, filename):
         pool = Pool()
         Document = pool.get('papyrus.document')
 
         document = Document()
-        document.queue = queue
+        document.queue = self
         document.filename = filename
-        document.company = queue.company
+        document.company = self.company
         return document
 
     def store_file(self, datamanager, filename):
@@ -197,10 +197,10 @@ class Queue(ModelSQL, ModelView):
                     check_file = False
             queue.store_file(datamanager, fname)
             if queue.type == 'page':
-                page = cls.get_page(queue, fname)
+                page = queue.get_page(fname)
                 pages.append(page)
             elif queue.type == 'document':
-                document = cls.get_document(queue, fname)
+                document = queue.get_document(fname)
                 documents.append(document)
             files.append(fname)
         queue_files[queue] = files
@@ -239,14 +239,14 @@ class Queue(ModelSQL, ModelView):
                     if ext == '.pdf':
                         with open(processed_fname, 'wb') as f:
                             f.write(attachment['data'])
-                        document = cls.get_document(queue, fname)
+                        document = queue.get_document(fname)
                         documents.append(document)
                         mail.mailbox = queue.storage_inbox
                 elif queue.type == 'page':
                     if ext in ('.png', '.jpg', '.jpeg', '.tif'):
                         with open(processed_fname, 'wb') as f:
                             f.write(attachment['data'])
-                        page = cls.get_page(queue, fname)
+                        page = queue.get_page(fname)
                         pages.append(page)
                         mail.mailbox = queue.storage_inbox
 

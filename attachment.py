@@ -58,7 +58,7 @@ class Attachment(metaclass=PoolMeta):
             with open(path, 'w') as f:
                 f.write(self.data)
         else:
-            if not self.file_id:
+            if not self.file_id or not store_prefix:
                 return
             path = filestore._filename(self.file_id, store_prefix)
         return path

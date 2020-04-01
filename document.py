@@ -229,7 +229,7 @@ class Queue(ModelSQL, ModelView):
             count = 0
             for attachment in attachments:
                 count += 1
-                file_name = attachment['filename']
+                file_name = attachment['filename'].lower()
                 _, ext = os.path.splitext(file_name)
                 fname = '%015d' % (mail.id * 100 + count) + ext
                 processed_fname = os.path.join(

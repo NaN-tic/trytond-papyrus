@@ -486,6 +486,7 @@ class Document(Workflow, ModelSQL, ModelView):
         attachment.resource = record
         attachment.type = 'data'
         attachment.data = self.data
+        attachment.content = self.text
         return attachment
 
     def scan_text(self):

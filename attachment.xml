@@ -7,7 +7,8 @@
         </record>
         <record model="ir.ui.view" id="attachment_view_form">
             <field name="model">ir.attachment</field>
-            <field name="type">form</field>
+            <field name="type" eval="None"/>
+            <field name="inherit" ref="ir.attachment_view_form"/>
             <field name="name">attachment_form</field>
         </record>
         <record model="ir.ui.view" id="attachment_view_tree">

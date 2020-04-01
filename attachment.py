@@ -2,6 +2,7 @@ import os
 from trytond.model import ModelView, fields
 from trytond.pool import PoolMeta
 from trytond.pyson import Eval, If, Bool
+from trytond.transaction import Transaction
 from trytond.config import config
 from trytond.filestore import filestore
 from trytond.ir.attachment import store_prefix
@@ -26,6 +27,11 @@ class Attachment(metaclass=PoolMeta):
                     ], []),
             ], depends=['page_count'])
     page_count = fields.Function(fields.Integer('Page Count'), 'get_page_count')
+    content = fields.Text('Content', readonly=True)
+
+    @staticmethod
+    def default_current_page():
+        return 1
 
     @classmethod
     def __setup__(cls):
@@ -58,9 +64,12 @@ class Attachment(metaclass=PoolMeta):
             with open(path, 'w') as f:
                 f.write(self.data)
         else:
-            if not self.file_id or not store_prefix:
+            if not self.file_id:
                 return
-            path = filestore._filename(self.file_id, store_prefix)
+            prefix = store_prefix
+            if prefix is None:
+                prefix = Transaction().database.name
+            path = filestore._filename(self.file_id, prefix)
         return path
 
     def get_page_count(self, name):

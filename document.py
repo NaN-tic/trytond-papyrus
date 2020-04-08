@@ -4,8 +4,10 @@
 import glob
 import os
 import os.path
+import re
 import shutil
 import subprocess
+import requests
 from trytond.model import (ModelSQL, ModelView, Workflow, fields,
     sequence_ordered)
 from trytond.pool import Pool
@@ -22,7 +24,20 @@ __all__ = ['Queue', 'Document', 'Page', 'DocumentBox', 'PageBox']
 ELECTRONIC_MAIL_STATES = {
     'invisible': Eval('source_type') != 'electronic_mail',
     'required': Eval('source_type') == 'electronic_mail',
-}
+    }
+
+def get_filename_from_response(response):
+    "Get filename from requests' Response object"
+    cd = response.headers.get('content-disposition')
+    if not cd:
+        return None
+    fname = re.findall('filename=(.+)', cd)
+    if len(fname) == 0:
+        return None
+    fname = fname[0]
+    fname = fname.replace('"', '')
+    return fname
+
 
 class Queue(ModelSQL, ModelView):
     'Document Queue'
@@ -73,6 +88,26 @@ class Queue(ModelSQL, ModelView):
     discarded_inbox = fields.Many2One('electronic.mail.mailbox',
         'Discarded Inbox', states=ELECTRONIC_MAIL_STATES,
         depends=['source_type'])
+    electronic_mail_urls_default_policy = fields.Selection([
+            (None, ''),
+            ('download', 'Download'),
+            ('discard', 'Discard'),
+            ], 'Default URL Policy', states=ELECTRONIC_MAIL_STATES,
+        depends=['source_type'],
+        help='The default policy to apply if URL does not match any of the '
+        'whitlisted nor blacklisted prefixes.')
+    electronic_mail_urls_whitelist = fields.Text('URL Whitelist', states={
+            'invisible': Eval('source_type') != 'electronic_mail',
+            }, depends=['source_type'],
+        help='List of URL prefixes (one per line) that should be downloaded. '
+        'For example, use https:// to download all URLs starting with '
+        '"https://".')
+    electronic_mail_urls_blacklist = fields.Text('URL Blacklist', states={
+            'invisible': Eval('source_type') != 'electronic_mail',
+            }, depends=['source_type'],
+        help='List of URL prefixes (one per line) that should not be '
+        'downloaded. For example, use http:// to NO download URLs starting '
+        'with "http://"')
     company = fields.Many2One('company.company', "Company")
 
     @classmethod
@@ -203,6 +238,53 @@ class Queue(ModelSQL, ModelView):
             files.append(fname)
         return documents, pages
 
+    def find_urls(self, text):
+        'Very naive algorithm for finding all URLs in a string'
+        whitelist = (self.electronic_mail_urls_whitelist or '').split('\n')
+        blacklist = (self.electronic_mail_urls_blacklist or '').split('\n')
+        default_policy = self.electronic_mail_urls_default_policy
+
+        urls = []
+        # By replacing ' and " with whitespace we try to ensure the end of the URL
+        # is very easy to find because the URL might be in an href="xx" in a HTML
+        # string or in a plain text file (where it will always
+        text = text.replace('"', ' ').replace("'", ' ')
+        start = 0
+        while start >= 0:
+            http_start = text.find('http://', start)
+            https_start = text.find('https://', start)
+            if http_start >= 0 and https_start >= 0:
+                start = min(http_start, https_start)
+            else:
+                start = max(http_start, https_start)
+            if start < 0:
+                break
+            space_end = text.find(' ', start)
+            enter_end = text.find('\n', start)
+            end = min(space_end, enter_end)
+            url = text[start:end]
+            url = url.replace('&amp;', '&')
+            start = end
+
+            # Apply whitelist, blacklist and default policy
+            whitelist = (self.electronic_mail_urls_whitelist or '').split('\n')
+            for item in whitelist:
+                if not item.strip():
+                    continue
+                if url.startswith(item):
+                    urls.append(url)
+                    break
+            else:
+                for item in blacklist:
+                    if not item.strip():
+                        continue
+                    if url.startswith(item):
+                        break
+                else:
+                    if default_policy == 'download':
+                        urls.append(url)
+        return urls
+
     def process_electronic_mail(self):
         pool = Pool()
         ElectronicMail = pool.get('electronic.mail')
@@ -218,6 +300,27 @@ class Queue(ModelSQL, ModelView):
             attachments = mail.get_attachments(email)
 
             mail.mailbox = self.discarded_inbox
+
+            # Extract all URLs from the body of the e-mail, download them,
+            # and if they return a file, add them as attachments to be
+            # processed
+            for url in self.find_urls(mail.body):
+                try:
+                    response = requests.get(url, timeout=15, verify=False,
+                        allow_redirects=True)
+                except requests.exceptions.ConnectionError:
+                    continue
+                mime = response.headers.get('content-type')
+                if mime != 'application/octet-stream':
+                    continue
+
+                filename = get_filename_from_response(response)
+                if not filename:
+                    continue
+                attachments.append({
+                        'filename': filename,
+                        'data': response.content,
+                        })
 
             if not attachments:
                 continue

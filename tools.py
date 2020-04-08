@@ -25,23 +25,28 @@ def page_count(path):
     out = out[0]
     return int(out.split(':')[-1].strip())
 
-def page_image(path, page):
+def page_image(path, page, unlink=True):
     if not os.path.exists(path):
         return
     _, jpg_path = tempfile.mkstemp(suffix='.jpg')
+    try:
+        filename = path
+        filename += '[%d]' % ((page or 1) - 1)
 
-    filename = path
-    filename += '[%d]' % ((page or 1) - 1)
-
-    # Adding '[0]' to source filename in convert, extracts only the first
-    # page of the PDF file
-    subprocess.call(['convert', '-quality', '90', '-density', '200x200',
-            '-background', 'white', '-alpha', 'remove', filename,
-            jpg_path])
-    with open(jpg_path, 'rb') as f:
-        res = f.read()
-    os.unlink(jpg_path)
-    return res
+        # Adding '[0]' to source filename in convert, extracts only the first
+        # page of the PDF file
+        subprocess.call(['convert', '-quality', '90', '-density', '200x200',
+                '-background', 'white', '-alpha', 'remove', filename,
+                jpg_path])
+        if unlink:
+            with open(jpg_path, 'rb') as f:
+                res = f.read()
+            return res
+        else:
+            return jpg_path
+    finally:
+        if unlink:
+            os.unlink(jpg_path)
 
 def pdftotext(filename):
     if not filename:
@@ -81,16 +86,44 @@ def pdftoboxes(filename, Box):
             boxes.append(box)
     return boxes
 
-def tesseract(filename):
+def tesseract(filename, Box):
     if not filename:
         return
     if get_type(filename) == 'PDF':
-        # TODO: Tesseract on PDF files not supported yet
-        return
-    content, err = subprocess.Popen(['tesseract', '-l', 'cat', filename,
-            'stdout'], stdout=subprocess.PIPE).communicate()
-    content = content.decode('utf8')
-    return content
+        count = page_count(filename)
+        if not count:
+            return ''
+
+        content = []
+        boxes = []
+        for page in range(count):
+            jpg_path = page_image(filename, page, unlink=False)
+            try:
+                jpg_content, jpg_boxes = tesseract(jpg_path, Box)
+            finally:
+                os.unlink(jpg_path)
+                pass
+            if jpg_content:
+                content.append(jpg_content)
+            if jpg_boxes:
+                boxes += jpg_boxes
+        return '\n'.join(content), boxes
+
+    _, pdf_path = tempfile.mkstemp(suffix='.pdf')
+    # Remove extension from filename because tesseract adds it again
+    tess_pdf_path, _ = os.path.splitext(pdf_path)
+    try:
+        content, err = subprocess.Popen(['tesseract', '-l', 'cat', filename,
+                'stdout'], stdout=subprocess.PIPE).communicate()
+        content = content.decode('utf8')
+
+        _, err = subprocess.Popen(['tesseract', '-l', 'cat', filename,
+                tess_pdf_path, 'pdf'], stdout=subprocess.PIPE).communicate()
+        boxes = pdftoboxes(pdf_path, Box)
+        return content, boxes
+    finally:
+        os.unlink(pdf_path)
+        pass
 
 def get_type(filename):
     content = subprocess.check_output(['identify', '-format', '"%m"', filename])

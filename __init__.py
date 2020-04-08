@@ -7,6 +7,7 @@ from . import invoice
 from . import attachment
 from . import stock
 from . import ir
+from . import electronic_mail
 
 module = 'papyrus'
 
@@ -19,6 +20,7 @@ def register():
         document.DocumentBox,
         document.PageBox,
         ir.Cron,
+        electronic_mail.ElectronicMail,
         module=module, type_='model')
     Pool.register(
         invoice.Invoice,

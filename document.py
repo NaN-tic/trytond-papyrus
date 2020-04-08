@@ -339,6 +339,7 @@ class Queue(ModelSQL, ModelView):
                         with open(processed_fname, 'wb') as f:
                             f.write(attachment['data'])
                         document = self.get_document(fname)
+                        document.origin = mail
                         documents.append(document)
                         mail.mailbox = self.storage_inbox
                 elif self.type == 'page':
@@ -346,6 +347,7 @@ class Queue(ModelSQL, ModelView):
                         with open(processed_fname, 'wb') as f:
                             f.write(attachment['data'])
                         page = self.get_page(fname)
+                        page.origin = mail
                         pages.append(page)
                         mail.mailbox = self.storage_inbox
 
@@ -448,6 +450,7 @@ class Document(Workflow, ModelSQL, ModelView):
             'invisible': Bool(Eval('filename')),
             }, depends=['state', 'queue', 'filename'])
     company = fields.Many2One('company.company', "Company")
+    origin = fields.Reference('Origin', selection='get_origin', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -517,6 +520,20 @@ class Document(Workflow, ModelSQL, ModelView):
     @classmethod
     def copy(cls, documents):
         raise UserError(gettext('papyrus.document_copy_forbidden'))
+
+    @staticmethod
+    def _get_origin():
+        'Return list of Model names for origin Reference'
+        return ['electronic.mail']
+
+    @classmethod
+    def get_origin(cls):
+        IrModel = Pool().get('ir.model')
+        models = cls._get_origin()
+        models = IrModel.search([
+                ('model', 'in', models),
+                ])
+        return [(None, '')] + [(m.model, m.name) for m in models]
 
     @fields.depends('filename', 'queue')
     def get_full_path(self):
@@ -784,6 +801,7 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
             ('inspected', 'Inspected'),
             ('processed', 'Processed'),
             ], 'State', required=True, readonly=True)
+    origin = fields.Reference('Origin', selection='get_origin', readonly=True)
 
     @classmethod
     def __setup__(cls):
@@ -818,6 +836,20 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
     @classmethod
     def copy(cls, pages):
         raise UserError(gettext('papyrus.page_copy_forbidden'))
+
+    @staticmethod
+    def _get_origin():
+        'Return list of Model names for origin Reference'
+        return ['electronic.mail']
+
+    @classmethod
+    def get_origin(cls):
+        IrModel = Pool().get('ir.model')
+        models = cls._get_origin()
+        models = IrModel.search([
+                ('model', 'in', models),
+                ])
+        return [(None, '')] + [(m.model, m.name) for m in models]
 
     @fields.depends('filename', 'queue')
     def get_full_path(self):

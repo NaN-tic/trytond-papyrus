@@ -1,0 +1,7 @@
+<data>
+    <xpath expr="/form/group[@id='content']/notebook" position="inside">
+        <page name="documents">
+            <field name="documents" colspan="4"/>
+        </page>
+    </xpath>
+</data>

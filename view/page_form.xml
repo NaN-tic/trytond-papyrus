@@ -23,6 +23,8 @@
             <field name="data"/>
             <label name="sequence"/>
             <field name="sequence"/>
+            <label name="origin"/>
+            <field name="origin"/>
         </page>
     </notebook>
     <group col="-1" colspan="6" id="buttons">

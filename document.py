@@ -629,7 +629,6 @@ class Document(Workflow, ModelSQL, ModelView):
             elif self.text:
                 self.text += '\n\n'
             self.text += text
-        print('tesseract: ', boxes)
         if self.boxes:
             self.boxes += tuple(boxes)
         else:

@@ -354,7 +354,8 @@ class Document(Workflow, ModelSQL, ModelView):
                 ('inspected', 'pending'),
                 ('inspected', 'processed'),
                 ))
-        cls._order.insert(0, ('number', 'DESC'))
+        cls._order.insert(0, ('queue', 'ASC'))
+        cls._order.insert(1, ('number', 'ASC'))
         cls._buttons.update({
                 'pending': {
                     'invisible': Eval('state') != 'inspected',

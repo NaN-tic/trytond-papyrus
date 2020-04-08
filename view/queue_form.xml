@@ -29,6 +29,12 @@
         <field name="storage_inbox"/>
         <label name="discarded_inbox"/>
         <field name="discarded_inbox"/>
+        <label name="electronic_mail_urls_default_policy"/>
+        <field name="electronic_mail_urls_default_policy"/>
+        <separator name="electronic_mail_urls_whitelist" colspan="2"/>
+        <separator name="electronic_mail_urls_blacklist" colspan="2"/>
+        <field name="electronic_mail_urls_whitelist" colspan="2"/>
+        <field name="electronic_mail_urls_blacklist" colspan="2"/>
     </group>
     <group string="Directory" id="directory" colspan="4">
         <label name="source_directory"/>

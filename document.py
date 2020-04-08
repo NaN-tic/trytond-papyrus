@@ -146,7 +146,7 @@ class Queue(ModelSQL, ModelView):
         documents = []
         for queue in queues:
             method = getattr(queue, 'process_%s' % queue.source_type)
-            d, p = method(queue)
+            d, p = method()
             documents += d
             pages += p
 
@@ -155,14 +155,13 @@ class Queue(ModelSQL, ModelView):
         if documents:
             Document.save(documents)
 
-    @classmethod
-    def process_directory(cls, queue):
+    def process_directory(self):
         transaction = Transaction()
         connection = transaction.connection
         database = transaction.database
         # Ensure no two processes execute this method concurrently as we would
         # be moving files twice and there could be race conditions
-        database.lock(connection, cls._table)
+        database.lock(connection, self._table)
 
         datamanager = FileDataManager()
         datamanager = transaction.join(datamanager)
@@ -170,59 +169,56 @@ class Queue(ModelSQL, ModelView):
         files = []
         pages = []
         documents = []
-        queue_files = {}
         for file_name in sorted(glob.glob(os.path.join(
-                        queue.source_directory, '*'))):
+                        self.source_directory, '*'))):
             # TODO: If file_name already exists as a record and file does
             # not exist in destination it means that we can move the file
             # directly (or just after the transaction finished and the
             # FileDataManager is being executed)
             fname = os.path.basename(file_name)
             # check that file_name doesn't exist in processed directory
-            processed_fname = os.path.join(queue.storage_directory, fname)
+            processed_fname = os.path.join(self.storage_directory, fname)
             count = 0
             check_file = True
             while check_file:
                 if os.path.isfile(processed_fname):
                     count += 1
                     new_file = '%s-%s' % (count, fname)
-                    processed_fname = os.path.join(queue.storage_directory,
+                    processed_fname = os.path.join(self.storage_directory,
                         new_file)
                 elif count > 0:
-                    shutil.move(os.path.join(queue.source_directory, fname),
-                        os.path.join(queue.source_directory, new_file))
+                    shutil.move(os.path.join(self.source_directory, fname),
+                        os.path.join(self.source_directory, new_file))
                     fname = new_file
                     check_file = False
                 else:
                     check_file = False
-            queue.store_file(datamanager, fname)
-            if queue.type == 'page':
-                page = queue.get_page(fname)
+            self.store_file(datamanager, fname)
+            if self.type == 'page':
+                page = self.get_page(fname)
                 pages.append(page)
-            elif queue.type == 'document':
-                document = queue.get_document(fname)
+            elif self.type == 'document':
+                document = self.get_document(fname)
                 documents.append(document)
             files.append(fname)
-        queue_files[queue] = files
-
         return documents, pages
 
-    @classmethod
-    def process_electronic_mail(cls, queue):
+    def process_electronic_mail(self):
         pool = Pool()
         ElectronicMail = pool.get('electronic.mail')
 
         pages = []
         documents = []
         mails = ElectronicMail.search([
-                ('mailbox', '=', queue.source_inbox),
+                ('mailbox', '=', self.source_inbox),
                 ])
         for mail in mails:
             mail_file = mail._get_mail(mail) or False
             email = message_from_bytes(mail_file)
             attachments = mail.get_attachments(email)
 
-            mail.mailbox = queue.discarded_inbox
+            mail.mailbox = self.discarded_inbox
+
             if not attachments:
                 continue
 
@@ -233,22 +229,22 @@ class Queue(ModelSQL, ModelView):
                 _, ext = os.path.splitext(file_name)
                 fname = '%015d' % (mail.id * 100 + count) + ext
                 processed_fname = os.path.join(
-                    queue.storage_directory, fname)
+                    self.storage_directory, fname)
 
-                if queue.type == 'document':
+                if self.type == 'document':
                     if ext == '.pdf':
                         with open(processed_fname, 'wb') as f:
                             f.write(attachment['data'])
-                        document = queue.get_document(fname)
+                        document = self.get_document(fname)
                         documents.append(document)
-                        mail.mailbox = queue.storage_inbox
-                elif queue.type == 'page':
+                        mail.mailbox = self.storage_inbox
+                elif self.type == 'page':
                     if ext in ('.png', '.jpg', '.jpeg', '.tif'):
                         with open(processed_fname, 'wb') as f:
                             f.write(attachment['data'])
-                        page = queue.get_page(fname)
+                        page = self.get_page(fname)
                         pages.append(page)
-                        mail.mailbox = queue.storage_inbox
+                        mail.mailbox = self.storage_inbox
 
         ElectronicMail.save(mails)
         return documents, pages

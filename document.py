@@ -322,11 +322,13 @@ class Document(Workflow, ModelSQL, ModelView):
             ('processed', 'Processed'),
             ], 'State', required=True, readonly=True)
     reference = fields.Char('Reference')
-    data = fields.Function(fields.Binary('Data'), 'get_data')
+    data = fields.Function(fields.Binary('Data', filename='filename'),
+        'get_data')
     text = fields.Text('Text', readonly=True)
     boxes = fields.One2Many('papyrus.document.box', 'document', 'Boxes')
     filename = fields.Char('File Name', readonly=True)
-    image = fields.Function(fields.Binary('Image'), 'on_change_with_image')
+    image = fields.Function(fields.Binary('Image'),
+        'on_change_with_image')
     current_page = fields.Integer('Current Page', domain=[
             If(Bool(Eval('page_count')), [
                     ('current_page', '>=', 1),

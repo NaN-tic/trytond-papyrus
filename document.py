@@ -620,14 +620,20 @@ class Document(Workflow, ModelSQL, ModelView):
             self.boxes = boxes
 
     def scan_tesseract(self):
+        Box = Pool().get('papyrus.document.box')
         filename = self.get_full_path()
-        text = tools.tesseract(filename)
+        text, boxes = tools.tesseract(filename, Box)
         if text:
             if self.text is None:
                 self.text = ''
             elif self.text:
                 self.text += '\n\n'
             self.text += text
+        print('tesseract: ', boxes)
+        if self.boxes:
+            self.boxes += tuple(boxes)
+        else:
+            self.boxes = boxes
 
     def scan_engines(self):
         return ['text', 'textboxes', 'datamatrix', 'tesseract']

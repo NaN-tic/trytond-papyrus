@@ -2,6 +2,14 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:electronic.mail,documents:"
+msgid "Documents"
+msgstr "Documentos"
+
+msgctxt "field:ir.attachment,content:"
+msgid "Content"
+msgstr "Contenido"
+
 msgctxt "field:ir.attachment,current_page:"
 msgid "Current Page"
 msgstr "Página actual"
@@ -18,6 +26,18 @@ msgctxt "field:papyrus.document,boxes:"
 msgid "Boxes"
 msgstr "Cajas"
 
+msgctxt "field:papyrus.document,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:papyrus.document,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:papyrus.document,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
 msgctxt "field:papyrus.document,current_page:"
 msgid "Current Page"
 msgstr "Página actual"
@@ -30,6 +50,10 @@ msgctxt "field:papyrus.document,filename:"
 msgid "File Name"
 msgstr "Nombre de fichero"
 
+msgctxt "field:papyrus.document,id:"
+msgid "ID"
+msgstr "ID"
+
 msgctxt "field:papyrus.document,image:"
 msgid "Image"
 msgstr "Imagen"
@@ -37,6 +61,10 @@ msgstr "Imagen"
 msgctxt "field:papyrus.document,number:"
 msgid "Number"
 msgstr "Número"
+
+msgctxt "field:papyrus.document,origin:"
+msgid "Origin"
+msgstr "Origen"
 
 msgctxt "field:papyrus.document,page_count:"
 msgid "Page Count"
@@ -50,6 +78,10 @@ msgctxt "field:papyrus.document,queue:"
 msgid "Queue"
 msgstr "Cola"
 
+msgctxt "field:papyrus.document,rec_name:"
+msgid "Record Name"
+msgstr "Nombre del registro"
+
 msgctxt "field:papyrus.document,reference:"
 msgid "Reference"
 msgstr "Referencia"
@@ -62,6 +94,22 @@ msgctxt "field:papyrus.document,text:"
 msgid "Text"
 msgstr "Texto"
 
+msgctxt "field:papyrus.document,write_date:"
+msgid "Write Date"
+msgstr "Fecha de modificación"
+
+msgctxt "field:papyrus.document,write_uid:"
+msgid "Write User"
+msgstr "Usuario de modificación"
+
+msgctxt "field:papyrus.document.box,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:papyrus.document.box,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
 msgctxt "field:papyrus.document.box,document:"
 msgid "Document"
 msgstr "Documento"
@@ -69,6 +117,14 @@ msgstr "Documento"
 msgctxt "field:papyrus.document.box,height:"
 msgid "Height"
 msgstr "Altura"
+
+msgctxt "field:papyrus.document.box,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:papyrus.document.box,rec_name:"
+msgid "Record Name"
+msgstr "Nombre del registro"
 
 msgctxt "field:papyrus.document.box,text:"
 msgid "Text"
@@ -81,6 +137,14 @@ msgstr "Tipo"
 msgctxt "field:papyrus.document.box,width:"
 msgid "Width"
 msgstr "Ancho"
+
+msgctxt "field:papyrus.document.box,write_date:"
+msgid "Write Date"
+msgstr "Fecha de modificación"
+
+msgctxt "field:papyrus.document.box,write_uid:"
+msgid "Write User"
+msgstr "Usuario de modificación"
 
 msgctxt "field:papyrus.document.box,x0:"
 msgid "X0"
@@ -102,6 +166,14 @@ msgctxt "field:papyrus.page,boxes:"
 msgid "Boxes"
 msgstr "Cajas"
 
+msgctxt "field:papyrus.page,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:papyrus.page,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
 msgctxt "field:papyrus.page,data:"
 msgid "Data"
 msgstr "Datos"
@@ -114,13 +186,29 @@ msgctxt "field:papyrus.page,filename:"
 msgid "File Name"
 msgstr "Nombre de fichero"
 
+msgctxt "field:papyrus.page,id:"
+msgid "ID"
+msgstr "ID"
+
 msgctxt "field:papyrus.page,image:"
 msgid "Image"
 msgstr "Imagen"
 
+msgctxt "field:papyrus.page,origin:"
+msgid "Origin"
+msgstr "Origen"
+
 msgctxt "field:papyrus.page,queue:"
 msgid "Queue"
 msgstr "Cola"
+
+msgctxt "field:papyrus.page,rec_name:"
+msgid "Record Name"
+msgstr "Nombre del registro"
+
+msgctxt "field:papyrus.page,sequence:"
+msgid "Sequence"
+msgstr "Secuencia"
 
 msgctxt "field:papyrus.page,state:"
 msgid "State"
@@ -130,6 +218,22 @@ msgctxt "field:papyrus.page,text:"
 msgid "Text"
 msgstr "Texto"
 
+msgctxt "field:papyrus.page,write_date:"
+msgid "Write Date"
+msgstr "Fecha de modificación"
+
+msgctxt "field:papyrus.page,write_uid:"
+msgid "Write User"
+msgstr "Usuario de modificación"
+
+msgctxt "field:papyrus.page.box,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:papyrus.page.box,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
 msgctxt "field:papyrus.page.box,extra:"
 msgid "Extra"
 msgstr "Extra"
@@ -138,9 +242,17 @@ msgctxt "field:papyrus.page.box,height:"
 msgid "Height"
 msgstr "Altura"
 
+msgctxt "field:papyrus.page.box,id:"
+msgid "ID"
+msgstr "ID"
+
 msgctxt "field:papyrus.page.box,page:"
 msgid "Page"
 msgstr "Página"
+
+msgctxt "field:papyrus.page.box,rec_name:"
+msgid "Record Name"
+msgstr "Nombre del registro"
 
 msgctxt "field:papyrus.page.box,text:"
 msgid "Text"
@@ -153,6 +265,14 @@ msgstr "Tipo"
 msgctxt "field:papyrus.page.box,width:"
 msgid "Width"
 msgstr "Ancho"
+
+msgctxt "field:papyrus.page.box,write_date:"
+msgid "Write Date"
+msgstr "Fecha de modificación"
+
+msgctxt "field:papyrus.page.box,write_uid:"
+msgid "Write User"
+msgstr "Usuario de modificación"
 
 msgctxt "field:papyrus.page.box,x0:"
 msgid "X0"
@@ -170,6 +290,18 @@ msgctxt "field:papyrus.page.box,y1:"
 msgid "Y1"
 msgstr "Y1"
 
+msgctxt "field:papyrus.queue,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:papyrus.queue,create_date:"
+msgid "Create Date"
+msgstr "Fecha de creación"
+
+msgctxt "field:papyrus.queue,create_uid:"
+msgid "Create User"
+msgstr "Usuario de creación"
+
 msgctxt "field:papyrus.queue,discarded_inbox:"
 msgid "Discarded Inbox"
 msgstr "Buzón de descartados"
@@ -177,6 +309,22 @@ msgstr "Buzón de descartados"
 msgctxt "field:papyrus.queue,document_sequence:"
 msgid "Document Sequence"
 msgstr "Secuencia de documentos"
+
+msgctxt "field:papyrus.queue,electronic_mail_urls_blacklist:"
+msgid "URL Blacklist"
+msgstr "Lista negra de URLs"
+
+msgctxt "field:papyrus.queue,electronic_mail_urls_default_policy:"
+msgid "Default URL Policy"
+msgstr "Política de URLs por defecto"
+
+msgctxt "field:papyrus.queue,electronic_mail_urls_whitelist:"
+msgid "URL Whitelist"
+msgstr "Lista blanca de URLs"
+
+msgctxt "field:papyrus.queue,id:"
+msgid "ID"
+msgstr "ID"
 
 msgctxt "field:papyrus.queue,image_dpi:"
 msgid "DPI"
@@ -189,6 +337,10 @@ msgstr "Nombre"
 msgctxt "field:papyrus.queue,page_sequence:"
 msgid "Page Sequence"
 msgstr "Secuencia de páginas"
+
+msgctxt "field:papyrus.queue,rec_name:"
+msgid "Record Name"
+msgstr "Nombre del registro"
 
 msgctxt "field:papyrus.queue,scheduler:"
 msgid "Scheduler"
@@ -217,6 +369,40 @@ msgstr "Buzón de almacenamiento"
 msgctxt "field:papyrus.queue,type:"
 msgid "Type"
 msgstr "Tipo"
+
+msgctxt "field:papyrus.queue,write_date:"
+msgid "Write Date"
+msgstr "Fecha de modificación"
+
+msgctxt "field:papyrus.queue,write_uid:"
+msgid "Write User"
+msgstr "Usuario de modificación"
+
+msgctxt "help:papyrus.queue,electronic_mail_urls_blacklist:"
+msgid ""
+"List of URL prefixes (one per line) that should not be downloaded. For "
+"example, use http:// to NO download URLs starting with \"http://\""
+msgstr ""
+"Lista de prefijos de URLs (uno por línea) que no se deberían descargar. Por "
+"ejemplo, utilice http:// para NO descargar URLs que empiecen por "
+"\"http://\"."
+
+msgctxt "help:papyrus.queue,electronic_mail_urls_default_policy:"
+msgid ""
+"The default policy to apply if URL does not match any of the whitlisted nor "
+"blacklisted prefixes."
+msgstr ""
+"La política por defecto a aplicar si una URL no encaja con ningún prefijo de"
+" la lista blanca ni de la lista negra."
+
+msgctxt "help:papyrus.queue,electronic_mail_urls_whitelist:"
+msgid ""
+"List of URL prefixes (one per line) that should be downloaded. For example, "
+"use https:// to download all URLs starting with \"https://\"."
+msgstr ""
+"Lista de prefijos de URLs (uno por línea) que se deben descargar. Por "
+"ejemplo, utilice https:// para descargar todas las URLs que empiecen por "
+"\"https://\"."
 
 msgctxt "help:papyrus.queue,image_dpi:"
 msgid ""
@@ -268,15 +454,15 @@ msgstr "Cola de documentos"
 
 msgctxt "model:ir.action,name:report_account_invoice_papyrus"
 msgid "Papyrus Barcode"
-msgstr ""
+msgstr "Código de barras Papyrus"
 
 msgctxt "model:ir.action,name:report_stock_shipment_in_papyrus"
 msgid "Papyrus Barcode"
-msgstr ""
+msgstr "Código de barras Papyrus"
 
 msgctxt "model:ir.action,name:report_stock_shipment_out_return_papyrus"
 msgid "Papyrus Barcode"
-msgstr ""
+msgstr "Código de barras Papyrus"
 
 msgctxt "model:ir.action.act_window.domain,name:act_document_form_domain_all"
 msgid "All"
@@ -366,7 +552,7 @@ msgstr "Procesar"
 
 msgctxt "model:ir.model.button,string:invoice_papyrus_barcode_button"
 msgid "Papyrus Barcode"
-msgstr ""
+msgstr "Código de barras Papyrus"
 
 msgctxt "model:ir.model.button,string:page_inspect_button"
 msgid "Inspect"
@@ -390,7 +576,7 @@ msgstr "Procesar"
 
 msgctxt "model:ir.model.button,string:shipment_in_papyrus_barcode_button"
 msgid "Papyrus Barcode"
-msgstr ""
+msgstr "Código de barras Papyrus"
 
 msgctxt ""
 "model:ir.model.button,string:shipment_out_return_papyrus_barcode_button"
@@ -521,6 +707,14 @@ msgctxt "selection:papyrus.page.box,type:"
 msgid "Text"
 msgstr "Texto"
 
+msgctxt "selection:papyrus.queue,electronic_mail_urls_default_policy:"
+msgid "Discard"
+msgstr "Descartar"
+
+msgctxt "selection:papyrus.queue,electronic_mail_urls_default_policy:"
+msgid "Download"
+msgstr "Descargar"
+
 msgctxt "selection:papyrus.queue,source_type:"
 msgid "Directory"
 msgstr "Directorio"
@@ -552,6 +746,10 @@ msgstr "/"
 msgctxt "view:papyrus.document:"
 msgid "Extra"
 msgstr "Extra"
+
+msgctxt "view:papyrus.document:"
+msgid "Image"
+msgstr "Imagen"
 
 msgctxt "view:papyrus.page:"
 msgid "Extra"

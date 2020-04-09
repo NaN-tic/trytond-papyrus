@@ -126,7 +126,10 @@ def tesseract(filename, Box):
         pass
 
 def get_type(filename):
-    content = subprocess.check_output(['identify', '-format', '"%m"', filename])
+    try:
+        content = subprocess.check_output(['identify', '-format', '"%m"', filename])
+    except subprocess.CalledProcessError:
+        return
     content = content.decode('utf-8', errors='replace').replace('"', '')
     # Return only the first 3 characters as identify may return type for each
     # page of the document

@@ -18,7 +18,7 @@ def page_count(path):
         return
     out, err = subprocess.Popen(['/usr/bin/pdfinfo', path],
         stdout=subprocess.PIPE).communicate()
-    out = out.decode('utf-8')
+    out = out.decode('utf-8', errors='replace')
     out = [x for x in out.splitlines() if x.startswith('Pages:')]
     if not out:
         return 0
@@ -55,7 +55,7 @@ def pdftotext(filename):
         return
     out, err = subprocess.Popen(['/usr/bin/pdftotext', '-layout', '-enc',
             'UTF-8', filename, '-'], stdout=subprocess.PIPE).communicate()
-    out = out.decode('utf8')
+    out = out.decode('utf8', errors='replace')
     return out
 
 def pdftoboxes(filename, Box):
@@ -65,7 +65,7 @@ def pdftoboxes(filename, Box):
         return
     out, err = subprocess.Popen(['/usr/bin/pdftotext', '-bbox', '-enc',
             'UTF-8', filename, '-'], stdout=subprocess.PIPE).communicate()
-    out = out.decode('utf8')
+    out = out.decode('utf8', 'replace')
 
     root = ElementTree.fromstring(out)
     body = root[1]
@@ -115,7 +115,7 @@ def tesseract(filename, Box):
     try:
         content, err = subprocess.Popen(['tesseract', '-l', 'cat', filename,
                 'stdout'], stdout=subprocess.PIPE).communicate()
-        content = content.decode('utf8')
+        content = content.decode('utf8', errors='replace')
 
         _, err = subprocess.Popen(['tesseract', '-l', 'cat', filename,
                 tess_pdf_path, 'pdf'], stdout=subprocess.PIPE).communicate()
@@ -127,7 +127,7 @@ def tesseract(filename, Box):
 
 def get_type(filename):
     content = subprocess.check_output(['identify', '-format', '"%m"', filename])
-    content = content.decode('utf-8').replace('"', '')
+    content = content.decode('utf-8', errors='replace').replace('"', '')
     # Return only the first 3 characters as identify may return type for each
     # page of the document
     return content[:3]
@@ -164,7 +164,7 @@ def datamatrix(filename, Box):
     extra = {}
 
     for x in range(len(lines)):
-        line = lines[x].decode("utf-8")
+        line = lines[x].decode('utf-8', errors='replace')
         if not box and line == ('-' * 50):
             continue
 

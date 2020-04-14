@@ -156,8 +156,11 @@ def datamatrix(filename, Box):
         return
 
     content, err = subprocess.Popen(['dmtxread', '--newline', '--verbose',
-            '--milliseconds=10000', filename],
-        stdout=subprocess.PIPE).communicate()
+            '--milliseconds=10000', filename], stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE).communicate()
+
+    if err:
+        content = err + content
 
     # Each datamatrix is a line of the output
     nextText = False
@@ -165,7 +168,6 @@ def datamatrix(filename, Box):
     lines = content.splitlines()
     boxes = []
     extra = {}
-
     for x in range(len(lines)):
         line = lines[x].decode('utf-8', errors='replace')
         if not box and line == ('-' * 50):

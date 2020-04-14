@@ -20,6 +20,7 @@ Imports::
     >>> from trytond.modules.account_invoice.tests.tools import \
     ...     set_fiscalyear_invoice_sequences
     >>> from trytond.modules.papyrus import tools
+    >>> from trytond.modules.jasper_reports.JasperReports.JasperServer import JasperServer
     >>> today = datetime.date.today()
 
 Install account_invoice::
@@ -155,3 +156,4 @@ Check attachment has been created::
 Cleanup test directory::
 
     >>> shutil.rmtree(temp_dir)
+    >>> JasperServer.stop()

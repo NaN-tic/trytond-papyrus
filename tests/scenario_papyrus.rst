@@ -16,6 +16,7 @@ Imports::
     >>> today = datetime.date.today()
     >>> from trytond.modules.company.tests.tools import create_company, \
     ...     get_company
+    >>> from trytond.modules.jasper_reports.JasperReports.JasperServer import JasperServer
 
 Install account_invoice::
 
@@ -156,3 +157,4 @@ Delete documents::
 Cleanup test directory::
 
     >>> shutil.rmtree(temp_dir)
+    >>> JasperServer.stop()

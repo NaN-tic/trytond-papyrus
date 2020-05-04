@@ -432,8 +432,10 @@ class Document(Workflow, ModelSQL, ModelView):
     text = fields.Text('Text', readonly=True)
     boxes = fields.One2Many('papyrus.document.box', 'document', 'Boxes')
     filename = fields.Char('File Name', readonly=True)
-    image = fields.Function(fields.Binary('Image'),
+    image = fields.Function(fields.Binary('Image', filename='image_filename'),
         'on_change_with_image')
+    image_filename = fields.Function(fields.Char('Image Filename'),
+            'on_change_with_image_filename')
     current_page = fields.Integer('Current Page', domain=[
             If(Bool(Eval('page_count')), [
                     ('current_page', '>=', 1),
@@ -588,6 +590,17 @@ class Document(Workflow, ModelSQL, ModelView):
         if path:
             res = tools.page_image(path, self.current_page or 1)
             return res
+
+    @fields.depends('current_page', 'filename')
+    def on_change_with_image_filename(self, name=None):
+        if self.filename:
+            filename, _ = os.path.splitext(self.filename or '')
+        else:
+            filename = 'x'
+        page = self.current_page
+        if not page or page < 0:
+            page = 0
+        return '%s-%02d.jpg' % (filename, page)
 
     def get_page_count(self, name):
         if not self.filename:

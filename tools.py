@@ -35,7 +35,7 @@ def page_image(path, page, unlink=True):
 
         # Adding '[0]' to source filename in convert, extracts only the first
         # page of the PDF file
-        subprocess.call(['convert', '-quality', '90', '-density', '200x200',
+        subprocess.call(['convert', '-quality', '90', '-density', '100x100',
                 '-background', 'white', '-alpha', 'remove', filename,
                 jpg_path])
         if unlink:

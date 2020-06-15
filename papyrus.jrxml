@@ -26,8 +26,8 @@
 		<band height="68" splitType="Stretch">
 			<printWhenExpression><![CDATA[$F{id} != null || $F{id} != ""]]></printWhenExpression>
 			<componentElement>
-				<reportElement x="5" y="1" width="65" height="65" uuid="f5c8f292-d5d6-4746-afc4-732384679fef">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement x="2" y="-1" width="71" height="67" uuid="f5c8f292-d5d6-4746-afc4-732384679fef">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:DataMatrix xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" moduleWidth="3.0" textPosition="none" shape="force-square">
 					<jr:codeExpression><![CDATA[$P{prefix}+$F{id}]]></jr:codeExpression>

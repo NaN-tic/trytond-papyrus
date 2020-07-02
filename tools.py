@@ -60,9 +60,9 @@ def pdftotext(filename):
 
 def pdftoboxes(filename, Box):
     if not filename:
-        return
+        return []
     if get_type(filename) != 'PDF':
-        return
+        return []
     out, err = subprocess.Popen(['/usr/bin/pdftotext', '-bbox', '-enc',
             'UTF-8', filename, '-'], stdout=subprocess.PIPE).communicate()
     out = out.decode('utf8', 'replace')
@@ -88,11 +88,11 @@ def pdftoboxes(filename, Box):
 
 def tesseract(filename, Box):
     if not filename:
-        return
+        return '', []
     if get_type(filename) == 'PDF':
         count = page_count(filename)
         if not count:
-            return ''
+            return '', []
 
         content = []
         boxes = []

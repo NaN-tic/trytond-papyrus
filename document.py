@@ -453,6 +453,11 @@ class Document(Workflow, ModelSQL, ModelView):
             }, depends=['state', 'queue', 'filename'])
     company = fields.Many2One('company.company', "Company")
     origin = fields.Reference('Origin', selection='get_origin', readonly=True)
+    employee = fields.Many2One('company.employee', 'Employee',
+        domain=[
+            ('company', '=', Eval('company', -1)),
+            ],
+        depends=['company'])
 
     @classmethod
     def __setup__(cls):

@@ -60,9 +60,9 @@ def pdftotext(filename):
 
 def pdftoboxes(filename, Box):
     if not filename:
-        return
+        return []
     if get_type(filename) != 'PDF':
-        return
+        return []
     out, err = subprocess.Popen(['/usr/bin/pdftotext', '-bbox', '-enc',
             'UTF-8', filename, '-'], stdout=subprocess.PIPE).communicate()
     out = out.decode('utf8', 'replace')
@@ -88,11 +88,11 @@ def pdftoboxes(filename, Box):
 
 def tesseract(filename, Box):
     if not filename:
-        return
+        return '', []
     if get_type(filename) == 'PDF':
         count = page_count(filename)
         if not count:
-            return ''
+            return '', []
 
         content = []
         boxes = []
@@ -113,12 +113,12 @@ def tesseract(filename, Box):
     # Remove extension from filename because tesseract adds it again
     tess_pdf_path, _ = os.path.splitext(pdf_path)
     try:
-        content, err = subprocess.Popen(['tesseract', '-l', 'cat', filename,
-                'stdout'], stdout=subprocess.PIPE).communicate()
+        content, err = subprocess.Popen(['tesseract', filename, 'stdout'],
+            stdout=subprocess.PIPE).communicate()
         content = content.decode('utf8', errors='replace')
 
-        _, err = subprocess.Popen(['tesseract', '-l', 'cat', filename,
-                tess_pdf_path, 'pdf'], stdout=subprocess.PIPE).communicate()
+        _, err = subprocess.Popen(['tesseract', filename, tess_pdf_path,
+                'pdf'], stdout=subprocess.PIPE).communicate()
         boxes = pdftoboxes(pdf_path, Box)
         return content, boxes
     finally:

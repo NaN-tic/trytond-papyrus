@@ -16,7 +16,7 @@
                     <label string="/" id="/"/>
                     <field name="page_count" xfill="0" xexpand="0"/>
                 </group>
-                <field name="image" widget="image" height="700" width="550" colspan="4"/>
+                <field name="image" widget="image" height="900" width="750" colspan="4"/>
             </group>
             <group id="extra" colspan="2">
               <label name="company"/>
@@ -39,6 +39,8 @@
             <field name="filename"/>
             <label name="origin"/>
             <field name="origin"/>
+            <label name="employee"/>
+            <field name="employee"/>
         </page>
     </notebook>
     <group col="-1" colspan="6" id="buttons">

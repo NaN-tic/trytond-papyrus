@@ -761,3 +761,7 @@ msgstr "Directori"
 msgctxt "view:papyrus.queue:"
 msgid "Electronic Mail"
 msgstr "Correu electrònic"
+
+msgctxt "field:papyrus.document,employee:"
+msgid "Employee"
+msgstr "Empleat"

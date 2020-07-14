@@ -29,3 +29,12 @@ documentation:
 
 To use without installation, extract the archive into ``trytond/modules`` with
 the directory name papyrus.
+
+ImageMagick
+-----------
+
+To allow convert PDF to images (preview), open /etc/ImageMagick-<version>/policy.xml
+and replace "none" by "read|write"
+
+  - <policy domain="coder" rights="none" pattern="PDF" />
+  + <policy domain="coder" rights="read|write" pattern="PDF" />

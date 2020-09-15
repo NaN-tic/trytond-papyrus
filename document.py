@@ -308,8 +308,7 @@ class Queue(ModelSQL, ModelView):
                 try:
                     response = requests.get(url, timeout=15, verify=False,
                         allow_redirects=True)
-                except (requests.exceptions.ConnectionError,
-                    requests.exceptions.ReadTimeout):
+                except requests.exceptions.RequestException:
                     continue
                 mime = response.headers.get('content-type')
                 if mime != 'application/octet-stream':

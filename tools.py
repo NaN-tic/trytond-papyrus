@@ -78,10 +78,10 @@ def pdftoboxes(filename, Box):
         for word in page:
             box = Box()
             box.type = 'text'
-            box.x0 = word.attrib['xMin']
-            box.x1 = word.attrib['xMax']
-            box.y0 = word.attrib['yMin']
-            box.y1 = word.attrib['yMax']
+            box.x0 = float(word.attrib['xMin'])
+            box.x1 = float(word.attrib['xMax'])
+            box.y0 = float(word.attrib['yMin'])
+            box.y1 = float(word.attrib['yMax'])
             box.text = word.text
             boxes.append(box)
     return boxes

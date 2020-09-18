@@ -1,11 +1,14 @@
 import os
 from trytond.model import ModelView, fields
-from trytond.pool import PoolMeta
+from trytond.wizard import Wizard, StateAction
+from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval, If, Bool
 from trytond.transaction import Transaction
 from trytond.config import config
 from trytond.filestore import filestore
+from trytond.pyson import PYSONEncoder
 from trytond.ir.attachment import store_prefix
+from sql.functions import Substring, Position
 from . import tools
 
 
@@ -103,3 +106,40 @@ class Attachment(metaclass=PoolMeta):
             self.current_page = 1
         elif self.current_page > self.page_count:
             self.current_page = self.page_count
+
+
+class PapyrusAttachment(Wizard):
+    "Papyrus Attachment"
+    __name__ = 'papyrus.attachment'
+    start_state = 'open_'
+    open_ = StateAction('papyrus.act_attachment_form')
+
+    def do_open_(self, action):
+        pool = Pool()
+        ModelAccess = pool.get('ir.model.access')
+        Model = pool.get('ir.model')
+        Rule = pool.get('ir.rule')
+        Attachment = pool.get('ir.attachment')
+        attachment = Attachment.__table__()
+
+        query = attachment.select(
+            Substring(attachment.resource, 0, Position(',', attachment.resource)),
+            distinct=True)
+        models = Model.search([('model', 'in', query)])
+        access = ModelAccess.get_access([m.model for m in models])
+
+        domain = ['OR']
+        for model in models:
+            if access[model.model]['read']:
+                domain_get = Rule.domain_get(model.model)
+                if domain_get:
+                    for clause in domain_get[1][-1]:
+                        domain.append(('resource.%s' % clause[0], clause[1], clause[2], model.model))
+                else:
+                    domain.append([('resource', 'like',  model.model+',%')])
+
+        action['pyson_domain'] = PYSONEncoder().encode(domain)
+        return action, {}
+
+    def transition_open_(self):
+        return 'end'

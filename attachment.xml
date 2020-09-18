@@ -7,7 +7,6 @@
         </record>
         <record model="ir.ui.view" id="attachment_view_form">
             <field name="model">ir.attachment</field>
-            <field name="type" eval="None"/>
             <field name="inherit" ref="ir.attachment_view_form"/>
             <field name="name">attachment_form</field>
         </record>
@@ -33,8 +32,13 @@
             <field name="view" ref="attachment_view_form"/>
             <field name="act_window" ref="act_attachment_form"/>
         </record>
-        <menuitem name="Attachments" parent="menu_papyrus"
-            action="act_attachment_form" id="menu_attachment_form" sequence="10"/>
+
+        <record model="ir.action.wizard" id="act_open_attachment">
+            <field name="name">Attachments</field>
+            <field name="wiz_name">papyrus.attachment</field>
+        </record>
+        <menuitem name="Attachments" parent="menu_papyrus" icon="tryton-list"
+            action="act_open_attachment" id="menu_attachment_form" sequence="10"/>
 
         <record model="ir.model.button" id="attachment_next_page_button">
             <field name="name">next_page</field>

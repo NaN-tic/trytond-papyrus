@@ -23,6 +23,9 @@ def register():
         electronic_mail.ElectronicMail,
         module=module, type_='model')
     Pool.register(
+        attachment.PapyrusAttachment,
+        module=module, type_='wizard')
+    Pool.register(
         invoice.Invoice,
         invoice.Page,
         invoice.Document,

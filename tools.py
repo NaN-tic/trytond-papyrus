@@ -5,7 +5,7 @@ import subprocess
 import json
 import tempfile
 import os
-from xml.etree import ElementTree
+from lxml import etree
 
 IDENTIFY_FORMATS = ['PNG', 'JPG', 'JPEG', 'GIF', 'PDF']
 
@@ -67,7 +67,8 @@ def pdftoboxes(filename, Box):
             'UTF-8', filename, '-'], stdout=subprocess.PIPE).communicate()
     out = out.decode('utf8', 'replace')
 
-    root = ElementTree.fromstring(out)
+    parser = etree.XMLParser(recover=True)
+    root = etree.fromstring(out, parser=parser)
     body = root[1]
     assert body.tag.endswith('body'), body.tag
     doc = body[0]

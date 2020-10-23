@@ -139,6 +139,11 @@ def get_type(filename):
 def datamatrix(filename, Box):
     """
     Parse dmtxread output which looks like this:
+
+    Stdout (each DataMatrix is a line of the output):
+    Wikipedia, the free encyclopedia
+
+    Stderr (each DataMatrix is enclosed between '-' * 50 separators):
     --------------------------------------------------
            Matrix Size: 22 x 22
         Data Codewords: 26 (capacity 30)
@@ -151,44 +156,41 @@ def datamatrix(filename, Box):
               Corner 2: (1701.0, 307.0)
               Corner 3: (1500.0, 307.0)
     --------------------------------------------------
-    Wikipedia, the free encyclopedia
     """
     if not filename:
         return
 
-    content, err = subprocess.Popen(['dmtxread', '--newline', '--verbose',
+    process = subprocess.Popen(['dmtxread', '--newline', '--verbose',
             '--milliseconds=10000', filename], stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE).communicate()
+        stderr=subprocess.PIPE, encoding='utf-8', errors='replace')
+    stdout, stderr = process.communicate()
 
-    if err:
-        content = err + content
-
-    # Each datamatrix is a line of the output
-    nextText = False
-    box = None
-    lines = content.splitlines()
+    # Split lines using \n because dmtxread prints some characters that are
+    # incorrectly understood as new lines by 'splitlines()'
+    stdout = stdout.split('\n')
+    stderr = stderr.split('\n')
     boxes = []
+    box = None
     extra = {}
-    for x in range(len(lines)):
-        line = lines[x].decode('utf-8', errors='replace')
+    for line in stderr:
+        if not line:
+            continue
+
         if not box and line == ('-' * 50):
+            continue
+
+        if line == ('-' * 50):
+            if extra:
+                box.extra = json.dumps(extra)
+                extra = {}
+            box = None
             continue
 
         if not box:
             box = Box()
             box.type = 'barcode'
+            box.text = stdout[len(boxes)]
             boxes.append( box )
-
-        if nextText:
-            box.text = line
-            if extra:
-                box.extra = json.dumps(extra)
-            nextText = False
-            box = None
-            continue
-        if line == ('-' * 50):
-            nextText = True
-            continue
 
         key, value = line.split(':')
         key = key.strip()

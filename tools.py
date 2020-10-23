@@ -16,9 +16,9 @@ def page_count(path):
         # has not been commited yet, the file may not exists) better quit
         # quitely
         return
-    out, err = subprocess.Popen(['/usr/bin/pdfinfo', path],
-        stdout=subprocess.PIPE).communicate()
-    out = out.decode('utf-8', errors='replace')
+    process = subprocess.Popen(['/usr/bin/pdfinfo', path],
+        stdout=subprocess.PIPE, encoding='utf-8', errors='replace')
+    out, err = process.communicate()
     out = [x for x in out.splitlines() if x.startswith('Pages:')]
     if not out:
         return 0
@@ -53,9 +53,10 @@ def pdftotext(filename):
         return
     if get_type(filename) != 'PDF':
         return
-    out, err = subprocess.Popen(['/usr/bin/pdftotext', '-layout', '-enc',
-            'UTF-8', filename, '-'], stdout=subprocess.PIPE).communicate()
-    out = out.decode('utf8', errors='replace')
+    process = subprocess.Popen(['/usr/bin/pdftotext', '-layout', '-enc',
+            'UTF-8', filename, '-'], stdout=subprocess.PIPE, encoding='utf-8',
+        errors='replace')
+    out, err = process.communicate()
     return out
 
 def pdftoboxes(filename, Box):
@@ -63,9 +64,10 @@ def pdftoboxes(filename, Box):
         return []
     if get_type(filename) != 'PDF':
         return []
-    out, err = subprocess.Popen(['/usr/bin/pdftotext', '-bbox', '-enc',
-            'UTF-8', filename, '-'], stdout=subprocess.PIPE).communicate()
-    out = out.decode('utf8', 'replace')
+    process = subprocess.Popen(['/usr/bin/pdftotext', '-bbox', '-enc',
+            'UTF-8', filename, '-'], stdout=subprocess.PIPE, encoding='utf-8',
+        errors='replace')
+    out, _ = process.communicate()
 
     parser = etree.XMLParser(recover=True)
     root = etree.fromstring(out, parser=parser)
@@ -114,12 +116,18 @@ def tesseract(filename, Box):
     # Remove extension from filename because tesseract adds it again
     tess_pdf_path, _ = os.path.splitext(pdf_path)
     try:
-        content, err = subprocess.Popen(['tesseract', filename, 'stdout'],
-            stdout=subprocess.PIPE).communicate()
-        content = content.decode('utf8', errors='replace')
+        # Execute tesseract twice:
 
-        _, err = subprocess.Popen(['tesseract', filename, tess_pdf_path,
-                'pdf'], stdout=subprocess.PIPE).communicate()
+        # In the first one we get plain text
+        process = subprocess.Popen(['tesseract', filename, 'stdout'],
+            stdout=subprocess.PIPE, encoding='utf-8', errors='replace')
+        content, _ = process.communicate()
+
+        # In the second one we get text boxes
+        process = subprocess.Popen(['tesseract', filename, tess_pdf_path,
+                'pdf'], stdout=subprocess.PIPE, encoding='utf-8',
+            errors='replace')
+        process.communicate()
         boxes = pdftoboxes(pdf_path, Box)
         return content, boxes
     finally:
@@ -128,10 +136,11 @@ def tesseract(filename, Box):
 
 def get_type(filename):
     try:
-        content = subprocess.check_output(['identify', '-format', '"%m"', filename])
+        content = subprocess.check_output(['identify', '-format', '"%m"',
+                filename], encoding='utf-8', errors='replace')
     except subprocess.CalledProcessError:
         return
-    content = content.decode('utf-8', errors='replace').replace('"', '')
+    content = content.replace('"', '')
     # Return only the first 3 characters as identify may return type for each
     # page of the document
     return content[:3]

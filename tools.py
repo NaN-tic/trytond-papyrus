@@ -41,7 +41,6 @@ def page_image(path, page, unlink=True, suffix='.jpg', alpha=False, quality=90,
         if not alpha:
             command += ['-background', 'white', '-alpha', 'remove']
         command += [filename, image_path]
-        print('COMMAND: ', command)
         subprocess.call(command)
         if unlink:
             with open(image_path, 'rb') as f:

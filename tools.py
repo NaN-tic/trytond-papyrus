@@ -25,28 +25,33 @@ def page_count(path):
     out = out[0]
     return int(out.split(':')[-1].strip())
 
-def page_image(path, page, unlink=True):
+def page_image(path, page, unlink=True, suffix='.jpg', alpha=False, quality=90,
+        density=100):
     if not os.path.exists(path):
         return
-    _, jpg_path = tempfile.mkstemp(suffix='.jpg')
+    _, image_path = tempfile.mkstemp(suffix=suffix)
     try:
         filename = path
         filename += '[%d]' % ((page or 1) - 1)
 
         # Adding '[0]' to source filename in convert, extracts only the first
         # page of the PDF file
-        subprocess.call(['convert', '-quality', '90', '-density', '100x100',
-                '-background', 'white', '-alpha', 'remove', filename,
-                jpg_path])
+        command = ['convert', '-quality', str(quality),
+            '-density', '%sx%s' % (density, density)]
+        if not alpha:
+            command += ['-background', 'white', '-alpha', 'remove']
+        command += [filename, image_path]
+        print('COMMAND: ', command)
+        subprocess.call(command)
         if unlink:
-            with open(jpg_path, 'rb') as f:
+            with open(image_path, 'rb') as f:
                 res = f.read()
             return res
         else:
-            return jpg_path
+            return image_path
     finally:
         if unlink:
-            os.unlink(jpg_path)
+            os.unlink(image_path)
 
 def pdftotext(filename):
     if not filename:

@@ -5,6 +5,7 @@ import subprocess
 import json
 import tempfile
 import os
+import shutil
 from lxml import etree
 
 IDENTIFY_FORMATS = ['PNG', 'JPG', 'JPEG', 'GIF', 'PDF']
@@ -217,3 +218,23 @@ def datamatrix(filename, Box):
         else:
             extra[key] = value
     return boxes
+
+def soffice_convert(data, from_extension, to_extension, timeout=15):
+    temp_dir = tempfile.mkdtemp()
+    try:
+        input_filename = os.path.join(temp_dir, 'file.%s' % from_extension)
+        with open(input_filename, 'wb') as f:
+            f.write(data)
+        process = subprocess.Popen(['soffice', '--headless', '--nolockcheck',
+                '--nodefault', '--norestore', '--convert-to', to_extension,
+                '--outdir', temp_dir, input_filename])
+        try:
+            process.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            return
+        output_filename = os.path.join(temp_dir, 'file.%s' % to_extension)
+        with open(output_filename, 'rb') as f:
+            return f.read()
+    finally:
+        shutil.rmtree(temp_dir)
+

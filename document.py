@@ -8,6 +8,7 @@ import re
 import shutil
 import subprocess
 import requests
+from fnmatch import fnmatch
 from trytond.model import (ModelSQL, ModelView, Workflow, fields,
     sequence_ordered)
 from trytond.pool import Pool
@@ -67,6 +68,7 @@ class Queue(ModelSQL, ModelView):
             ('document', 'Document'),
             ('page', 'Page'),
             ], 'Type', required=True)
+    company = fields.Many2One('company.company', "Company")
     image_dpi = fields.Char('DPI', states={
             'invisible': Eval('type') != 'page',
             }, depends=['type'], help='DPI: This value indicates the number '
@@ -108,7 +110,19 @@ class Queue(ModelSQL, ModelView):
         help='List of URL prefixes (one per line) that should not be '
         'downloaded. For example, use http:// to NO download URLs starting '
         'with "http://"')
-    company = fields.Many2One('company.company', "Company")
+    filename_whitelist = fields.Text('Filename Whitelist', states={
+            'invisible': Eval('source_type') != 'electronic_mail',
+            }, depends=['source_type'], help='List of filename-matching '
+        'patterns (one per line). File names matching any of the patterns will '
+        'be created as documents as long as they do not match any blacklist '
+        'pattern. Valid matching expressions include: *.pdf, *.doc, '
+        'invoice*.pdf')
+    filename_blacklist = fields.Text('Filename Blacklist', states={
+            'invisible': Eval('source_type') != 'electronic_mail',
+            }, depends=['source_type'], help='List of filename-matching '
+        'patterns (one per line). Filenames matching any of the patterns will '
+        'be discarded. Valid matching expressions include: *.pdf, *.doc, '
+        'invoice*.pdf')
 
     @classmethod
     def __setup__(cls):
@@ -140,6 +154,14 @@ class Queue(ModelSQL, ModelView):
     @staticmethod
     def default_source_type():
         return 'directory'
+
+    @fields.depends('type')
+    def on_change_with_filename_whitelist(self):
+        if self.type == 'document':
+            return '\n'.join(['*.pdf', '*.doc', '*.docx', '*.odp', '*.ods',
+                    '*.ppt', '*.pptx', '*.xls', '*.xlsx'])
+        elif self.type == 'page':
+            return '\n'.join(['*.jpg', '*.jpeg', '*.png', '*.tif'])
 
     def get_page(self, filename):
         pool = Pool()
@@ -238,6 +260,26 @@ class Queue(ModelSQL, ModelView):
             files.append(fname)
         return documents, pages
 
+    def matching_filename(self, filename):
+        '''
+        Checks if the given filename should be imported as a document
+        according to the queue filename_whitelist and filename_blacklist
+        fields.
+        A filename will be valid only if it matches at least one whitelist
+        pattern and does not match any blacklist pattern.
+        '''
+        whitelist = (self.filename_whitelist or '').split('\n')
+        for pattern in whitelist:
+            if fnmatch(filename, pattern):
+                break
+        else:
+            return False
+        blacklist = (self.filename_blacklist or '').split('\n')
+        for pattern in blacklist:
+            if fnmatch(filename, pattern):
+                return False
+        return True
+
     def find_urls(self, text):
         'Very naive algorithm for finding all URLs in a string'
         whitelist = (self.electronic_mail_urls_whitelist or '').split('\n')
@@ -245,9 +287,9 @@ class Queue(ModelSQL, ModelView):
         default_policy = self.electronic_mail_urls_default_policy
 
         urls = []
-        # By replacing ' and " with whitespace we try to ensure the end of the URL
-        # is very easy to find because the URL might be in an href="xx" in a HTML
-        # string or in a plain text file (where it will always
+        # By replacing ' and " with whitespace we try to ensure the end of the
+        # URL is very easy to find because the URL might be in an href="xx" in
+        # a HTML string or in a plain text file (where it will always
         text = text.replace('"', ' ').replace("'", ' ')
         start = 0
         while start >= 0:
@@ -310,10 +352,6 @@ class Queue(ModelSQL, ModelView):
                         allow_redirects=True)
                 except requests.exceptions.RequestException:
                     continue
-                mime = response.headers.get('content-type')
-                if mime != 'application/octet-stream':
-                    continue
-
                 filename = get_filename_from_response(response)
                 if not filename:
                     continue
@@ -329,21 +367,38 @@ class Queue(ModelSQL, ModelView):
             for attachment in attachments:
                 count += 1
                 file_name = attachment['filename'].lower()
-                _, ext = os.path.splitext(file_name)
-                fname = '%015d' % (mail.id * 100 + count) + ext
-                processed_fname = os.path.join(
-                    self.storage_directory, fname)
+
+                if not self.matching_filename(file_name):
+                    continue
+
+                first_part, ext = os.path.splitext(file_name)
+                ext = ext.replace('.', '')
+                if not ext:
+                    # In some cases attachments are received without extension
+                    # because it's missing the separating dot.
+                    ext = first_part[-3:]
+                    if not ext:
+                        continue
+
+                fname = '%015d.%s' % (mail.id * 100 + count, ext)
+                processed_fname = os.path.join(self.storage_directory, fname)
 
                 if self.type == 'document':
-                    if ext == '.pdf':
-                        with open(processed_fname, 'wb') as f:
-                            f.write(attachment['data'])
-                        document = self.get_document(fname)
-                        document.origin = mail
-                        documents.append(document)
-                        mail.mailbox = self.storage_inbox
+                    if ext == 'pdf':
+                        data = attachment['data']
+                    else:
+                        data = tools.soffice_convert(attachment['data'], ext,
+                            'pdf')
+                    if not data:
+                        continue
+                    with open(processed_fname, 'wb') as f:
+                        f.write(data)
+                    document = self.get_document(fname)
+                    document.origin = mail
+                    documents.append(document)
+                    mail.mailbox = self.storage_inbox
                 elif self.type == 'page':
-                    if ext in ('.png', '.jpg', '.jpeg', '.tif'):
+                    if ext in ('jpg', 'jpeg', 'png', 'tif'):
                         with open(processed_fname, 'wb') as f:
                             f.write(attachment['data'])
                         page = self.get_page(fname)

@@ -233,8 +233,11 @@ def soffice_convert(data, from_extension, to_extension, timeout=15):
         except subprocess.TimeoutExpired:
             return
         output_filename = os.path.join(temp_dir, 'file.%s' % to_extension)
-        with open(output_filename, 'rb') as f:
-            return f.read()
+        try:
+            with open(output_filename, 'rb') as f:
+                return f.read()
+        except FileNotFoundError:
+            return
     finally:
         shutil.rmtree(temp_dir)
 

@@ -12,15 +12,21 @@ from fnmatch import fnmatch
 from trytond.model import (ModelSQL, ModelView, Workflow, fields,
     sequence_ordered)
 from trytond.pool import Pool
-from trytond.pyson import Bool, Eval, If
+from trytond.pyson import Bool, Eval, If, PYSONEncoder
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
 from trytond.transaction import Transaction
+from trytond.exceptions import UserWarning
+from trytond.wizard import (Wizard, StateView, StateTransition, StateReport,
+    Button, StateAction)
 from . import tools
 from .datamanager import FileDataManager
 from email import message_from_bytes
+from PyPDF2 import PdfFileReader, PdfFileWriter
 
-__all__ = ['Queue', 'Document', 'Page', 'DocumentBox', 'PageBox']
+__all__ = ['Queue', 'Document', 'Page', 'DocumentSplitPage',
+    'DocumentSplitStart', 'DocumentSplit', 'DocumentBox',
+    'PageBox']
 
 ELECTRONIC_MAIL_STATES = {
     'invisible': Eval('source_type') != 'electronic_mail',
@@ -551,6 +557,11 @@ class Document(Workflow, ModelSQL, ModelView):
                     'icon': 'tryton-forward',
                     'depends': ['current_page', 'page_count'],
                     },
+                'split': {
+                    'invisible': Eval('state') == 'processed',
+                    'icon': 'tryton-document-split',
+                    'depends': ['state']
+                    },
                 })
 
     @staticmethod
@@ -816,6 +827,117 @@ class Document(Workflow, ModelSQL, ModelView):
         if self.current_page < self.page_count:
             self.current_page += 1
         self.image = self.on_change_with_image()
+
+    @classmethod
+    @ModelView.button_action('papyrus.wizard_split')
+    def split(cls, documents):
+        pass
+
+
+class DocumentSplitPage(ModelView):
+    'Document Split Page'
+    __name__ = 'document.split.page'
+    page = fields.Binary('Image')
+    split = fields.Boolean('Split')
+
+
+class DocumentSplitStart(ModelView):
+    'Document Split Start'
+    __name__ = 'document.split.start'
+    document = fields.Many2One('papyrus.document', 'Document', readonly=True)
+    pages = fields.One2Many('document.split.page', None, 'Pages',
+        readonly=True)
+
+    @fields.depends('document')
+    def on_change_with_pages(self, name=None):
+        pages = []
+        for p in range(self.document.page_count):
+            current_page = p + 1
+            page_image = None
+
+            path = self.document.get_full_path()
+            if path:
+                page_image = tools.page_image(path, current_page or 1, width=500)
+
+            values = {
+                'page': page_image,
+                'split': False,
+            }
+            pages.append(values)
+        return pages
+
+
+class DocumentSplit(Wizard):
+    'Papyrus Split'
+    __name__ = 'document.split'
+
+    start = StateView('document.split.start',
+        'papyrus.papyrus_split_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('OK', 'split_document', 'tryton-ok', True),
+        ])
+    split_document = StateAction('papyrus.act_papyrus_document')
+
+    def default_start(self, fields):
+        Document = Pool().get('papyrus.document')
+        document = Document(Transaction().context['active_id'])
+        return {
+            'document':document.id,
+            'pages': [],
+        }
+
+    def do_split_document(self,action):
+        Warning = Pool().get('res.user.warning')
+        Document = Pool().get('papyrus.document')
+
+        document = [0]
+        documents = [document]
+        num_page = 1
+        for page in self.start.pages[1:]:
+            if page.split:
+                document = []
+                documents.append(document)
+            document.append(num_page)
+            num_page += 1
+
+        #Warning confirmation
+        key = 'split_document_%s' % (self.start.document.id)
+        if Warning.check(key):
+            raise UserWarning(key,
+                gettext('papyrus.split_document_confirmation',
+                    num_documents=len(documents),
+                    pages='\n'.join([','.join(str(x) for x in documents)])))
+
+        #Create documents
+        with open(self.start.document.get_full_path(), 'rb') as original:
+            reader = PdfFileReader(original)
+            num_document = 0
+            new_document_id = []
+            for d in documents:
+                num_document += 1
+                writer = PdfFileWriter()
+                for p in d:
+                   writer.addPage(reader.getPage(p))
+                #Document name is like: path/name.extension
+                name = (self.start.document.get_full_path().split('.')[0]
+                    + '-' + str(num_document) + '.' +
+                    self.start.document.get_full_path().split('.')[1])
+                with open(name,'wb') as outfile:
+                    writer.write(outfile)
+
+                #Create new documents
+                document = Document()
+                document.queue = self.start.document.queue
+                document.number = (self.start.document.number +
+                    '-' + str(num_document))
+                document.filename = name
+                document.save()
+                new_document_id.append(document.id)
+
+        domain = [('id', 'in', new_document_id)]
+        action['pyson_search_value'] = PYSONEncoder().encode(domain)
+
+        return action, {}
 
 
 class DocumentBox(ModelSQL, ModelView):

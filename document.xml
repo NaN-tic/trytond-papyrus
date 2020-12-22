@@ -225,6 +225,15 @@
             <field name="button" ref="document_previous_page_button"/>
             <field name="group" ref="group_papyrus"/>
         </record>
+        <record model="ir.model.button" id="document_split_button">
+            <field name="name">split</field>
+            <field name="string">Split</field>
+            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="document_split_button_group_papyrus">
+            <field name="button" ref="document_split_button"/>
+            <field name="group" ref="group_papyrus"/>
+        </record>
 
 	<!-- papyrus.document.box -->
         <record model="ir.ui.view" id="papyrus_document_box_view_form">
@@ -413,6 +422,27 @@
             <field name="method">papyrus.page|cron_process</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_split">
+            <field name="name">Split Document</field>
+            <field name="wiz_name">document.split</field>
+        </record>
+        <record model="ir.ui.view" id="papyrus_split_start_view_form">
+            <field name="model">papyrus.document.split.start</field>
+            <field name="type">form</field>
+            <field name="name">papyrus_split_start</field>
+        </record>
+        <record model="ir.ui.view" id="papyrus_document_view_tree_sequence">
+            <field name="model">document.split.page</field>
+            <field name="type">list-form</field>
+            <field name="priority" eval="20"/>
+            <field name="name">papyrus_document_page_split_tree_sequence</field>
+        </record>
+
+        <record model="ir.ui.icon" id="document_split_icon">
+            <field name="name">tryton-document-split</field>
+            <field name="path">icons/tryton-document-split.svg</field>
         </record>
     </data>
 </tryton>

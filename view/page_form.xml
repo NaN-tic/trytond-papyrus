@@ -10,7 +10,7 @@
     <field name="queue"/>
     <notebook colspan="6">
         <page name="image">
-            <field name="image" widget="image" height="700" width="550" colspan="4"/>
+            <field name="image" widget="image" readonly="1" height="700" width="550" colspan="4"/>
         </page>
         <page name="text">
             <field name="text" colspan="4"/>

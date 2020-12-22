@@ -7,8 +7,6 @@
     <field name="last_modification" widget="time"
         string="Last Modification Time"/>
     <field name="type"/>
-    <field name="data"/>
-    <field name="link" widget="url"/>
     <!-- To allow client to set description field -->
     <field name="description" tree_invisible="1"/>
 </tree>

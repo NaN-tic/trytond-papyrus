@@ -27,7 +27,7 @@ def page_count(path):
     return int(out.split(':')[-1].strip())
 
 def page_image(path, page, unlink=True, suffix='.jpg', alpha=False, quality=90,
-        density=100):
+        density=100, height=None, width=None):
     if not os.path.exists(path):
         return
     _, image_path = tempfile.mkstemp(suffix=suffix)
@@ -41,6 +41,8 @@ def page_image(path, page, unlink=True, suffix='.jpg', alpha=False, quality=90,
             '-density', '%sx%s' % (density, density)]
         if not alpha:
             command += ['-background', 'white', '-alpha', 'remove']
+        if height or width:
+            command += ['-resize', '%sx%s' % (width or '', height or '')]
         command += [filename, image_path]
         subprocess.call(command)
         if unlink:

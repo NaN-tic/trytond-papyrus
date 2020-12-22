@@ -18,7 +18,7 @@
                     <field name="page_count" xfill="0" xexpand="0"/>
                     <button name="next_page"/>
                 </group>
-                <field name="image" widget="image" height="-1" width="750" colspan="4"/>
+                <field name="image" widget="image" readonly="1" height="-1" width="750" colspan="4"/>
             </group>
             <group id="extra" colspan="2">
               <label name="company"/>
@@ -51,5 +51,6 @@
       <button name="pending"/>
       <button name="inspect"/>
       <button name="process"/>
+      <button name="split"/>
     </group>
 </form>

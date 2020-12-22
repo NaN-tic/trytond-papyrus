@@ -19,11 +19,14 @@ def register():
         document.Page,
         document.DocumentBox,
         document.PageBox,
+        document.DocumentSplitPage,
+        document.DocumentSplitStart,
         ir.Cron,
         electronic_mail.ElectronicMail,
         module=module, type_='model')
     Pool.register(
         attachment.PapyrusAttachment,
+        document.DocumentSplit,
         module=module, type_='wizard')
     Pool.register(
         invoice.Invoice,

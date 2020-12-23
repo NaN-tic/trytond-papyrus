@@ -851,19 +851,20 @@ class DocumentSplitStart(ModelView):
     @fields.depends('document')
     def on_change_with_pages(self, name=None):
         pages = []
-        for p in range(self.document.page_count):
-            current_page = p + 1
-            page_image = None
+        if self.document:
+            for p in range(self.document.page_count):
+                current_page = p + 1
+                page_image = None
 
-            path = self.document.get_full_path()
-            if path:
-                page_image = tools.page_image(path, current_page or 1, width=500)
+                path = self.document.get_full_path()
+                if path:
+                    page_image = tools.page_image(path, current_page or 1, width=500)
 
-            values = {
-                'page': page_image,
-                'split': False,
-            }
-            pages.append(values)
+                values = {
+                    'page': page_image,
+                    'split': False,
+                }
+                pages.append(values)
         return pages
 
 

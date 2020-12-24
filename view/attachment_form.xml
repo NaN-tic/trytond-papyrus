@@ -8,6 +8,7 @@
                 <label string="/" id="/"/>
                 <field name="page_count" xfill="0" xexpand="0"/>
                 <button name="next_page"/>
+                <field name="file_id" invisible="1" colspan="6"/>
             </group>
         </group>
     </xpath>

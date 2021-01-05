@@ -51,6 +51,7 @@
       <button name="pending"/>
       <button name="inspect"/>
       <button name="process"/>
+      <button name="cancelled"/>
       <button name="split"/>
     </group>
 </form>

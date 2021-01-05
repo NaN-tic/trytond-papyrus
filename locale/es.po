@@ -534,6 +534,11 @@ msgctxt ""
 msgid "Pending"
 msgstr "Pendiente"
 
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_document_form_domain_cancelled"
+msgid "Cancelled"
+msgstr "Cancelado"
+
 msgctxt "model:ir.action.act_window.domain,name:act_page_form_domain_all"
 msgid "All"
 msgstr "Todo"
@@ -625,6 +630,10 @@ msgstr "Página anterior"
 msgctxt "model:ir.model.button,string:document_process_button"
 msgid "Process"
 msgstr "Procesar"
+
+msgctxt "model:ir.model.button,string:document_cancel_button"
+msgid "Cancel"
+msgstr "Cancela"
 
 msgctxt "model:ir.model.button,string:document_split_button"
 msgid "Split"
@@ -753,6 +762,10 @@ msgstr "Pendiente"
 msgctxt "selection:papyrus.document,state:"
 msgid "Processed"
 msgstr "Procesado"
+
+msgctxt "selection:papyrus.document,state:"
+msgid "Cancelled"
+msgstr "Cancelado"
 
 msgctxt "selection:papyrus.document.box,type:"
 msgid "Barcode"

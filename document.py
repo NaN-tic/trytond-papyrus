@@ -486,6 +486,7 @@ class Document(Workflow, ModelSQL, ModelView):
             ('pending', 'Pending'),
             ('inspected', 'Inspected'),
             ('processed', 'Processed'),
+            ('cancelled', 'Cancelled'),
             ], 'State', required=True, readonly=True)
     reference = fields.Char('Reference')
     data = fields.Function(fields.Binary('Data', filename='filename'),
@@ -525,14 +526,17 @@ class Document(Workflow, ModelSQL, ModelView):
         super().__setup__()
         cls._transitions |= set((
                 ('pending', 'inspected'),
+                ('pending', 'cancelled'),
                 ('inspected', 'pending'),
+                ('inspected','cancelled'),
                 ('inspected', 'processed'),
+                ('cancelled', 'pending'),
                 ))
         cls._order.insert(0, ('queue', 'ASC'))
         cls._order.insert(1, ('number', 'ASC'))
         cls._buttons.update({
                 'pending': {
-                    'invisible': Eval('state') != 'inspected',
+                    'invisible': ~Eval('state').in_(['inspected','cancelled']),
                     'icon': 'tryton-back',
                     'depends': ['state'],
                     },
@@ -561,6 +565,11 @@ class Document(Workflow, ModelSQL, ModelView):
                     'invisible': Eval('state') == 'processed',
                     'icon': 'tryton-document-split',
                     'depends': ['state']
+                    },
+                'cancelled': {
+                    'invisible': ~Eval('state').in_(['pending','inspected']),
+                    'icon': 'tryton-cancel',
+                    'depends': ['state'],
                     },
                 })
 
@@ -802,6 +811,12 @@ class Document(Workflow, ModelSQL, ModelView):
             cls.proceed(to_proceed)
 
     @classmethod
+    @ModelView.button
+    @Workflow.transition('cancelled')
+    def cancelled(cls, documents):
+        pass
+
+    @classmethod
     def cron_process(cls):
         'Process method to be used by cron. It is a separate method so '
         '"process()" is easier to override.'
@@ -937,6 +952,9 @@ class DocumentSplit(Wizard):
 
         domain = [('id', 'in', new_document_id)]
         action['pyson_search_value'] = PYSONEncoder().encode(domain)
+
+        self.start.document.state = 'cancelled'
+        self.start.document.save()
 
         return action, {}
 

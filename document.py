@@ -562,7 +562,7 @@ class Document(Workflow, ModelSQL, ModelView):
                     'depends': ['current_page', 'page_count'],
                     },
                 'split': {
-                    'invisible': Eval('state') == 'processed',
+                    'invisible': ~Eval('state').in_(['pending']),
                     'icon': 'tryton-document-split',
                     'depends': ['state']
                     },

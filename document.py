@@ -759,7 +759,8 @@ class Document(Workflow, ModelSQL, ModelView):
         'Inspect method to be used by cron. It is a separate method so '
         '"inspect()" is easier to override.'
         documents = cls.search([('state', '=', 'pending')])
-        cls.inspect(documents)
+        for document in documents:
+            cls.__queue__.inspect([document])
 
     @classmethod
     @Workflow.transition('processed')

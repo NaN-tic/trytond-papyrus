@@ -8,6 +8,8 @@ import re
 import shutil
 import subprocess
 import requests
+from email import message_from_bytes
+from PyPDF2 import PdfFileReader, PdfFileWriter
 from fnmatch import fnmatch
 from trytond.model import (ModelSQL, ModelView, Workflow, fields,
     sequence_ordered)
@@ -17,12 +19,9 @@ from trytond.i18n import gettext
 from trytond.exceptions import UserError
 from trytond.transaction import Transaction
 from trytond.exceptions import UserWarning
-from trytond.wizard import (Wizard, StateView, StateTransition, StateReport,
-    Button, StateAction)
+from trytond.wizard import Wizard, StateView, Button, StateAction
 from . import tools
 from .datamanager import FileDataManager
-from email import message_from_bytes
-from PyPDF2 import PdfFileReader, PdfFileWriter
 
 __all__ = ['Queue', 'Document', 'Page', 'DocumentSplitPage',
     'DocumentSplitStart', 'DocumentSplit', 'DocumentBox',

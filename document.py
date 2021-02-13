@@ -963,6 +963,7 @@ class DocumentBox(ModelSQL, ModelView):
     __name__ = 'papyrus.document.box'
     document = fields.Many2One('papyrus.document', 'Document', required=True,
         ondelete='CASCADE')
+    page = fields.Integer('Page')
     x0 = fields.Float('X0')
     y0 = fields.Float('Y0')
     x1 = fields.Float('X1')

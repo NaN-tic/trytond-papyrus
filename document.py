@@ -778,7 +778,8 @@ class Document(Workflow, ModelSQL, ModelView):
         'Inspect method to be used by cron. It is a separate method so '
         '"inspect()" is easier to override.'
         documents = cls.search([('state', '=', 'pending')])
-        cls.inspect(documents)
+        for document in documents:
+            cls.__queue__.inspect([document])
 
     @classmethod
     @Workflow.transition('processed')
@@ -820,7 +821,8 @@ class Document(Workflow, ModelSQL, ModelView):
         'Process method to be used by cron. It is a separate method so '
         '"process()" is easier to override.'
         documents = cls.search([('state', '=', 'inspected')])
-        cls.process(documents)
+        for document in documents:
+            cls.__queue__.process([document])
 
     # TODO: When this issue is implemented https://bugs.tryton.org/issue8331
     # the "hardcoded" fields will no longer be needed.

@@ -142,6 +142,7 @@
             <field name="name">Inspected</field>
             <field name="sequence" eval="20"/>
             <field name="domain" eval="[('state', '=', 'inspected')]" pyson="1"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_papyrus_document"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_document_form_domain_cancelled">
@@ -309,6 +310,7 @@
             <field name="name">Inspected</field>
             <field name="sequence" eval="20"/>
             <field name="domain" eval="[('state', '=', 'inspected')]" pyson="1"/>
+            <field name="count" eval="True"/>
             <field name="act_window" ref="act_papyrus_page"/>
         </record>
         <record model="ir.action.act_window.domain" id="act_page_form_domain_all">

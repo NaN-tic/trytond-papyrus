@@ -1,5 +1,6 @@
 <tree>
     <field name="document"/>
+    <field name="page"/>
     <field name="x0"/>
     <field name="y0"/>
     <field name="x1"/>

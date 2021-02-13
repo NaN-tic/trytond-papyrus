@@ -2,6 +2,9 @@
     <label name="document"/>
     <field name="document"/>
     <newline/>
+    <label name="page"/>
+    <field name="page"/>
+    <newline/>
     <label name="x0"/>
     <field name="x0"/>
     <label name="y0"/>

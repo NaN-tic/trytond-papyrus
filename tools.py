@@ -84,15 +84,20 @@ def pdftoboxes(filename, Box):
     assert doc.tag.endswith('doc'), doc.tag
 
     boxes = []
+    current_page = 0
     for page in doc:
+        current_page += 1
         for word in page:
             box = Box()
+            if hasattr(Box, 'page'):
+                box.page = current_page
             box.type = 'text'
             box.x0 = float(word.attrib['xMin'])
             box.x1 = float(word.attrib['xMax'])
             box.y0 = float(word.attrib['yMin'])
             box.y1 = float(word.attrib['yMax'])
             box.text = word.text
+
             boxes.append(box)
     return boxes
 
@@ -116,6 +121,9 @@ def tesseract(filename, Box):
             if jpg_content:
                 content.append(jpg_content)
             if jpg_boxes:
+                if hasattr(Box, 'page'):
+                    for box in jpg_boxes:
+                        box.page = page + 1
                 boxes += jpg_boxes
         return '\n'.join(content), boxes
 
@@ -180,6 +188,8 @@ def datamatrix(filename, Box):
             '--milliseconds=10000', filename], stdout=subprocess.PIPE,
         stderr=subprocess.PIPE, encoding='utf-8', errors='replace')
     stdout, stderr = process.communicate()
+    if process.returncode:
+        return []
 
     # Split lines using \n because dmtxread prints some characters that are
     # incorrectly understood as new lines by 'splitlines()'

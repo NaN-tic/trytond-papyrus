@@ -112,7 +112,7 @@ def tesseract(filename, Box):
         content = []
         boxes = []
         for page in range(count):
-            jpg_path = page_image(filename, page, unlink=False)
+            jpg_path = page_image(filename, page, density=300, unlink=False)
             try:
                 jpg_content, jpg_boxes = tesseract(jpg_path, Box)
             finally:
@@ -134,14 +134,15 @@ def tesseract(filename, Box):
         # Execute tesseract twice:
 
         # In the first one we get plain text
-        process = subprocess.Popen(['tesseract', filename, 'stdout'],
+        process = subprocess.Popen(['tesseract', '-l', 'spa+cat+eng', '--dpi',
+                '300', filename, 'stdout'],
             stdout=subprocess.PIPE, encoding='utf-8', errors='replace')
         content, _ = process.communicate()
 
         # In the second one we get text boxes
-        process = subprocess.Popen(['tesseract', filename, tess_pdf_path,
-                'pdf'], stdout=subprocess.PIPE, encoding='utf-8',
-            errors='replace')
+        process = subprocess.Popen(['tesseract', '-l', 'spa+cat+eng', '--dpi',
+                '300', filename, tess_pdf_path, 'pdf'], stdout=subprocess.PIPE,
+            encoding='utf-8', errors='replace')
         process.communicate()
         boxes = pdftoboxes(pdf_path, Box)
         return content, boxes

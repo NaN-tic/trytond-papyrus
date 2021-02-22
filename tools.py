@@ -143,6 +143,8 @@ def get_type(filename):
     try:
         content = subprocess.check_output(['identify', '-format', '"%m"',
                 filename], encoding='utf-8', errors='replace')
+    except OSError:
+        return
     except subprocess.CalledProcessError:
         return
     content = content.replace('"', '')
@@ -237,4 +239,3 @@ def soffice_convert(data, from_extension, to_extension, timeout=15):
             return f.read()
     finally:
         shutil.rmtree(temp_dir)
-

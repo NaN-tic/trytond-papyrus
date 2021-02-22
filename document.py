@@ -779,7 +779,8 @@ class Document(Workflow, ModelSQL, ModelView):
         '"inspect()" is easier to override.'
         documents = cls.search([('state', '=', 'pending')])
         for document in documents:
-            cls.__queue__.inspect([document])
+            with Transaction().set_context(queue_name='papyrus'):
+                cls.__queue__.inspect([document])
 
     @classmethod
     @Workflow.transition('processed')
@@ -822,7 +823,8 @@ class Document(Workflow, ModelSQL, ModelView):
         '"process()" is easier to override.'
         documents = cls.search([('state', '=', 'inspected')])
         for document in documents:
-            cls.__queue__.process([document])
+            with Transaction().set_context(queue_name='papyrus'):
+                cls.__queue__.process([document])
 
     # TODO: When this issue is implemented https://bugs.tryton.org/issue8331
     # the "hardcoded" fields will no longer be needed.

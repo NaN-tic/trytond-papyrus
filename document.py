@@ -599,7 +599,7 @@ class Document(Workflow, ModelSQL, ModelView):
         return super().create(vlist)
 
     @classmethod
-    def copy(cls, documents):
+    def copy(cls, documents, default=None):
         raise UserError(gettext('papyrus.document_copy_forbidden'))
 
     @staticmethod
@@ -1052,7 +1052,7 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
         return 'pending'
 
     @classmethod
-    def copy(cls, pages):
+    def copy(cls, pages, default=None):
         raise UserError(gettext('papyrus.page_copy_forbidden'))
 
     @staticmethod

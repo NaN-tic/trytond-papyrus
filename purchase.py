@@ -24,7 +24,7 @@ class Purchase(metaclass=PoolMeta):
 
     @classmethod
     @ModelView.button_action('papyrus.report_purchase_papyrus')
-    def papyrus_barcode(cls, invoices):
+    def papyrus_barcode(cls, purchases):
         pass
 
 

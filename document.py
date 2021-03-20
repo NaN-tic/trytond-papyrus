@@ -14,7 +14,7 @@ from fnmatch import fnmatch
 from trytond.model import (ModelSQL, ModelView, Workflow, fields,
     sequence_ordered)
 from trytond.pool import Pool
-from trytond.pyson import Bool, Eval, If, PYSONEncoder
+from trytond.pyson import Bool, Eval, If, PYSONEncoder, Id
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
 from trytond.transaction import Transaction
@@ -51,14 +51,15 @@ class Queue(ModelSQL, ModelView):
     name = fields.Char('Name', required=True)
     page_sequence = fields.Many2One('ir.sequence', 'Page Sequence',
         domain=[
-            ('code', '=', 'papyrus.page'),
+            ('sequence_type', '=', Id('papyrus', 'sequence_type_papyrus_page')),
             ], states={
             'required': Eval('type') == 'page',
             'invisible': Eval('type') != 'page',
             }, depends=['type'])
     document_sequence = fields.Many2One('ir.sequence', 'Document Sequence',
         domain=[
-            ('code', '=', 'papyrus.document'),
+            ('sequence_type', '=', Id('papyrus',
+                    'sequence_type_papyrus_document')),
             ], required=True)
     source_directory = fields.Char('Source Directory',
         help='Absolute path directory',
@@ -171,12 +172,11 @@ class Queue(ModelSQL, ModelView):
     def get_page(self, filename):
         pool = Pool()
         Page = pool.get('papyrus.page')
-        Sequence = pool.get('ir.sequence')
 
         page = Page()
         page.queue = self
         page.filename = filename
-        page.sequence = Sequence.get_id(self.page_sequence.id)
+        page.sequence = self.page_sequence.get()
         return page
 
     def get_document(self, filename):
@@ -584,7 +584,6 @@ class Document(Workflow, ModelSQL, ModelView):
     def create(cls, vlist):
         pool = Pool()
         Queue = pool.get('papyrus.queue')
-        Sequence = pool.get('ir.sequence')
 
         # cache of already instantiated queues
         queues = {}
@@ -595,7 +594,7 @@ class Document(Workflow, ModelSQL, ModelView):
             if not values.get('queue'):
                 continue
             queue = queues.get(values['queue'], Queue(values['queue']))
-            values['number'] = Sequence.get_id(queue.document_sequence.id)
+            values['number'] = queue.document_sequence.get()
         return super().create(vlist)
 
     @classmethod

@@ -25,14 +25,18 @@ Install account_invoice::
 Create sequences::
 
     >>> Sequence = Model.get('ir.sequence')
+    >>> SequenceType = Model.get('ir.sequence.type')
+    >>> page_sequence_type, = SequenceType.find([('name', '=', 'Papyrus Page')])
     >>> page_sequence = Sequence()
     >>> page_sequence.name = 'Page Sequence'
-    >>> page_sequence.code = 'papyrus.page'
+    >>> page_sequence.sequence_type = page_sequence_type
     >>> page_sequence.save()
 
+    >>> document_sequence_type, = SequenceType.find([('name', '=',
+    ...             'Papyrus Document')])
     >>> document_sequence = Sequence()
     >>> document_sequence.name = 'Document Sequence'
-    >>> document_sequence.code = 'papyrus.document'
+    >>> document_sequence.sequence_type = document_sequence_type
     >>> document_sequence.save()
 
 Create directories::

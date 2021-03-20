@@ -20,7 +20,6 @@
 
         <record model="ir.sequence.type" id="sequence_type_papyrus_page">
             <field name="name">Papyrus Page</field>
-            <field name="code">papyrus.page</field>
         </record>
         <record model="ir.sequence.type-res.group" id="sequence_type_papyrus_page_group_admin">
             <field name="sequence_type" ref="sequence_type_papyrus_page"/>
@@ -33,7 +32,6 @@
 
         <record model="ir.sequence.type" id="sequence_type_papyrus_document">
             <field name="name">Papyrus Document</field>
-            <field name="code">papyrus.document</field>
         </record>
         <record model="ir.sequence.type-res.group" id="sequence_type_papyrus_document_group_admin">
             <field name="sequence_type" ref="sequence_type_papyrus_document"/>

@@ -12,7 +12,7 @@ IDENTIFY_FORMATS = ['PNG', 'JPG', 'JPEG', 'GIF', 'PDF']
 
 def page_count(path):
     # TODO: Ensure path is a PDF. If its not a PDF return 1?
-    if not os.path.exists(path):
+    if not path or not os.path.exists(path):
         # When the file has not yet been created (maybe because FileDataManager
         # has not been commited yet, the file may not exists) better quit
         # quitely
@@ -28,7 +28,7 @@ def page_count(path):
 
 def page_image(path, page, unlink=True, suffix='.jpg', alpha=False, quality=90,
         density=100):
-    if not os.path.exists(path):
+    if not path or not os.path.exists(path):
         return
     _, image_path = tempfile.mkstemp(suffix=suffix)
     try:

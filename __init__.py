@@ -43,7 +43,7 @@ def register():
         purchase.Purchase,
         purchase.Page,
         purchase.Document,
-        depends=['purhcase'],
+        depends=['purchase'],
         module=module, type_='model')
     Pool.register(
         purchase.PurchasePapyrus,

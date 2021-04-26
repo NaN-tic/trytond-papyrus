@@ -64,7 +64,7 @@ class Attachment(metaclass=PoolMeta):
             if not os.path.exists(dirname):
                 os.makedirs(dirname, 0o770)
             path = os.path.join(dirname, str(self.id))
-            with open(path, 'w') as f:
+            with open(path, 'wb') as f:
                 f.write(self.data)
         else:
             if not self.file_id:

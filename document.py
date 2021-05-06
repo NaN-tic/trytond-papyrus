@@ -342,7 +342,9 @@ class Queue(ModelSQL, ModelView):
                 ('mailbox', '=', self.source_inbox),
                 ])
         for mail in mails:
-            mail_file = mail._get_mail(mail) or False
+            mail_file = mail._get_mail(mail)
+            if not mail_file:
+                continue
             email = message_from_bytes(mail_file)
             attachments = mail.get_attachments(email)
 

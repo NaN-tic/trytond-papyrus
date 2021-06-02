@@ -69,7 +69,7 @@ Print shipment in papyrus label::
     >>> ext
     'pdf'
     >>> name
-    'Papyrus Barcode'
+    'Papyrus-Barcode'
 
 Convert PDF to JPG and store it in queue's source directory::
 
@@ -88,7 +88,7 @@ Print shipment out return papyrus label::
     >>> ext
     'pdf'
     >>> name
-    'Papyrus Barcode'
+    'Papyrus-Barcode'
 
 Convert PDF to JPG and store it in queue's source directory::
 

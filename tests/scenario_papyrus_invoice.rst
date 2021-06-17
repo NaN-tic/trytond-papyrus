@@ -83,7 +83,7 @@ Print invoice label::
     >>> ext
     'pdf'
     >>> name
-    'Papyrus-Barcode'
+    'Papyrus-Barcode-1'
 
 Convert PDF to JPG and store it in queue's source directory::
 

@@ -592,16 +592,16 @@ msgstr ""
 
 #, fuzzy
 msgctxt "model:ir.model.button,string:"
-msgid "Papyrus Barcode"
-msgstr "Código de barras Papyrus"
+msgid "Barcode"
+msgstr "Código barras"
 
 msgctxt "model:ir.model.button,string:"
-msgid "Papyrus Barcode"
-msgstr "Código de barras Papyrus"
+msgid "Barcode"
+msgstr "Código barras"
 
 msgctxt "model:ir.model.button,string:"
-msgid "Papyrus Barcode"
-msgstr "Código de barras Papyrus"
+msgid "Barcode"
+msgstr "Código barras"
 
 msgctxt "model:ir.model.button,string:attachment_next_page_button"
 msgid "Next Page"

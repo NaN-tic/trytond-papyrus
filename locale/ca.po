@@ -480,15 +480,15 @@ msgstr "Camí absolut del directori"
 
 msgctxt "model:ir.action,name:"
 msgid "Papyrus Barcode"
-msgstr ""
+msgstr "Codi de barres Papyrus"
 
 msgctxt "model:ir.action,name:"
 msgid "Papyrus Barcode"
-msgstr ""
+msgstr "Codi de barres Papyrus"
 
 msgctxt "model:ir.action,name:"
 msgid "Papyrus Barcode"
-msgstr ""
+msgstr "Codi de barres Papyrus"
 
 msgctxt "model:ir.action,name:act_attachment_form"
 msgid "Attachments"
@@ -590,16 +590,16 @@ msgid ""
 msgstr ""
 
 msgctxt "model:ir.model.button,string:"
-msgid "Papyrus Barcode"
-msgstr ""
+msgid "Barcode"
+msgstr "Codi barres"
 
 msgctxt "model:ir.model.button,string:"
-msgid "Papyrus Barcode"
-msgstr ""
+msgid "Barcode"
+msgstr "Codi barres"
 
 msgctxt "model:ir.model.button,string:"
-msgid "Papyrus Barcode"
-msgstr ""
+msgid "Barcode"
+msgstr "Codi barres"
 
 msgctxt "model:ir.model.button,string:attachment_next_page_button"
 msgid "Next Page"

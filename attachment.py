@@ -55,6 +55,8 @@ class Attachment(metaclass=PoolMeta):
 
     @fields.depends('file_id', 'data')
     def get_full_path(self):
+        pool = Pool()
+        Attachment = pool.get('ir.attachment')
         if config.get('database', 'class'):
             if not self.data:
                 return
@@ -63,9 +65,11 @@ class Attachment(metaclass=PoolMeta):
             dirname = os.path.join(cache_directory, 'ir.attachment')
             if not os.path.exists(dirname):
                 os.makedirs(dirname, 0o770)
+            with Transaction().set_context({'ir.attachment.data': None}):
+                attachment = Attachment(self.id)
             path = os.path.join(dirname, str(self.id))
             with open(path, 'wb') as f:
-                f.write(self.data)
+                f.write(attachment.data)
         else:
             if not self.file_id:
                 return

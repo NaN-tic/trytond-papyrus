@@ -130,11 +130,11 @@ class PapyrusAttachment(Wizard):
         for model in models:
             if access[model.model]['read']:
                 domain_get = Rule.domain_get(model.model)
-                if domain_get:
+                if domain_get and domain_get[1] and domain_get[1][-1]:
                     for clause in domain_get[1][-1]:
                         domain.append(('resource.%s' % clause[0], clause[1], clause[2], model.model))
                 else:
-                    domain.append([('resource', 'like',  model.model+',%')])
+                    domain.append(('resource', 'like',  model.model+',%'))
 
         action['pyson_domain'] = PYSONEncoder().encode(domain)
         return action, {}

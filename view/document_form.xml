@@ -10,16 +10,7 @@
     <field name="queue"/>
     <notebook colspan="6">
         <page string="Image" id="image">
-            <group colspan="2" id="image">
-                <group id="current_page" xfill="0" xexpand="0" col="6" colspan="4">
-                    <button name="previous_page" />
-                    <field name="current_page" xfill="1" xexpand="0"/>
-                    <label string="/" id="/"/>
-                    <field name="page_count" xfill="0" xexpand="0"/>
-                    <button name="next_page"/>
-                </group>
-                <field name="image" widget="image" readonly="1" height="-1" width="750" colspan="4"/>
-            </group>
+	    <field name="data" widget="document" colspan="2"/>
             <group id="extra" colspan="2">
               <label name="company"/>
               <field name="company"/>

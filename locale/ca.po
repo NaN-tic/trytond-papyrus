@@ -330,6 +330,10 @@ msgctxt "field:papyrus.queue,discarded_inbox:"
 msgid "Discarded Inbox"
 msgstr "Bústia de descartats"
 
+msgctxt "field:papyrus.queue,document_process_auto:"
+msgid "Document Process Auto"
+msgstr "Processar documents auto"
+
 msgctxt "field:papyrus.queue,document_sequence:"
 msgid "Document Sequence"
 msgstr "Seqüència de documents"

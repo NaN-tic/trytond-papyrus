@@ -825,15 +825,12 @@ class Document(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def cron_process(cls):
-        print('entro metodo cron_process')
         'Process method to be used by cron. It is a separate method so '
         '"process()" is easier to override.'
         documents = cls.search([
             ('state', '=', 'inspected'),
             ('queue.document_process_auto', '=', True)
             ])
-        print(documents)
-        print('============')
         for document in documents:
             with Transaction().set_context(queue_name='papyrus'):
                 cls.__queue__.process([document])

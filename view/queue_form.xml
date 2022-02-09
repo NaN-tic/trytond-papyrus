@@ -17,6 +17,8 @@
     <field name="document_sequence"/>
     <label name="scheduler"/>
     <field name="scheduler"/>
+    <label name="document_process_auto"/>
+    <field name="document_process_auto"/>
     <newline/>
     <label name="storage_directory"/>
     <field name="storage_directory" colspan="3"/>

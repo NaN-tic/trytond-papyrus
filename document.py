@@ -1252,8 +1252,8 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
         'Process method to be used by cron. It is a separate method so '
         '"process()" is easier to override.'
         pages = cls.search([
-            ('state', '=', 'inspected'),
-            ('queue.document_process_auto', '=', True)])
+            ('state', '=', 'inspected')
+            ])
         cls.process(pages)
 
 

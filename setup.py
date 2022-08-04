@@ -9,8 +9,17 @@ import os
 import io
 from configparser import ConfigParser
 
-MODULE2PREFIX = {}
 
+MODULE = 'papyrus'
+PREFIX = 'nantic'
+MODULE2PREFIX = {
+    'electronic_mail': 'nantic',
+    'jasper_reports': 'trytonspain',
+    }
+OWNER = {
+    'nantic': 'NaN-tic',
+    'trytonspain': 'NaN-tic',
+}
 
 def read(fname):
     return io.open(
@@ -27,6 +36,27 @@ def get_require_version(name):
         major_version, minor_version + 1)
     return require
 
+def get_requires(depends='depends'):
+  requires = []
+  for dep in info.get(depends, []):
+      if not re.match(r'(ir|res)(\W|$)', dep):
+          prefix = MODULE2PREFIX.get(dep, 'trytond')
+          owner = OWNER.get(prefix, prefix)
+          if prefix == 'trytond':
+              requires.append(get_require_version('%s_%s' % (prefix, dep)))
+          else:
+              requires.append(
+                  '%(prefix)s-%(dep)s@git+https://github.com/%(owner)s/'
+                  'trytond-%(dep)s.git@%(branch)s'
+                  '#egg=%(prefix)s-%(dep)s-%(series)s'%{
+                          'prefix': prefix,
+                          'owner': owner,
+                          'dep':dep,
+                          'branch': branch,
+                          'series': series,})
+
+  return requires
+
 config = ConfigParser()
 config.readfp(open('tryton.cfg'))
 info = dict(config.items('tryton'))
@@ -37,30 +67,36 @@ version = info.get('version', '0.0.1')
 major_version, minor_version, _ = version.split('.', 2)
 major_version = int(major_version)
 minor_version = int(minor_version)
-name = 'nantic_papyrus'
-download_url = 'https://bitbucket.org/nantic/trytond-papyrus'
 
 requires = []
-for dep in info.get('depends', []):
-    if not re.match(r'(ir|res)(\W|$)', dep):
-        prefix = MODULE2PREFIX.get(dep, 'trytond')
-        requires.append(get_require_version('%s_%s' % (prefix, dep)))
-requires.append(get_require_version('trytond'))
 
-tests_require = []
+series = '%s.%s' % (major_version, minor_version)
+if minor_version % 2:
+    branch = 'master'
+else:
+    branch = series
+
+requires += get_requires('depends')
+
+tests_require = [
+    get_require_version('proteus'),
+
+    ]
+tests_require += get_requires('extras_depend')
+
 dependency_links = []
 if minor_version % 2:
     # Add development index for testing with proteus
     dependency_links.append('https://trydevpi.tryton.org/')
 
-setup(name=name,
+setup(name='%s_%s' % (PREFIX, MODULE),
     version=version,
     description='Tryton Papyrus Module',
     long_description=read('README'),
     author='NaN-TIC',
     author_email='info@nan-tic.com',
     url='https://bitbucket.org/nantic/',
-    download_url=download_url,
+    download_url='https://github.com/NaN-tic/trytond-papyrus',
     keywords='',
     package_dir={'trytond.modules.papyrus': '.'},
     packages=[
@@ -70,7 +106,7 @@ setup(name=name,
     package_data={
         'trytond.modules.papyrus': (info.get('xml', [])
             + ['tryton.cfg', 'view/*.xml', 'locale/*.po', '*.odt',
-                'icons/*.svg', 'tests/*.rst']),
+                'icons/*.svg', 'tests/*.rst', 'tests/examples/*.pdf']),
         },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -103,5 +139,4 @@ setup(name=name,
     test_suite='tests',
     test_loader='trytond.test_loader:Loader',
     tests_require=tests_require,
-    use_2to3=True,
     )

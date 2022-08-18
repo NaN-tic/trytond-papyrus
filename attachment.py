@@ -14,9 +14,6 @@ from . import tools
 
 # We need a cache when files are stored in a cloud filestore
 cache_directory = config.get('papyrus', 'cache_directory')
-if config.get('database', 'class'):
-    assert cache_directory, ('Cache directory is required when FileStore is '
-        'not the default one')
 
 
 class Attachment(metaclass=PoolMeta):
@@ -62,6 +59,8 @@ class Attachment(metaclass=PoolMeta):
                 return
             # TODO: Remove cache periodically
             # Cache objects when they're stored in a cloud FileStore
+            assert cache_directory, ('Cache directory is required when '
+                'FileStore is not the default one')
             dirname = os.path.join(cache_directory, 'ir.attachment')
             if not os.path.exists(dirname):
                 os.makedirs(dirname, 0o770)

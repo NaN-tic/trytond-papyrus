@@ -64,6 +64,10 @@ class Document(metaclass=PoolMeta):
         if self.reference:
             if self.reference.startswith(PURCHASE_PREFIX):
                 id = self.reference[len(PURCHASE_PREFIX):]
+                try:
+                    id = int(id)
+                except ValueError:
+                    return
                 records = Purchase.search([
                         ('id', '=', id),
                         ], limit=1)

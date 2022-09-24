@@ -100,6 +100,10 @@ class Document(metaclass=PoolMeta):
         if self.reference:
             if self.reference.startswith(IN_PREFIX):
                 id = self.reference[len(IN_PREFIX):]
+                try:
+                    id = int(id)
+                except ValueError:
+                    return
                 records = ShipmentIn.search([
                         ('id', '=', id),
                         ], limit=1)
@@ -107,6 +111,10 @@ class Document(metaclass=PoolMeta):
                     return records[0]
             if self.reference.startswith(OUT_RETURN_PREFIX):
                 id = self.reference[len(OUT_RETURN_PREFIX):]
+                try:
+                    id = int(id)
+                except ValueError:
+                    return
                 records = ShipmentOutReturn.search([
                         ('id', '=', id),
                         ], limit=1)

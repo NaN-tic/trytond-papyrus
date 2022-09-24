@@ -61,6 +61,10 @@ class Document(metaclass=PoolMeta):
             return res
         if self.reference and self.reference.startswith(PREFIX):
             id = self.reference[len(PREFIX):]
+                try:
+                    id = int(id)
+                except ValueError:
+                    return
             records = Invoice.search([
                     ('id', '=', id),
                     ], limit=1)

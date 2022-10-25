@@ -214,12 +214,11 @@ def datamatrix(filename, Box):
                 extra = {}
             box = None
             continue
-
         if not box:
             box = Box()
             box.type = 'barcode'
             box.text = stdout[len(boxes)]
-            boxes.append( box )
+            boxes.append(box)
 
         key, value = line.split(':')
         key = key.strip()

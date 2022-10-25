@@ -1168,17 +1168,21 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
         for box in self.boxes:
             if not box.text:
                 continue
-            for prefix in self.get_prefixes():
-                if box.text.startswith(prefix):
-                    document = Document()
-                    document.queue = self.queue
-                    document.state = 'inspected'
-                    document.reference = box.text
-                    document.pages = (self,)
-                    return document
+            if self.is_new_document(box):
+                document = Document()
+                document.queue = self.queue
+                document.state = 'inspected'
+                document.reference = box.text
+                document.pages = (self,)
+                return document
         if previous:
             previous.pages += (self,)
         return previous
+
+    def is_new_document(self, box):
+        for prefix in self.get_prefixes():
+            if box.text.startswith(prefix):
+                return True
 
     @classmethod
     @ModelView.button

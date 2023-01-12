@@ -9,7 +9,6 @@ import shutil
 import subprocess
 import requests
 from email import message_from_bytes
-from PyPDF2 import PdfFileReader, PdfFileWriter
 from fnmatch import fnmatch
 from trytond.model import (ModelSQL, ModelView, Workflow, fields,
     sequence_ordered)
@@ -22,6 +21,12 @@ from trytond.exceptions import UserWarning
 from trytond.wizard import Wizard, StateView, Button, StateAction
 from . import tools
 from .datamanager import FileDataManager
+
+try:
+    from PyPDF2 import PdfReader, PdfWriter
+except ImportError:
+    from PyPDF2 import PdfFileReader as PdfReader, PdfFileWriter as PdfWriter
+
 
 __all__ = ['Queue', 'Document', 'Page', 'DocumentSplitPage',
     'DocumentSplitStart', 'DocumentSplit', 'DocumentBox',
@@ -937,12 +942,12 @@ class DocumentSplit(Wizard):
 
         #Create documents
         with open(self.start.document.get_full_path(), 'rb') as original:
-            reader = PdfFileReader(original)
+            reader = PdfReader(original)
             num_document = 0
             new_document_id = []
             for d in documents:
                 num_document += 1
-                writer = PdfFileWriter()
+                writer = PdfWriter()
                 for p in d:
                    writer.addPage(reader.getPage(p))
                 #Document name is like: path/name.extension

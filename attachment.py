@@ -124,7 +124,8 @@ class PapyrusAttachment(Wizard):
         attachment = Attachment.__table__()
 
         query = attachment.select(
-            Substring(attachment.resource, 0, Position(',', attachment.resource)),
+            Substring(
+                attachment.resource, 0, Position(',', attachment.resource)),
             distinct=True)
         models = Model.search([('model', 'in', query)])
         access = ModelAccess.get_access([m.model for m in models])
@@ -136,7 +137,10 @@ class PapyrusAttachment(Wizard):
                     domain_get = Rule.domain_get(model.model)
                 if domain_get and domain_get[1] and domain_get[1][-1]:
                     for clause in domain_get[1][-1]:
-                        domain.append(('resource.%s' % clause[0], clause[1], clause[2], model.model))
+                        if len(clause) > 2:
+                            domain.append(
+                                ('resource.%s' % clause[0], clause[1],
+                                    clause[2], model.model))
                 else:
                     domain.append(('resource', 'like',  model.model+',%'))
 

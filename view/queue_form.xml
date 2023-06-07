@@ -24,6 +24,8 @@
     <field name="storage_directory" colspan="3"/>
     <label name="source_type"/>
     <field name="source_type"/>
+    <label name="delay"/>
+    <field name="delay"/>
     <group string="Electronic Mail" id="electronic_mail" colspan="4">
         <label name="source_inbox"/>
         <field name="source_inbox"/>

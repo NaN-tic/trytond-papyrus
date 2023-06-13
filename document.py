@@ -8,6 +8,7 @@ import re
 import shutil
 import subprocess
 import requests
+from datetime import datetime
 from email import message_from_bytes
 from fnmatch import fnmatch
 from trytond.model import (ModelSQL, ModelView, Workflow, fields,
@@ -138,6 +139,9 @@ class Queue(ModelSQL, ModelView):
         states={
             'invisible': ~Bool(Eval('scheduler'))
         }, depends=['scheduler'])
+    delay = fields.TimeDelta('Delay', states={
+            'invisible': Eval('source_type') != 'directory',
+            })
 
     @classmethod
     def __setup__(cls):
@@ -242,6 +246,10 @@ class Queue(ModelSQL, ModelView):
         documents = []
         for file_name in sorted(glob.glob(os.path.join(
                         self.source_directory, '*'))):
+            if self.delay:
+                file_time = datetime.fromtimestamp(os.path.getmtime(file_name))
+                if file_time > datetime.now() - self.delay:
+                    continue
             # TODO: If file_name already exists as a record and file does
             # not exist in destination it means that we can move the file
             # directly (or just after the transaction finished and the

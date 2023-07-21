@@ -22,11 +22,7 @@ from trytond.exceptions import UserWarning
 from trytond.wizard import Wizard, StateView, Button, StateAction
 from . import tools
 from .datamanager import FileDataManager
-
-try:
-    from PyPDF2 import PdfReader, PdfWriter
-except ImportError:
-    from PyPDF2 import PdfFileReader as PdfReader, PdfFileWriter as PdfWriter
+from pypdf import PdfReader, PdfWriter
 
 
 __all__ = ['Queue', 'Document', 'Page', 'DocumentSplitPage',

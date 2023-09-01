@@ -116,6 +116,24 @@ class PapyrusAttachment(Wizard):
     open_ = StateAction('papyrus.act_attachment_form')
 
     def do_open_(self, action):
+
+        def convert_resource(domain, model):
+            if not domain:
+                return []
+            if domain[0] not in ('AND', 'OR') and not isinstance(domain[0], (list, tuple)):
+                domain[0] = 'resource.%s' % domain[0]
+                domain.append(model)
+                return domain
+
+            new_domain = []
+            for item in domain:
+                if isinstance(item, tuple):
+                    item = list(item)
+                if isinstance(item, list):
+                    item = convert_resource(item, model)
+                new_domain.append(item)
+            return new_domain
+
         pool = Pool()
         ModelAccess = pool.get('ir.model.access')
         Model = pool.get('ir.model')
@@ -135,12 +153,8 @@ class PapyrusAttachment(Wizard):
             if access[model.model]['read']:
                 with Transaction().set_context(_check_access=True):
                     domain_get = Rule.domain_get(model.model)
-                if domain_get and domain_get[1] and domain_get[1][-1]:
-                    for clause in domain_get[1][-1]:
-                        if len(clause) > 2:
-                            domain.append(
-                                ('resource.%s' % clause[0], clause[1],
-                                    clause[2], model.model))
+                if domain_get:
+                    domain.append(convert_resource(domain_get, model.model))
                 else:
                     domain.append(('resource', 'like',  model.model+',%'))
 

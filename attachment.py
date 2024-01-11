@@ -25,7 +25,7 @@ class Attachment(metaclass=PoolMeta):
                     ('current_page', '>=', 1),
                     ('current_page', '<=', Eval('page_count')),
                     ], []),
-            ], depends=['page_count'])
+            ])
     page_count = fields.Function(fields.Integer('Page Count'), 'get_page_count')
     content = fields.Text('Content', readonly=True)
 

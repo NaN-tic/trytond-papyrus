@@ -57,7 +57,7 @@ class Queue(ModelSQL, ModelView):
             ], states={
             'required': Eval('type') == 'page',
             'invisible': Eval('type') != 'page',
-            }, depends=['type'])
+            })
     document_sequence = fields.Many2One('ir.sequence', 'Document Sequence',
         domain=[
             ('sequence_type', '=', Id('papyrus',
@@ -68,7 +68,7 @@ class Queue(ModelSQL, ModelView):
         states={
             'invisible': Eval('source_type') != 'directory',
             'required': Eval('source_type') == 'directory',
-        }, depends=['source_type'])
+        })
     storage_directory = fields.Char('Storage Directory',
         help='Absolute path directory', required=True)
     scheduler = fields.Boolean('Scheduler')
@@ -79,7 +79,7 @@ class Queue(ModelSQL, ModelView):
     company = fields.Many2One('company.company', "Company")
     image_dpi = fields.Char('DPI', states={
             'invisible': Eval('type') != 'page',
-            }, depends=['type'], help='DPI: This value indicates the number '
+            }, help='DPI: This value indicates the number '
         'of pixels per inch that PDFs of documents will generate when they '
         'come from multiple pages, if the system is unable to get the value '
         'from the image on the page (usually in files in PDF format). '
@@ -92,9 +92,9 @@ class Queue(ModelSQL, ModelView):
             ('electronic_mail', 'Electronic mail'),
             ], 'Source', required=True)
     source_inbox = fields.Many2One('electronic.mail.mailbox', 'Source Inbox',
-        states=ELECTRONIC_MAIL_STATES, depends=['source_type'])
+        states=ELECTRONIC_MAIL_STATES)
     storage_inbox = fields.Many2One('electronic.mail.mailbox', 'Storage Inbox',
-        states=ELECTRONIC_MAIL_STATES, depends=['source_type'])
+        states=ELECTRONIC_MAIL_STATES)
     discarded_inbox = fields.Many2One('electronic.mail.mailbox',
         'Discarded Inbox', states=ELECTRONIC_MAIL_STATES,
         depends=['source_type'])
@@ -108,33 +108,33 @@ class Queue(ModelSQL, ModelView):
         'whitlisted nor blacklisted prefixes.')
     electronic_mail_urls_whitelist = fields.Text('URL Whitelist', states={
             'invisible': Eval('source_type') != 'electronic_mail',
-            }, depends=['source_type'],
+            },
         help='List of URL prefixes (one per line) that should be downloaded. '
         'For example, use https:// to download all URLs starting with '
         '"https://".')
     electronic_mail_urls_blacklist = fields.Text('URL Blacklist', states={
             'invisible': Eval('source_type') != 'electronic_mail',
-            }, depends=['source_type'],
+            },
         help='List of URL prefixes (one per line) that should not be '
         'downloaded. For example, use http:// to NO download URLs starting '
         'with "http://"')
     filename_whitelist = fields.Text('Filename Whitelist', states={
             'invisible': Eval('source_type') != 'electronic_mail',
-            }, depends=['source_type'], help='List of filename-matching '
+            }, help='List of filename-matching '
         'patterns (one per line). File names matching any of the patterns will '
         'be created as documents as long as they do not match any blacklist '
         'pattern. Valid matching expressions include: *.pdf, *.doc, '
         'invoice*.pdf')
     filename_blacklist = fields.Text('Filename Blacklist', states={
             'invisible': Eval('source_type') != 'electronic_mail',
-            }, depends=['source_type'], help='List of filename-matching '
+            }, help='List of filename-matching '
         'patterns (one per line). Filenames matching any of the patterns will '
         'be discarded. Valid matching expressions include: *.pdf, *.doc, '
         'invoice*.pdf')
     document_process_auto = fields.Boolean('Document Process Auto',
         states={
             'invisible': ~Bool(Eval('scheduler'))
-        }, depends=['scheduler'])
+        })
     delay = fields.TimeDelta('Delay', states={
             'invisible': Eval('source_type') != 'directory',
             })
@@ -490,7 +490,7 @@ class Document(Workflow, ModelSQL, ModelView):
     number = fields.Char('Number', required=True,
         states={
             'readonly': (Bool(Eval('pages'))),
-        }, depends=['pages'])
+        })
     queue = fields.Many2One('papyrus.queue', 'Queue', required=True,
         states={
             'readonly': (Bool(Eval('pages'))),
@@ -517,7 +517,7 @@ class Document(Workflow, ModelSQL, ModelView):
                     ('current_page', '>=', 1),
                     ('current_page', '<=', Eval('page_count')),
                     ], []),
-            ], depends=['page_count'])
+            ])
     page_count = fields.Function(fields.Integer('Page Count'), 'get_page_count')
     pages = fields.One2Many('papyrus.page', 'document', 'Pages', add_remove=[
             ('document', '=', None),
@@ -526,7 +526,7 @@ class Document(Workflow, ModelSQL, ModelView):
         states={
             'readonly': (Eval('state') != 'processed'),
             'invisible': Bool(Eval('filename')),
-            }, depends=['state', 'queue', 'filename'])
+            })
     company = fields.Many2One('company.company', "Company")
     origin = fields.Reference('Origin', selection='get_origin', readonly=True)
     employee = fields.Many2One('company.employee', 'Employee',

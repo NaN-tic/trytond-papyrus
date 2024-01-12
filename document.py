@@ -96,14 +96,12 @@ class Queue(ModelSQL, ModelView):
     storage_inbox = fields.Many2One('electronic.mail.mailbox', 'Storage Inbox',
         states=ELECTRONIC_MAIL_STATES)
     discarded_inbox = fields.Many2One('electronic.mail.mailbox',
-        'Discarded Inbox', states=ELECTRONIC_MAIL_STATES,
-        depends=['source_type'])
+        'Discarded Inbox', states=ELECTRONIC_MAIL_STATES)
     electronic_mail_urls_default_policy = fields.Selection([
             (None, ''),
             ('download', 'Download'),
             ('discard', 'Discard'),
             ], 'Default URL Policy', states=ELECTRONIC_MAIL_STATES,
-        depends=['source_type'],
         help='The default policy to apply if URL does not match any of the '
         'whitlisted nor blacklisted prefixes.')
     electronic_mail_urls_whitelist = fields.Text('URL Whitelist', states={
@@ -494,8 +492,7 @@ class Document(Workflow, ModelSQL, ModelView):
     queue = fields.Many2One('papyrus.queue', 'Queue', required=True,
         states={
             'readonly': (Bool(Eval('pages'))),
-            },
-        depends=['pages'])
+            })
     state = fields.Selection([
             ('pending', 'Pending'),
             ('inspected', 'Inspected'),
@@ -532,8 +529,7 @@ class Document(Workflow, ModelSQL, ModelView):
     employee = fields.Many2One('company.employee', 'Employee',
         domain=[
             ('company', '=', Eval('company', -1)),
-            ],
-        depends=['company'])
+            ])
 
     @classmethod
     def __setup__(cls):
@@ -1018,18 +1014,15 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
         states={
             'readonly': (Eval('state') == 'processed'),
             # 'required': (Eval('state') == 'processed'),
-            },
-        depends=['state'])
+            })
     queue = fields.Many2One('papyrus.queue', 'Queue', required=True,
         states={
             'readonly': (Bool(Eval('filename'))),
-            },
-        depends=['filename'])
+            })
     filename = fields.Char("File Name",
         states={
             'readonly': (Bool(Eval('filename'))),
-            },
-        depends=['filename'])
+            })
     image = fields.Function(fields.Binary('Image'), 'on_change_with_image')
     state = fields.Selection([
             ('pending', 'Pending'),

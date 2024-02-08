@@ -438,7 +438,9 @@ class Queue(ModelSQL, ModelView):
         'Process method to be used by cron. It is a separate method so '
         '"process()" is easier to override.'
         queues = cls.search([('scheduler', '=', True)])
-        cls.process(queues)
+        for queue in queues:
+            with Transaction().set_context(queue_name='papyrus'):
+                cls.__queue__.process([queue])
 
     @classmethod
     @ModelView.button
@@ -484,7 +486,9 @@ class Queue(ModelSQL, ModelView):
         'Clean method to be used by cron. It is a separate method so '
         '"clean()" is easier to override.'
         queues = cls.search([])
-        cls.clean(queues)
+        for queue in queues:
+            with Transaction().set_context(queue_name='papyrus'):
+                cls.__queue__.clean([queue])
 
 
 class Document(Workflow, ModelSQL, ModelView):
@@ -1223,7 +1227,9 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
         'Inspect method to be used by cron. It is a separate method so '
         '"inspect()" is easier to override.'
         pages = cls.search([('state', '=', 'pending')])
-        cls.inspect(pages)
+        for page in pages:
+            with Transaction().set_context(queue_name='papyrus'):
+                cls.__queue__.inspect([page])
 
     @classmethod
     @Workflow.transition('processed')
@@ -1270,7 +1276,9 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
         pages = cls.search([
             ('state', '=', 'inspected')
             ])
-        cls.process(pages)
+        for page in pages:
+            with Transaction().set_context(queue_name='papyrus'):
+                cls.__queue__.process([page])
 
 
 class PageBox(ModelSQL, ModelView):

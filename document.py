@@ -11,7 +11,6 @@ import requests
 from datetime import datetime
 from email import message_from_bytes
 from fnmatch import fnmatch
-from psycopg2.errors import LockNotAvailable
 from trytond.model import (ModelSQL, ModelView, Workflow, fields,
     sequence_ordered)
 from trytond.pool import Pool
@@ -237,10 +236,7 @@ class Queue(ModelSQL, ModelView):
         database = transaction.database
         # Ensure no two processes execute this method concurrently as we would
         # be moving files twice and there could be race conditions
-        try:
-            database.lock(connection, self._table)
-        except LockNotAvailable:
-            return
+        database.lock(connection, self._table)
 
         datamanager = FileDataManager()
         datamanager = transaction.join(datamanager)

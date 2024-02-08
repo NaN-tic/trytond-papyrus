@@ -459,10 +459,7 @@ class Queue(ModelSQL, ModelView):
         # Otherwise, it could happen that a file exists in the
         # storage_directory but the transaction that created it, has not been
         # committed yet.
-        try:
-            database.lock(connection, self._table)
-        except LockNotAvailable:
-            return
+        database.lock(connection, cls._table)
 
         pool = Pool()
         Page = pool.get('papyrus.page')

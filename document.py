@@ -1227,9 +1227,8 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
         'Inspect method to be used by cron. It is a separate method so '
         '"inspect()" is easier to override.'
         pages = cls.search([('state', '=', 'pending')])
-        for page in pages:
-            with Transaction().set_context(queue_name='papyrus'):
-                cls.__queue__.inspect([page])
+        with Transaction().set_context(queue_name='papyrus'):
+            cls.__queue__.inspect(pages)
 
     @classmethod
     @Workflow.transition('processed')
@@ -1276,9 +1275,8 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
         pages = cls.search([
             ('state', '=', 'inspected')
             ])
-        for page in pages:
-            with Transaction().set_context(queue_name='papyrus'):
-                cls.__queue__.process([page])
+        with Transaction().set_context(queue_name='papyrus'):
+            cls.__queue__.process(pages)
 
 
 class PageBox(ModelSQL, ModelView):

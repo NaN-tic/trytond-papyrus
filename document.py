@@ -2,6 +2,7 @@
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
 import glob
+import logging
 import os
 import os.path
 import re
@@ -28,6 +29,7 @@ try:
 except ImportError:
     from PyPDF2 import PdfFileReader as PdfReader, PdfFileWriter as PdfWriter
 
+logger = logging.getLogger(__name__)
 
 __all__ = ['Queue', 'Document', 'Page', 'DocumentSplitPage',
     'DocumentSplitStart', 'DocumentSplit', 'DocumentBox',
@@ -370,7 +372,13 @@ class Queue(ModelSQL, ModelView):
             # Extract all URLs from the body of the e-mail, download them,
             # and if they return a file, add them as attachments to be
             # processed
-            for url in self.find_urls(mail.body):
+            try:
+                body = mail.body
+            except UnicodeDecodeError:
+                logger.error('UnicodeDecodeError mail ID: %s)' % (mail.id))
+                continue
+
+            for url in self.find_urls(body):
                 try:
                     response = requests.get(url, timeout=15, verify=False,
                         allow_redirects=True)

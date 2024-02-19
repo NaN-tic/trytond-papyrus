@@ -1,5 +1,0 @@
-<data>
-    <xpath expr="//field[@name='data']" position="replace_attributes">
-	<field name="image" widget="image"/>
-    </xpath>
-</data>

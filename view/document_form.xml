@@ -10,7 +10,7 @@
     <field name="queue"/>
     <notebook colspan="6">
         <page string="Image" id="image">
-	    <field name="data" widget="document" colspan="2"/>
+            <field name="data" widget="document" colspan="2"/>
             <group id="extra" colspan="2">
               <label name="company"/>
               <field name="company"/>

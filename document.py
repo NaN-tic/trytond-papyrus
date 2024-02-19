@@ -580,17 +580,6 @@ class Document(Workflow, ModelSQL, ModelView):
                     'icon': 'tryton-ok',
                     'depends': ['state'],
                     },
-                'previous_page': {
-                    'readonly': Eval('current_page', 1) <= 1,
-                    'icon': 'tryton-back',
-                    'depends': ['current_page'],
-                    },
-                'next_page': {
-                    'readonly': (Eval('current_page', 1) >=
-                        Eval('page_count', 1)),
-                    'icon': 'tryton-forward',
-                    'depends': ['current_page', 'page_count'],
-                    },
                 'split': {
                     'invisible': ~Eval('state').in_(['pending']),
                     'icon': 'tryton-document-split',
@@ -858,26 +847,6 @@ class Document(Workflow, ModelSQL, ModelView):
         for document in documents:
             with Transaction().set_context(queue_name='papyrus'):
                 cls.__queue__.process([document])
-
-    # TODO: When this issue is implemented https://bugs.tryton.org/issue8331
-    # the "hardcoded" fields will no longer be needed.
-    @ModelView.button_change('current_page', 'page_count', 'pages', 'filename',
-        'queue')
-    def previous_page(self):
-        # TODO: Check why it doesn't work. Seems to be a GTK client issue
-        if self.current_page > 1:
-            self.current_page -= 1
-        self.image = self.on_change_with_image()
-
-    # TODO: When this issue is implemented https://bugs.tryton.org/issue8331
-    # the hardcoded fields will no longer be needed.
-    @ModelView.button_change('current_page', 'page_count', 'filename', 'pages',
-        'queue')
-    def next_page(self):
-        # TODO: Check why it doesn't work. Seems to be a GTK client issue
-        if self.current_page < self.page_count:
-            self.current_page += 1
-        self.image = self.on_change_with_image()
 
     @classmethod
     @ModelView.button_action('papyrus.wizard_split')

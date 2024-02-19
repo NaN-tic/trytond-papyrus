@@ -19,36 +19,7 @@ cache_directory = config.get('papyrus', 'cache_directory')
 class Attachment(metaclass=PoolMeta):
     "Attachment"
     __name__ = 'ir.attachment'
-    image = fields.Function(fields.Binary('Image'), 'on_change_with_image')
-    current_page = fields.Integer('Current Page', domain=[
-            If(Bool(Eval('page_count')), [
-                    ('current_page', '>=', 1),
-                    ('current_page', '<=', Eval('page_count')),
-                    ], []),
-            ], depends=['page_count'])
-    page_count = fields.Function(fields.Integer('Page Count'), 'get_page_count')
     content = fields.Text('Content', readonly=True)
-
-    @staticmethod
-    def default_current_page():
-        return 1
-
-    @classmethod
-    def __setup__(cls):
-        super(Attachment, cls).__setup__()
-        cls._buttons.update({
-                'previous_page': {
-                    'readonly': Eval('current_page', 1) <= 1,
-                    'icon': 'tryton-back',
-                    'depends': ['current_page'],
-                    },
-                'next_page': {
-                    'readonly': (Eval('current_page', 1) >=
-                        Eval('page_count', 1)),
-                    'icon': 'tryton-forward',
-                    'depends': ['current_page', 'page_count'],
-                    },
-                })
 
     @fields.depends('file_id', 'data')
     def get_full_path(self):
@@ -77,36 +48,6 @@ class Attachment(metaclass=PoolMeta):
                 prefix = Transaction().database.name
             path = filestore._filename(self.file_id, prefix)
         return path
-
-    def get_page_count(self, name):
-        return tools.page_count(self.get_full_path())
-
-    @fields.depends('current_page', methods=['get_full_path'])
-    def on_change_with_image(self, name=None):
-        path = self.get_full_path()
-        if path:
-            return tools.page_image(path, self.current_page or 1)
-
-    @ModelView.button_change('current_page', 'file_id')
-    def previous_page(self):
-        if self.current_page and self.current_page > 1:
-            self.current_page -= 1
-        self.image = self.on_change_with_image()
-
-    @ModelView.button_change('current_page', 'page_count', 'file_id')
-    def next_page(self):
-        if self.current_page and self.current_page < self.page_count:
-            self.current_page += 1
-        self.image = self.on_change_with_image()
-
-    @fields.depends('current_page', 'page_count')
-    def on_change_current_page(self):
-        if not self.page_count:
-            return
-        if not self.current_page or self.current_page < 1:
-            self.current_page = 1
-        elif self.current_page > self.page_count:
-            self.current_page = self.page_count
 
 
 class PapyrusAttachment(Wizard):

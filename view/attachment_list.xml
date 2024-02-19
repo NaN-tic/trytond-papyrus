@@ -4,8 +4,7 @@
     <field name="summary"/>
     <field name="last_user"/>
     <field name="last_modification" widget="date"/>
-    <field name="last_modification" widget="time"
-        string="Last Modification Time"/>
+    <field name="last_modification" widget="time" string="Last Modification Time"/>
     <field name="type"/>
     <!-- To allow client to set description field -->
     <field name="description" tree_invisible="1"/>

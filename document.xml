@@ -68,14 +68,14 @@
             <field name="act_window" ref="act_papyrus_queue"/>
         </record>
         <record model="ir.model.access" id="access_papyrus_queue">
-            <field name="model" search="[('model', '=', 'papyrus.queue')]"/>
+            <field name="model">papyrus.queue</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_papyrus_queue_admin">
-            <field name="model" search="[('model', '=', 'papyrus.queue')]"/>
+            <field name="model">papyrus.queue</field>
             <field name="group" ref="group_papyrus_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -86,7 +86,7 @@
         <record model="ir.model.button" id="queue_process_button">
             <field name="name">process</field>
             <field name="string">Process</field>
-            <field name="model" search="[('model', '=', 'papyrus.queue')]"/>
+            <field name="model">papyrus.queue</field>
         </record>
         <record model="ir.model.button-res.group" id="queue_process_button_group_papyrus_admin">
             <field name="button" ref="queue_process_button"/>
@@ -95,7 +95,7 @@
         <record model="ir.model.button" id="queue_clean_button">
             <field name="name">clean</field>
             <field name="string">Clean</field>
-            <field name="model" search="[('model', '=', 'papyrus.queue')]"/>
+            <field name="model">papyrus.queue</field>
         </record>
         <record model="ir.model.button-res.group" id="queue_clean_button_group_papyrus_admin">
             <field name="button" ref="queue_clean_button"/>
@@ -104,7 +104,7 @@
 
         <record model="ir.rule.group" id="rule_group_papyrus_queue">
             <field name="name">User in company</field>
-            <field name="model" search="[('model', '=', 'papyrus.queue')]"/>
+            <field name="model">papyrus.queue</field>
             <field name="global_p" eval="True"/>
         </record>
         <record model="ir.rule" id="rule_papyrus_queue1">
@@ -197,14 +197,14 @@
         </record>
 
         <record model="ir.model.access" id="access_papyrus">
-            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+            <field name="model">papyrus.document</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_papyrus_admin">
-            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+            <field name="model">papyrus.document</field>
             <field name="group" ref="group_papyrus_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -215,7 +215,7 @@
         <record model="ir.model.button" id="document_pending_button">
             <field name="name">pending</field>
             <field name="string">Pending</field>
-            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+            <field name="model">papyrus.document</field>
         </record>
         <record model="ir.model.button-res.group" id="document_pending_button_group_papyrus">
             <field name="button" ref="document_pending_button"/>
@@ -224,7 +224,7 @@
         <record model="ir.model.button" id="document_inspect_button">
             <field name="name">inspect</field>
             <field name="string">Inspect</field>
-            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+            <field name="model">papyrus.document</field>
         </record>
         <record model="ir.model.button-res.group" id="document_inspect_button_group_papyrus">
             <field name="button" ref="document_inspect_button"/>
@@ -233,7 +233,7 @@
         <record model="ir.model.button" id="document_process_button">
             <field name="name">process</field>
             <field name="string">Process</field>
-            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+            <field name="model">papyrus.document</field>
         </record>
         <record model="ir.model.button-res.group" id="document_process_button_group_papyrus">
             <field name="button" ref="document_process_button"/>
@@ -243,7 +243,7 @@
         <record model="ir.model.button" id="document_cancel_button">
             <field name="name">cancelled</field>
             <field name="string">Cancel</field>
-            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+            <field name="model">papyrus.document</field>
         </record>
         <record model="ir.model.button-res.group" id="document_cancel_button_group_papyrus">
             <field name="button" ref="document_cancel_button"/>
@@ -253,7 +253,7 @@
         <record model="ir.model.button" id="document_split_button">
             <field name="name">split</field>
             <field name="string">Split</field>
-            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+            <field name="model">papyrus.document</field>
         </record>
         <record model="ir.model.button-res.group" id="document_split_button_group_papyrus">
             <field name="button" ref="document_split_button"/>
@@ -262,7 +262,7 @@
 
         <record model="ir.rule.group" id="rule_group_papyrus_document">
             <field name="name">User in company</field>
-            <field name="model" search="[('model', '=', 'papyrus.document')]"/>
+            <field name="model">papyrus.document</field>
             <field name="global_p" eval="True"/>
         </record>
         <record model="ir.rule" id="rule_papyrus_document1">
@@ -299,7 +299,7 @@
             <field name="name">document_box_list</field>
         </record>
         <record model="ir.model.access" id="access_papyrus_document_box">
-            <field name="model" search="[('model', '=', 'papyrus.document.box')]"/>
+            <field name="model">papyrus.document.box</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
@@ -355,14 +355,14 @@
         </record>
 
         <record model="ir.model.access" id="access_papyrus_page">
-            <field name="model" search="[('model', '=', 'papyrus.page')]"/>
+            <field name="model">papyrus.page</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_delete" eval="False"/>
         </record>
         <record model="ir.model.access" id="access_papyrus_page_admin">
-            <field name="model" search="[('model', '=', 'papyrus.page')]"/>
+            <field name="model">papyrus.page</field>
             <field name="group" ref="group_papyrus_admin"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -373,7 +373,7 @@
         <record model="ir.model.button" id="page_pending_button">
             <field name="name">pending</field>
             <field name="string">Pending</field>
-            <field name="model" search="[('model', '=', 'papyrus.page')]"/>
+            <field name="model">papyrus.page</field>
         </record>
         <record model="ir.model.button-res.group" id="page_pending_button_group_papyrus">
             <field name="button" ref="page_pending_button"/>
@@ -382,7 +382,7 @@
         <record model="ir.model.button" id="page_inspect_button">
             <field name="name">inspect</field>
             <field name="string">Inspect</field>
-            <field name="model" search="[('model', '=', 'papyrus.page')]"/>
+            <field name="model">papyrus.page</field>
         </record>
         <record model="ir.model.button-res.group" id="page_inspect_button_group_papyrus">
             <field name="button" ref="page_inspect_button"/>
@@ -391,7 +391,7 @@
         <record model="ir.model.button" id="page_process_button">
             <field name="name">process</field>
             <field name="string">Process</field>
-            <field name="model" search="[('model', '=', 'papyrus.page')]"/>
+            <field name="model">papyrus.page</field>
         </record>
         <record model="ir.model.button-res.group" id="page_process_button_group_papyrus">
             <field name="button" ref="page_process_button"/>
@@ -410,7 +410,7 @@
             <field name="name">page_box_list</field>
         </record>
         <record model="ir.model.access" id="access_papyrus_page_box">
-            <field name="model" search="[('model', '=', 'papyrus.page.box')]"/>
+            <field name="model">papyrus.page.box</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>

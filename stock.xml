@@ -12,7 +12,7 @@ this repository contains the full copyright notices and license terms. -->
             <field name="name">papyrus_barcode</field>
             <field name="string">Barcode</field>
             <field name="help">Prints a barcode that can be stick to the paper and later process the document using Papyrus</field>
-            <field name="model" search="[('model', '=', 'stock.shipment.in')]"/>
+            <field name="model">stock.shipment.in</field>
         </record>
 
         <record model="ir.action.report" id="report_stock_shipment_in_papyrus">
@@ -38,7 +38,7 @@ this repository contains the full copyright notices and license terms. -->
             <field name="name">papyrus_barcode</field>
             <field name="string">Barcode</field>
             <field name="help">Prints a barcode that can be stick to the paper and later process the document using Papyrus</field>
-            <field name="model" search="[('model', '=', 'stock.shipment.out.return')]"/>
+            <field name="model">stock.shipment.out.return</field>
         </record>
 
         <record model="ir.action.report" id="report_stock_shipment_out_return_papyrus">

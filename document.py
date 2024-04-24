@@ -355,6 +355,10 @@ class Queue(ModelSQL, ModelView):
         pool = Pool()
         ElectronicMail = pool.get('electronic.mail')
 
+        # check if directory exists
+        if not os.path.exists(self.storage_directory):
+            return
+
         pages = []
         documents = []
         mails = ElectronicMail.search([

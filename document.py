@@ -17,9 +17,8 @@ from trytond.model import (ModelSQL, ModelView, Workflow, fields,
 from trytond.pool import Pool
 from trytond.pyson import Bool, Eval, If, PYSONEncoder, Id
 from trytond.i18n import gettext
-from trytond.exceptions import UserError
+from trytond.exceptions import UserError, UserWarning
 from trytond.transaction import Transaction
-from trytond.exceptions import UserWarning
 from trytond.wizard import Wizard, StateView, Button, StateAction
 from . import tools
 from .datamanager import FileDataManager
@@ -348,6 +347,12 @@ class Queue(ModelSQL, ModelView):
     def process_electronic_mail(self):
         pool = Pool()
         ElectronicMail = pool.get('electronic.mail')
+
+        # check if directory exists
+        if not os.path.exists(self.storage_directory):
+            raise UserError(gettext('papyrus.msg_missing_storage_directory',
+                    path=self.storage_directory))
+            return
 
         pages = []
         documents = []

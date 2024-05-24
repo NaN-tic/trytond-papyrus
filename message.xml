@@ -15,5 +15,8 @@ this repository contains the full copyright notices and license terms. -->
         <record model="ir.message" id="split_document_confirmation">
             <field name="text">Are you sure you want to split this document in "%(num_documents)s"? With the distribution "%(pages)s".</field>
         </record>
+        <record model="ir.message" id="msg_missing_storage_directory">
+            <field name="text">Storage directory "%(path)s" does not exist.</field>
+        </record>
     </data>
 </tryton>

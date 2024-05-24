@@ -1,15 +1,13 @@
 import os
-from trytond.model import ModelView, fields
+from trytond.model import fields
 from trytond.wizard import Wizard, StateAction
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval, If, Bool
 from trytond.transaction import Transaction
 from trytond.config import config
 from trytond.filestore import filestore
 from trytond.pyson import PYSONEncoder
 from trytond.ir.attachment import store_prefix
 from sql.functions import Substring, Position
-from . import tools
 
 
 # We need a cache when files are stored in a cloud filestore

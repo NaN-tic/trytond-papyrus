@@ -1084,7 +1084,10 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
     def get_data(self, name):
         if not self.filename:
             return
-        with open(self.get_full_path(), 'rb') as f:
+        filename = self.get_full_path()
+        if not os.path.isfile(filename):
+            return
+        with open(filename, 'rb') as f:
             return f.read()
 
     @classmethod

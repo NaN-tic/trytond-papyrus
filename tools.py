@@ -1,6 +1,7 @@
 # This file is part papyrus module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
+import logging
 import subprocess
 import json
 import tempfile
@@ -9,6 +10,8 @@ import shutil
 from lxml import etree
 
 IDENTIFY_FORMATS = ['PNG', 'JPG', 'JPEG', 'GIF', 'PDF']
+
+logger = logging.getLogger(__name__)
 
 def page_count(path):
     # TODO: Ensure path is a PDF. If its not a PDF return 1?
@@ -244,7 +247,8 @@ def soffice_convert(data, from_extension, to_extension, timeout=15):
                 '--outdir', temp_dir, input_filename])
         try:
             process.communicate(timeout=timeout)
-        except subprocess.TimeoutExpired:
+        except (subprocess.TimeoutExpired, FileNotFoundError) as e:
+            logger.error('soffice conversion failed: %s', e)
             return
         output_filename = os.path.join(temp_dir, 'file.%s' % to_extension)
         try:

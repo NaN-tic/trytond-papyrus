@@ -321,12 +321,11 @@ class Queue(ModelSQL, ModelView):
             space_end = text.find(' ', start)
             enter_end = text.find('\n', start)
             end = min(space_end, enter_end)
-            url = text[start:end]
+            url = text[start:end-1]
             url = url.replace('&amp;', '&')
             start = end
 
             # Apply whitelist, blacklist and default policy
-            whitelist = (self.electronic_mail_urls_whitelist or '').split('\n')
             for item in whitelist:
                 if not item.strip():
                     continue
@@ -342,7 +341,7 @@ class Queue(ModelSQL, ModelView):
                 else:
                     if default_policy == 'download':
                         urls.append(url)
-        return urls
+        return list(set(urls))
 
     def process_electronic_mail(self):
         pool = Pool()
@@ -352,7 +351,6 @@ class Queue(ModelSQL, ModelView):
         if not os.path.exists(self.storage_directory):
             raise UserError(gettext('papyrus.msg_missing_storage_directory',
                     path=self.storage_directory))
-            return
 
         pages = []
         documents = []

@@ -17,7 +17,6 @@ cache_directory = config.get('papyrus', 'cache_directory')
 class Attachment(metaclass=PoolMeta):
     "Attachment"
     __name__ = 'ir.attachment'
-    content = fields.Text('Content', readonly=True)
 
     @fields.depends('file_id', 'data')
     def get_full_path(self):

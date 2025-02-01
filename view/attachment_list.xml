@@ -8,4 +8,5 @@
     <field name="type"/>
     <!-- To allow client to set description field -->
     <field name="description" tree_invisible="1"/>
+    <field name="content" tree_invisible="1"/>
 </tree>

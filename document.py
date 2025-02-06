@@ -626,7 +626,7 @@ class Document(Workflow, ModelSQL, ModelView):
         IrModel = Pool().get('ir.model')
         models = cls._get_origin()
         models = IrModel.search([
-                ('model', 'in', models),
+                ('name', 'in', models),
                 ])
         return [(None, '')] + [(m.model, m.name) for m in models]
 
@@ -1059,7 +1059,7 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
         IrModel = Pool().get('ir.model')
         models = cls._get_origin()
         models = IrModel.search([
-                ('model', 'in', models),
+                ('name', 'in', models),
                 ])
         return [(None, '')] + [(m.model, m.name) for m in models]
 

@@ -83,7 +83,7 @@ class PapyrusAttachment(Wizard):
             Substring(
                 attachment.resource, 0, Position(',', attachment.resource)),
             distinct=True)
-        models = Model.search([('model', 'in', query)])
+        models = Model.search([('name', 'in', query)])
         access = ModelAccess.get_access([m.model for m in models])
 
         domain = ['OR']

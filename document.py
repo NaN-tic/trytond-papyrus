@@ -628,7 +628,7 @@ class Document(Workflow, ModelSQL, ModelView):
         models = IrModel.search([
                 ('name', 'in', models),
                 ])
-        return [(None, '')] + [(m.model, m.name) for m in models]
+        return [(None, '')] + [(m.name, m.string) for m in models]
 
     @fields.depends('filename', 'queue')
     def get_full_path(self):
@@ -1061,7 +1061,7 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
         models = IrModel.search([
                 ('name', 'in', models),
                 ])
-        return [(None, '')] + [(m.model, m.name) for m in models]
+        return [(None, '')] + [(m.name, m.string) for m in models]
 
     @fields.depends('filename', 'queue')
     def get_full_path(self):

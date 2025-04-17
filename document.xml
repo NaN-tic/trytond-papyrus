@@ -113,21 +113,12 @@
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_papyrus_queue"/>
         </record>
-        <!-- Rule created to ignore rule_papyrus_queue1 -->
         <record model="ir.rule" id="rule_papyrus_queue2">
             <field name="domain"
-                eval="[('company', '!=', None)]"
+                eval="[('company', '=', None)]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_papyrus_queue"/>
         </record>
-        <!-- Rule created to ignore rule_papyrus_queue1 -->
-        <record model="ir.rule" id="rule_papyrus_queue3">
-            <field name="domain"
-                eval="[('company', 'in', [None, -1])]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_papyrus_queue"/>
-        </record>
-
 
         <!-- papyrus.document -->
         <record model="ir.ui.view" id="papyrus_document_view_form">
@@ -271,21 +262,12 @@
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_papyrus_document"/>
         </record>
-        <!-- Rule created to ignore rule_papyrus_document1 -->
-        <record model="ir.rule" id="rule_papyrus_docuemnt2">
+        <record model="ir.rule" id="rule_papyrus_document2">
             <field name="domain"
-                eval="[('company', '!=', None)]"
+                eval="[('company', '=', None)]"
                 pyson="1"/>
             <field name="rule_group" ref="rule_group_papyrus_document"/>
         </record>
-        <!-- Rule created to ignore rule_papyrus_document1 -->
-        <record model="ir.rule" id="rule_papyrus_document3">
-            <field name="domain"
-                eval="[('company', 'in', [None, -1])]"
-                pyson="1"/>
-            <field name="rule_group" ref="rule_group_papyrus_document"/>
-        </record>
-
 
 	<!-- papyrus.document.box -->
         <record model="ir.ui.view" id="papyrus_document_box_view_form">

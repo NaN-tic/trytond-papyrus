@@ -614,9 +614,8 @@ class Document(Workflow, ModelSQL, ModelView):
 
     @classmethod
     def copy(cls, documents, default=None):
-        if not documents:
-            return
-        raise UserError(gettext('papyrus.document_copy_forbidden'))
+        # not call super
+        return
 
     @staticmethod
     def _get_origin():
@@ -1049,7 +1048,8 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
 
     @classmethod
     def copy(cls, pages, default=None):
-        raise UserError(gettext('papyrus.page_copy_forbidden'))
+        # not call super
+        return
 
     @staticmethod
     def _get_origin():

@@ -77,7 +77,7 @@ class Queue(ModelSQL, ModelView):
             ('document', 'Document'),
             ('page', 'Page'),
             ], 'Type', required=True)
-    company = fields.Many2One('company.company', "Company", required=True)
+    company = fields.Many2One('company.company', "Company")
     image_dpi = fields.Char('DPI', states={
             'invisible': Eval('type') != 'page',
             }, help='DPI: This value indicates the number '

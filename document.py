@@ -540,6 +540,9 @@ class Document(Workflow, ModelSQL, ModelView):
             'invisible': Bool(Eval('filename')),
             })
     company = fields.Many2One('company.company', "Company")
+    document_company = fields.Function(fields.Many2One('company.company',
+        'Document Company'),
+        'on_change_with_document_company')
     origin = fields.Reference('Origin', selection='get_origin', readonly=True)
     employee = fields.Many2One('company.employee', 'Employee',
         domain=[
@@ -695,6 +698,10 @@ class Document(Workflow, ModelSQL, ModelView):
             page = 0
         return '%s-%02d.jpg' % (filename, page)
 
+    @fields.depends('company', 'queue')
+    def on_change_with_document_company(self, name=None):
+        return self.company or self.queue.company
+
     def get_page_count(self, name):
         if not self.filename:
             return len(self.pages)
@@ -784,7 +791,9 @@ class Document(Workflow, ModelSQL, ModelView):
     @Workflow.transition('inspected')
     def inspect(cls, documents):
         for document in documents:
-            document.scan()
+            company_id = document.document_company and document.document_company.id or -1
+            with Transaction().set_context(company=company_id):
+                document.scan()
         cls.save(documents)
 
     @classmethod

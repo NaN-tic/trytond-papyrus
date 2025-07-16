@@ -700,7 +700,10 @@ class Document(Workflow, ModelSQL, ModelView):
 
     @fields.depends('company', 'queue')
     def on_change_with_document_company(self, name=None):
-        return self.company and self.company.id or self.queue.company and sef.queue.company.id
+        return (
+            (self.company and self.company.id) or
+            (self.queue and self.queue.company and sef.queue.company.id)
+            )
 
     def get_page_count(self, name):
         if not self.filename:

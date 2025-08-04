@@ -6,7 +6,16 @@ from trytond.modules.company.tests import CompanyTestMixin
 from trytond.tests.test_tryton import ModuleTestCase
 
 
-class PapyrusTestCase(CompanyTestMixin, ModuleTestCase):
+class PapyrusCompanyTestMixin(CompanyTestMixin):
+
+    @property
+    def _skip_company_rule(self):
+        return super()._skip_company_rule | {
+            ('papyrus.document', 'document_company'),
+            }
+
+
+class PapyrusTestCase(PapyrusCompanyTestMixin, ModuleTestCase):
     'Test Papyrus module'
     module = 'papyrus'
     extras = ['account_invoice', 'purchase', 'stock']

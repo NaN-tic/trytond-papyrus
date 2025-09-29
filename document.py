@@ -9,6 +9,7 @@ import re
 import shutil
 import subprocess
 import requests
+import gdown
 from datetime import datetime
 from email import message_from_bytes
 from fnmatch import fnmatch
@@ -72,6 +73,11 @@ class Queue(ModelSQL, ModelView):
         })
     storage_directory = fields.Char('Storage Directory',
         help='Absolute path directory', required=True)
+    source_url = fields.Char('Source URL', states={
+            'invisible': Eval('source_type') != 'google_drive',
+            'required': Eval('source_type') == 'google_drive',
+            }, help='Google Drive shared URL of the folder to be used as '
+        'source.')
     scheduler = fields.Boolean('Scheduler')
     type = fields.Selection([
             ('document', 'Document'),
@@ -91,6 +97,7 @@ class Queue(ModelSQL, ModelView):
     source_type = fields.Selection([
             ('directory', 'Directory'),
             ('electronic_mail', 'Electronic mail'),
+            ('google_drive', 'Google Drive'),
             ], 'Source', required=True)
     source_inbox = fields.Many2One('electronic.mail.mailbox', 'Source Inbox',
         states=ELECTRONIC_MAIL_STATES)
@@ -158,6 +165,9 @@ class Queue(ModelSQL, ModelView):
                 }),
             ('//group[@id="electronic_mail"]', 'states', {
                 'invisible': Eval('source_type') != 'electronic_mail',
+                }),
+            ('//group[@id="google_drive"]', 'states', {
+                'invisible': Eval('source_type') != 'google_drive',
                 }),
             ]
 
@@ -432,6 +442,31 @@ class Queue(ModelSQL, ModelView):
                         mail.mailbox = self.storage_inbox
 
         ElectronicMail.save(mails)
+        return documents, pages
+
+    def process_google_drive(self):
+        # Ensure no two processes execute this method concurrently as we would
+        # be creating the same document or page twice
+        self.lock()
+
+        pages = []
+        documents = []
+        drive_files = gdown.download_folder(url=self.source_url,
+            skip_download=True)
+        for drive_file in drive_files:
+            file_name = drive_file.path
+            path = os.path.join(self.storage_directory, file_name)
+            if os.path.isfile(path):
+                continue
+            url = f'https://drive.google.com/uc?id={drive_file.id}&export=download'
+            gdown.download(url=url, output=path, quiet=False)
+
+            if self.type == 'page':
+                page = self.get_page(file_name)
+                pages.append(page)
+            elif self.type == 'document':
+                document = self.get_document(file_name)
+                documents.append(document)
         return documents, pages
 
     @classmethod

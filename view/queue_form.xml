@@ -50,6 +50,10 @@
         <label name="source_directory"/>
         <field name="source_directory"/>
     </group>
+    <group string="Google Drive" id="google_drive" colspan="4">
+        <label name="source_url"/>
+        <field name="source_url"/>
+    </group>
     <group col="-1" colspan="4" id="buttons">
         <button name="process"/>
         <button name="clean"/>

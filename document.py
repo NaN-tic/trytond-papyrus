@@ -227,16 +227,13 @@ class Queue(ModelSQL, ModelView):
 
     def process_directory(self):
         transaction = Transaction()
-        connection = transaction.connection
-        database = transaction.database
         # Ensure no two processes execute this method concurrently as we would
         # be moving files twice and there could be race conditions
-        database.lock(connection, self._table)
+        self.lock()
 
         datamanager = FileDataManager()
         datamanager = transaction.join(datamanager)
 
-        files = []
         pages = []
         documents = []
         for file_name in sorted(glob.glob(os.path.join(
@@ -274,7 +271,6 @@ class Queue(ModelSQL, ModelView):
             elif self.type == 'document':
                 document = self.get_document(fname)
                 documents.append(document)
-            files.append(fname)
         return documents, pages
 
     def matching_filename(self, filename):

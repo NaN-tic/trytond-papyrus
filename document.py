@@ -445,6 +445,10 @@ class Queue(ModelSQL, ModelView):
         return documents, pages
 
     def process_google_drive(self):
+        pool = Pool()
+        Page = pool.get('papyrus.page')
+        Document = pool.get('papyrus.document')
+
         # Ensure no two processes execute this method concurrently as we would
         # be creating the same document or page twice
         self.lock()
@@ -456,17 +460,18 @@ class Queue(ModelSQL, ModelView):
         for drive_file in drive_files:
             file_name = drive_file.path
             path = os.path.join(self.storage_directory, file_name)
-            if os.path.isfile(path):
-                continue
-            url = f'https://drive.google.com/uc?id={drive_file.id}&export=download'
-            gdown.download(url=url, output=path, quiet=False)
+            if not os.path.isfile(path):
+                url = f'https://drive.google.com/uc?id={drive_file.id}&export=download'
+                gdown.download(url=url, output=path, quiet=False)
 
             if self.type == 'page':
-                page = self.get_page(file_name)
-                pages.append(page)
+                if not Page.search([('filename', '=', file_name)], limit=1):
+                    page = self.get_page(file_name)
+                    pages.append(page)
             elif self.type == 'document':
-                document = self.get_document(file_name)
-                documents.append(document)
+                if not Document.search([('filename', '=', file_name)], limit=1):
+                    document = self.get_document(file_name)
+                    documents.append(document)
         return documents, pages
 
     @classmethod

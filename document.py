@@ -624,6 +624,11 @@ class Document(Workflow, ModelSQL, ModelView):
                     'icon': 'tryton-cancel',
                     'depends': ['state'],
                     },
+                'reinspect': {
+                    'invisible': Eval('state') != 'inspected',
+                    'icon': 'tryton-refresh',
+                    'depends': ['state'],
+                    },
                 })
 
     @staticmethod
@@ -830,6 +835,11 @@ class Document(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('inspected')
     def inspect(cls, documents):
+        cls.reinspect(documents)
+
+    @classmethod
+    @ModelView.button
+    def reinspect(cls, documents):
         for document in documents:
             company_id = document.document_company and document.document_company.id or -1
             with Transaction().set_context(company=company_id):

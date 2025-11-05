@@ -458,7 +458,7 @@ class Queue(ModelSQL, ModelView):
         drive_files = gdown.download_folder(url=self.source_url,
             skip_download=True)
         for drive_file in drive_files:
-            file_name = drive_file.path
+            file_name = os.path.basename(drive_file.path)
             path = os.path.join(self.storage_directory, file_name)
             if not os.path.isfile(path):
                 url = f'https://drive.google.com/uc?id={drive_file.id}&export=download'

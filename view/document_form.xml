@@ -10,11 +10,19 @@
     <field name="queue"/>
     <notebook colspan="6">
         <page string="Image" id="image">
-            <field name="data" widget="document" colspan="2" height="993"/>
-            <group id="extra" colspan="2">
-              <label name="company"/>
-              <field name="company"/>
-            </group>
+            <hpaned id="main">
+                <child id="image" col="2">
+                    <vpaned id="wrapper">
+                        <child id="top">
+                            <field name="data" widget="document" colspan="2"/>
+                        </child>
+                    </vpaned>
+                </child>
+                <child id="extra">
+                    <label name="company"/>
+                    <field name="company"/>
+                </child>
+            </hpaned>
         </page>
         <page name="text">
             <field name="text" colspan="4"/>

@@ -21,12 +21,9 @@
             <field name="view" ref="ir.attachment_view_form"/>
             <field name="act_window" ref="act_attachment_form"/>
         </record>
-
-        <record model="ir.action.wizard" id="act_open_attachment">
-            <field name="name">Attachments</field>
-            <field name="wiz_name">papyrus.attachment</field>
-        </record>
         <menuitem name="Attachments" parent="menu_papyrus" icon="tryton-list"
-            action="act_open_attachment" id="menu_attachment_form" sequence="10"/>
+            action="act_attachment_form" id="menu_attachment_form" sequence="10"/>
     </data>
 </tryton>
+
+

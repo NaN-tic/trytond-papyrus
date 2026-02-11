@@ -11,7 +11,7 @@
     <notebook colspan="6">
         <page string="Image" id="image">
             <hpaned id="main">
-                <child id="image" col="2">
+                <child id="image">
                     <vpaned id="wrapper">
                         <child id="top">
                             <field name="data" widget="document" colspan="2"/>

@@ -53,7 +53,7 @@ class Test(unittest.TestCase):
 
         # Create invoice
         Invoice = Model.get('account.invoice')
-        invoice = Invoice()
+        invoice = Invoice(type='out')
         invoice.party = party
         invoice.save()
 

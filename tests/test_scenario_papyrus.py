@@ -6,8 +6,6 @@ import unittest
 
 from proteus import Model
 from trytond.modules.company.tests.tools import create_company, get_company
-from trytond.modules.jasper_reports.JasperReports.JasperServer import \
-    JasperServer
 from trytond.tests.test_tryton import drop_db
 from trytond.tests.tools import activate_modules
 
@@ -142,4 +140,3 @@ class Test(unittest.TestCase):
 
         # Cleanup test directory
         shutil.rmtree(temp_dir)
-        JasperServer.stop()

@@ -4,8 +4,9 @@
 from trytond.pool import PoolMeta
 from trytond.model import ModelView
 from trytond.pool import Pool
-from trytond.modules.jasper_reports.jasper import JasperReport
 from trytond.config import config as config_
+
+from .common import PapyrusReportMixin
 
 IN_PREFIX = config_.get('papyrus', 'stock_shipment_in', default='SI-')
 OUT_RETURN_PREFIX = config_.get('papyrus', 'stock_shipment_out_return',
@@ -30,19 +31,9 @@ class ShipmentIn(metaclass=PoolMeta):
         pass
 
 
-class ShipmentInPapyrus(JasperReport):
+class ShipmentInPapyrus(PapyrusReportMixin):
     __name__ = 'stock.shipment.in.papyrus'
-
-    @classmethod
-    def execute(cls, ids, data):
-        parameters = {
-            'prefix': IN_PREFIX,
-            }
-        if 'parameters' in data:
-            data['parameters'].update(parameters)
-        else:
-            data['parameters'] = parameters
-        return super().execute(ids, data)
+    prefix = IN_PREFIX
 
 
 class ShipmentOutReturn(metaclass=PoolMeta):
@@ -63,19 +54,9 @@ class ShipmentOutReturn(metaclass=PoolMeta):
         pass
 
 
-class ShipmentOutReturnPapyrus(JasperReport):
+class ShipmentOutReturnPapyrus(PapyrusReportMixin):
     __name__ = 'stock.shipment.out.return.papyrus'
-
-    @classmethod
-    def execute(cls, ids, data):
-        parameters = {
-            'prefix': OUT_RETURN_PREFIX,
-            }
-        if 'parameters' in data:
-            data['parameters'].update(parameters)
-        else:
-            data['parameters'] = parameters
-        return super().execute(ids, data)
+    prefix = OUT_RETURN_PREFIX
 
 
 class Page(metaclass=PoolMeta):

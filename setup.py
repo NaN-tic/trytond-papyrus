@@ -10,7 +10,7 @@ from configparser import ConfigParser
 MODULE = 'papyrus'
 PREFIX = 'nantic'
 MODULE2PREFIX = {
-    'jasper_reports': 'nantic',
+    'html_report': 'nantic',
     'nantic_connection': 'nantic',
 }
 

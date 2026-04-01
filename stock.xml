@@ -19,9 +19,9 @@ this repository contains the full copyright notices and license terms. -->
             <field name="name">Papyrus Barcode</field>
             <field name="model">stock.shipment.in</field>
             <field name="report_name">stock.shipment.in.papyrus</field>
-            <field name="report">papyrus/papyrus.jrxml</field>
+            <field name="report" eval="None"/>
             <field name="extension">pdf</field>
-            <field name="template_extension">jrxml</field>
+            <field name="template_extension">html</field>
         </record>
         <record model="ir.action.keyword" id="report_papyrus_stock_shipment_in_keyword">
             <field name="keyword">form_print</field>
@@ -45,9 +45,9 @@ this repository contains the full copyright notices and license terms. -->
             <field name="name">Papyrus Barcode</field>
             <field name="model">stock.shipment.out.return</field>
             <field name="report_name">stock.shipment.out.return.papyrus</field>
-            <field name="report">papyrus/papyrus.jrxml</field>
+            <field name="report" eval="None"/>
             <field name="extension">pdf</field>
-            <field name="template_extension">jrxml</field>
+            <field name="template_extension">html</field>
         </record>
         <record model="ir.action.keyword" id="report_papyrus_stock_shipment_out_return_keyword">
             <field name="keyword">form_print</field>

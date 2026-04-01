@@ -4,8 +4,9 @@
 from trytond.pool import PoolMeta
 from trytond.model import ModelView
 from trytond.pool import Pool
-from trytond.modules.jasper_reports.jasper import JasperReport
 from trytond.config import config as config_
+
+from .common import PapyrusReportMixin
 
 PREFIX = config_.get('papyrus', 'account_invoice', default='AI-')
 
@@ -28,19 +29,9 @@ class Invoice(metaclass=PoolMeta):
         pass
 
 
-class InvoicePapyrus(JasperReport):
+class InvoicePapyrus(PapyrusReportMixin):
     __name__ = 'account.invoice.papyrus'
-
-    @classmethod
-    def execute(cls, ids, data):
-        parameters = {
-            'prefix': PREFIX,
-            }
-        if 'parameters' in data:
-            data['parameters'].update(parameters)
-        else:
-            data['parameters'] = parameters
-        return super().execute(ids, data)
+    prefix = PREFIX
 
 
 class Page(metaclass=PoolMeta):

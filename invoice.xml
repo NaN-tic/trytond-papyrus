@@ -19,9 +19,9 @@ this repository contains the full copyright notices and license terms. -->
             <field name="name">Papyrus Barcode</field>
             <field name="model">account.invoice</field>
             <field name="report_name">account.invoice.papyrus</field>
-            <field name="report">papyrus/papyrus.jrxml</field>
+            <field name="report" eval="None"/>
             <field name="extension">pdf</field>
-            <field name="template_extension">jrxml</field>
+            <field name="template_extension">html</field>
         </record>
         <record model="ir.action.keyword" id="report_papyrus_account_invoice_keyword">
             <field name="keyword">form_print</field>

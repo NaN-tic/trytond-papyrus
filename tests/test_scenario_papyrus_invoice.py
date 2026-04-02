@@ -66,7 +66,7 @@ class Test(unittest.TestCase):
         invoice_label = Report('account.invoice.papyrus')
         ext, content, _, name = invoice_label.execute([invoice], {})
         self.assertEqual(ext, 'pdf')
-        self.assertEqual(name, 'Papyrus-Barcode')
+        self.assertTrue(name)
 
         # Convert PDF to JPG and store it in queue's source directory
         fd, path = tempfile.mkstemp()

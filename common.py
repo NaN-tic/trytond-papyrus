@@ -46,7 +46,7 @@ class PapyrusReportMixin(DominateReport):
         return ''
 
     @classmethod
-    def _qr_value(cls, record):
+    def _barcode_value(cls, record):
         return '%s%s' % (cls.prefix, record.raw.id)
 
     @classmethod
@@ -54,7 +54,7 @@ class PapyrusReportMixin(DominateReport):
         container = div()
         for record in records:
             page = section(cls='papyrus-page')
-            page.add(img(src=cls.qrcode(cls._qr_value(record)),
+            page.add(img(src=cls.datamatrix(cls._barcode_value(record)),
                     cls='papyrus-code'))
             container.add(page)
         return container

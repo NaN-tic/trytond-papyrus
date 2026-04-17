@@ -221,6 +221,15 @@
             <field name="button" ref="document_inspect_button"/>
             <field name="group" ref="group_papyrus"/>
         </record>
+        <record model="ir.model.button" id="document_reinspect_button">
+            <field name="name">reinspect</field>
+            <field name="string">Reinspect</field>
+            <field name="model">papyrus.document</field>
+        </record>
+        <record model="ir.model.button-res.group" id="document_reinspect_button_group_papyrus">
+            <field name="button" ref="document_reinspect_button"/>
+            <field name="group" ref="group_papyrus"/>
+        </record>
         <record model="ir.model.button" id="document_process_button">
             <field name="name">process</field>
             <field name="string">Process</field>

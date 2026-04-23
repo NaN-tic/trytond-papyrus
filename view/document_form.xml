@@ -41,6 +41,7 @@
       <field name="state"/>
       <button name="pending"/>
       <button name="inspect"/>
+      <button name="reinspect"/>
       <button name="process"/>
       <button name="cancelled"/>
       <button name="split"/>

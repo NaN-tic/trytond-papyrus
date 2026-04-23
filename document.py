@@ -659,7 +659,9 @@ class Document(Workflow, ModelSQL, ModelView):
     @classmethod
     def copy(cls, documents, default=None):
         # not call super
-        return
+        if not documents:
+            return []
+        raise UserError(gettext('papyrus.document_copy_forbidden'))
 
     @staticmethod
     def _get_origin():

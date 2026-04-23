@@ -609,6 +609,11 @@ class Document(Workflow, ModelSQL, ModelView):
                     'icon': 'tryton-search',
                     'depends': ['state'],
                     },
+                'reinspect': {
+                    'invisible': Eval('state') != 'inspected',
+                    'icon': 'tryton-refresh',
+                    'depends': ['state'],
+                    },
                 'process': {
                     'invisible': Eval('state') != 'inspected',
                     'icon': 'tryton-ok',
@@ -833,6 +838,25 @@ class Document(Workflow, ModelSQL, ModelView):
         for document in documents:
             company_id = document.document_company and document.document_company.id or -1
             with Transaction().set_context(company=company_id):
+                document.scan()
+        cls.save(documents)
+
+    @classmethod
+    @ModelView.button
+    def reinspect(cls, documents):
+        DocumentBox = Pool().get('papyrus.document.box')
+
+        boxes = []
+        for document in documents:
+            document.text = None
+            boxes += list(document.boxes)
+        if boxes:
+            DocumentBox.delete(boxes)
+
+        for document in documents:
+            company_id = document.document_company and document.document_company.id or -1
+            with Transaction().set_context(
+                    company=company_id, papyrus_reinspect=True):
                 document.scan()
         cls.save(documents)
 

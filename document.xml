@@ -435,6 +435,8 @@
         <menuitem action="act_papyrus_page" id="menu_papyrus_page" parent="menu_papyrus_document" sequence="10" name="Pages"/>
 
         <!-- Cron -->
+    </data>
+    <data noupdate="1">
         <record model="ir.cron" id="cron_process_queue">
             <field name="method">papyrus.queue|cron_process</field>
             <field name="interval_number">1</field>
@@ -445,7 +447,9 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
         </record>
+    </data>
 
+    <data noupdate="1">
         <record model="ir.cron" id="cron_inspect_documents">
             <field name="method">papyrus.document|cron_inspect</field>
             <field name="interval_number">1</field>
@@ -456,7 +460,9 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
         </record>
+    </data>
 
+    <data noupdate="1">
         <record model="ir.cron" id="cron_inspect_pages">
             <field name="method">papyrus.page|cron_inspect</field>
             <field name="interval_number">1</field>
@@ -467,6 +473,8 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
         </record>
+    </data>
+    <data>
 
         <record model="ir.action.wizard" id="wizard_split">
             <field name="name">Split Document</field>

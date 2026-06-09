@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import requests
 import gdown
+from gdown.exceptions import DownloadError
 from datetime import datetime
 from email import message_from_bytes
 from fnmatch import fnmatch
@@ -455,8 +456,13 @@ class Queue(ModelSQL, ModelView):
 
         pages = []
         documents = []
-        drive_files = gdown.download_folder(url=self.source_url,
-            skip_download=True)
+        try:
+            drive_files = gdown.download_folder(url=self.source_url,
+                skip_download=True)
+        except DownloadError:
+            logger.exception('Google Drive folder listing failed for queue %s '
+                'and URL %s', self.rec_name, self.source_url)
+            drive_files = []
         for drive_file in drive_files:
             file_name = drive_file.path
             path = os.path.join(self.storage_directory, file_name)

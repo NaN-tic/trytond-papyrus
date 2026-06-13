@@ -78,23 +78,29 @@ class PapyrusAttachment(Wizard):
         Rule = pool.get('ir.rule')
         Attachment = pool.get('ir.attachment')
         attachment = Attachment.__table__()
+        cursor = Transaction().connection.cursor()
 
         query = attachment.select(
             Substring(
                 attachment.resource, 0, Position(',', attachment.resource)),
             distinct=True)
-        models = Model.search([('name', 'in', query)])
-        access = ModelAccess.get_access([m.model for m in models])
+        cursor.execute(*query)
+        model_names = [name for name, in cursor if name]
+        models = Model.search([('name', 'in', model_names)])
+        access = ModelAccess.get_access([m.name for m in models])
 
         domain = ['OR']
         for model in models:
-            if access[model.model]['read']:
+            if access[model.name]['read']:
                 with Transaction().set_context(_check_access=True):
-                    domain_get = Rule.domain_get(model.model)
+                    domain_get = Rule.domain_get(model.name)
                 if domain_get:
-                    domain.append(convert_resource(domain_get, model.model))
+                    domain.append(convert_resource(domain_get, model.name))
                 else:
-                    domain.append(('resource', 'like',  model.model+',%'))
+                    domain.append(('resource', 'like',  model.name+',%'))
+
+        if len(domain) == 1:
+            domain = [('id', '=', -1)]
 
         action['pyson_domain'] = PYSONEncoder().encode(domain)
         return action, {}

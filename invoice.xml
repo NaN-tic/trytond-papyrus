@@ -8,16 +8,6 @@ this repository contains the full copyright notices and license terms. -->
             <field name="inherit" ref="account_invoice.invoice_view_form"/>
             <field name="name">invoice_form</field>
         </record>
-        <record model="ir.ui.view" id="invoice_line_view_tree">
-            <field name="model">account.invoice.line</field>
-            <field name="inherit" ref="account_invoice.invoice_line_view_tree"/>
-            <field name="name">invoice_line_tree</field>
-        </record>
-        <record model="ir.ui.view" id="invoice_line_view_tree_sequence">
-            <field name="model">account.invoice.line</field>
-            <field name="inherit" ref="account_invoice.invoice_line_view_tree_sequence"/>
-            <field name="name">invoice_line_tree_sequence</field>
-        </record>
         <record model="ir.model.button" id="invoice_papyrus_barcode_button">
             <field name="name">papyrus_barcode</field>
             <field name="string">Barcode</field>

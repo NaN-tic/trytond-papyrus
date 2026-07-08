@@ -30,35 +30,39 @@ def register():
         attachment.PapyrusAttachment,
         document.DocumentSplit,
         module=module, type_='wizard')
-    Pool.register(
-        invoice.Invoice,
-        invoice.Page,
-        invoice.Document,
-        depends=['account_invoice'],
-        module=module, type_='model')
-    Pool.register(
-        invoice.InvoicePapyrus,
-        depends=['account_invoice'],
-        module=module, type_='report')
-    Pool.register(
-        purchase.Purchase,
-        purchase.Page,
-        purchase.Document,
-        depends=['purchase'],
-        module=module, type_='model')
-    Pool.register(
-        purchase.PurchasePapyrus,
-        depends=['purchase'],
-        module=module, type_='report')
-    Pool.register(
-        stock.ShipmentIn,
-        stock.ShipmentOutReturn,
-        stock.Page,
-        stock.Document,
-        depends=['stock'],
-        module=module, type_='model')
-    Pool.register(
-        stock.ShipmentInPapyrus,
-        stock.ShipmentOutReturnPapyrus,
-        depends=['stock'],
-        module=module, type_='report')
+    if common.PapyrusReportMixin:
+        Pool.register(
+            invoice.Invoice,
+            invoice.Page,
+            invoice.Document,
+            depends=['account_invoice', 'html_report'],
+            module=module, type_='model')
+        Pool.register(
+            invoice.InvoicePapyrus,
+            depends=['account_invoice', 'html_report'],
+            module=module, type_='report')
+        Pool.register(
+            purchase.Purchase,
+            purchase.Page,
+            purchase.Document,
+            depends=['purchase', 'html_report'],
+            module=module, type_='model')
+        Pool.register(
+            purchase.PurchasePapyrus,
+            depends=['purchase', 'html_report'],
+            module=module, type_='report')
+        Pool.register(
+            stock.ShipmentIn,
+            stock.ShipmentOutReturn,
+            depends=['stock', 'html_report'],
+            module=module, type_='model')
+        Pool.register(
+            stock.Page,
+            stock.Document,
+            depends=['stock', 'html_report'],
+            module=module, type_='model')
+        Pool.register(
+            stock.ShipmentInPapyrus,
+            stock.ShipmentOutReturnPapyrus,
+            depends=['stock', 'html_report'],
+            module=module, type_='report')

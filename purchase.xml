@@ -2,7 +2,7 @@
 <!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
 this repository contains the full copyright notices and license terms. -->
 <tryton>
-  <data depends="purchase">
+  <data depends="purchase,html_report">
         <record model="ir.ui.view" id="purchase_view_form">
             <field name="model">purchase.purchase</field>
             <field name="inherit" ref="purchase.purchase_view_form"/>

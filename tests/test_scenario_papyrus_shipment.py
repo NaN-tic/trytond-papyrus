@@ -23,7 +23,7 @@ class Test(unittest.TestCase):
     def test(self):
 
         # Install account_invoice
-        activate_modules(['papyrus', 'stock'])
+        activate_modules(['papyrus', 'stock', 'html_report'])
 
         # Create company
         _ = create_company()

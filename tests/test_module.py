@@ -25,7 +25,9 @@ class PapyrusCompanyTestMixin(CompanyTestMixin):
 class PapyrusTestCase(PapyrusCompanyTestMixin, ModuleTestCase):
     'Test Papyrus module'
     module = 'papyrus'
-    extras = ['account_invoice', 'html_report', 'purchase', 'stock']
+    extras = [
+        'account_invoice', 'attachment_content', 'html_report', 'purchase',
+        'stock']
 
     @with_transaction()
     def test_reports_execute(self):

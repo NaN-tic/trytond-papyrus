@@ -771,7 +771,12 @@ class Document(Workflow, ModelSQL, ModelView):
         attachment.resource = record
         attachment.type = 'data'
         attachment.data = self.data
-        attachment.content = self.text
+        if self.text and hasattr(Attachment, 'content'):
+            # If attachment_content module is activated take advantage of the
+            # fact that we already extracted the content
+            attachment.content = self.text
+            attachment.data_updated = False
+            attachment.mimetype = 'application/pdf'
         return attachment
 
     def scan_text(self):

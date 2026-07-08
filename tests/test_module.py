@@ -2,6 +2,7 @@
 # This file is part of Tryton.  The COPYRIGHT file at the top level of
 # this repository contains the full copyright notices and license terms.
 
+import unittest
 from datetime import date
 
 from trytond.modules.account.tests import create_chart, get_fiscalyear
@@ -24,7 +25,7 @@ class PapyrusCompanyTestMixin(CompanyTestMixin):
 class PapyrusTestCase(PapyrusCompanyTestMixin, ModuleTestCase):
     'Test Papyrus module'
     module = 'papyrus'
-    extras = ['account_invoice', 'purchase', 'stock']
+    extras = ['account_invoice', 'html_report', 'purchase', 'stock']
 
     @with_transaction()
     def test_reports_execute(self):
@@ -142,6 +143,45 @@ class PapyrusTestCase(PapyrusCompanyTestMixin, ModuleTestCase):
                 ext, content, _, _ = Report.execute([record.id], {})
                 self.assertEqual(ext, 'pdf')
                 self.assertTrue(content)
+
+
+class PapyrusWithoutHtmlReportTestCase(PapyrusCompanyTestMixin, ModuleTestCase):
+    'Test Papyrus module without html_report'
+    module = 'papyrus'
+    extras = ['account_invoice', 'purchase', 'stock']
+
+    @unittest.skip("Optional html_report views are not loaded in this variant")
+    def test_view(self):
+        pass
+
+    @with_transaction()
+    def test_papyrus_report_actions_not_loaded(self):
+        pool = Pool()
+        ActionReport = pool.get('ir.action.report')
+        ModelButton = pool.get('ir.model.button')
+
+        for report_name in [
+                'account.invoice.papyrus',
+                'purchase.papyrus',
+                'stock.shipment.in.papyrus',
+                'stock.shipment.out.return.papyrus',
+                ]:
+            with self.subTest(report_name=report_name):
+                self.assertFalse(ActionReport.search([
+                            ('report_name', '=', report_name),
+                            ]))
+
+        for model_name in [
+                'account.invoice',
+                'purchase.purchase',
+                'stock.shipment.in',
+                'stock.shipment.out.return',
+                ]:
+            with self.subTest(model_name=model_name):
+                self.assertFalse(ModelButton.search([
+                            ('model.name', '=', model_name),
+                            ('name', '=', 'papyrus_barcode'),
+                            ]))
 
 
 del ModuleTestCase

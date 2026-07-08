@@ -26,7 +26,7 @@ class Test(unittest.TestCase):
     def test(self):
 
         # Install account_invoice
-        activate_modules(['papyrus', 'account_invoice'])
+        activate_modules(['papyrus', 'account_invoice', 'html_report'])
 
         # Create company
         _ = create_company()

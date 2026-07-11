@@ -526,6 +526,10 @@ msgctxt "model:ir.model.button,string:document_inspect_button"
 msgid "Inspect"
 msgstr "Inspeccionar"
 
+msgctxt "model:ir.model.button,string:document_reinspect_button"
+msgid "Reinspect"
+msgstr "Reinspeccionar"
+
 msgctxt "model:ir.model.button,string:document_pending_button"
 msgid "Pending"
 msgstr "Pendiente"

@@ -3,7 +3,7 @@ from trytond.model import fields
 from trytond.wizard import Wizard, StateAction
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
-from trytond.config import config
+import trytond.config as config
 from trytond.filestore import filestore
 from trytond.pyson import PYSONEncoder
 from trytond.ir.attachment import store_prefix

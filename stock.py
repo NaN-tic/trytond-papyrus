@@ -4,8 +4,7 @@
 from trytond.pool import PoolMeta
 from trytond.model import ModelView
 from trytond.pool import Pool
-from trytond.config import config as config_
-
+import trytond.config as config_
 from .common import PapyrusReportMixin
 
 IN_PREFIX = config_.get('papyrus', 'stock_shipment_in', default='SI-')

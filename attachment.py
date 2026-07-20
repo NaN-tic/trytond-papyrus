@@ -3,7 +3,7 @@ from trytond.model import fields
 from trytond.wizard import Wizard, StateAction
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
-from trytond.config import config
+import trytond.config as config_
 from trytond.filestore import filestore
 from trytond.pyson import PYSONEncoder
 from trytond.ir.attachment import store_prefix
@@ -11,7 +11,7 @@ from sql.functions import Substring, Position
 
 
 # We need a cache when files are stored in a cloud filestore
-cache_directory = config.get('papyrus', 'cache_directory')
+cache_directory = config_.get('papyrus', 'cache_directory')
 
 
 class Attachment(metaclass=PoolMeta):
@@ -22,7 +22,7 @@ class Attachment(metaclass=PoolMeta):
     def get_full_path(self):
         pool = Pool()
         Attachment = pool.get('ir.attachment')
-        if config.get('database', 'class'):
+        if config_.get('database', 'class'):
             if not self.data:
                 return
             # TODO: Remove cache periodically

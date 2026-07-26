@@ -32,8 +32,6 @@
             <field name="filename"/>
             <label name="origin"/>
             <field name="origin"/>
-            <label name="employee"/>
-            <field name="employee"/>
         </page>
     </notebook>
     <group col="-1" colspan="6" id="buttons">

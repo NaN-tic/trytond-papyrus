@@ -114,7 +114,9 @@ class Test(unittest.TestCase):
         self.assertEqual(page.filename, 'image.jpg')
         page.click('inspect')
         self.assertEqual(page.state, 'inspected')
-        self.assertEqual(len(page.boxes), 1)
+        barcode_boxes = [box for box in page.boxes if box.type == 'barcode']
+        self.assertEqual(len(barcode_boxes), 1)
+        self.assertEqual(barcode_boxes[0].text, 'AI-%s' % invoice.id)
         page.click('process')
         document = page.document
         self.assertEqual(document.state, 'inspected')

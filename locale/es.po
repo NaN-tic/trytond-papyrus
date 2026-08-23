@@ -391,10 +391,6 @@ msgctxt "model:document.split.start,string:"
 msgid "Document Split Start"
 msgstr "Inicio de la división del documento"
 
-msgctxt "model:ir.action,name:act_attachment_form"
-msgid "Attachments"
-msgstr "Adjuntos"
-
 msgctxt "model:ir.action,name:act_document_pages"
 msgid "Pages"
 msgstr "Páginas"
@@ -408,8 +404,8 @@ msgid "Document Page"
 msgstr "Página de documento"
 
 msgctxt "model:ir.action,name:act_papyrus_queue"
-msgid "Document Queue"
-msgstr "Cola de documentos"
+msgid "Document Queues"
+msgstr "Colas de documentos"
 
 msgctxt "model:ir.action,name:report_account_invoice_papyrus"
 msgid "Papyrus Barcode"
@@ -595,29 +591,17 @@ msgctxt "model:ir.sequence.type,name:sequence_type_papyrus_page"
 msgid "Papyrus Page"
 msgstr "Página Papyrus"
 
-msgctxt "model:ir.ui.menu,name:menu_attachment_form"
-msgid "Attachments"
-msgstr "Adjuntos"
-
-msgctxt "model:ir.ui.menu,name:menu_papyrus"
-msgid "Papyrus"
-msgstr "Papyrus"
-
-msgctxt "model:ir.ui.menu,name:menu_papyrus_configuration"
-msgid "Configuration"
-msgstr "Configuración"
-
 msgctxt "model:ir.ui.menu,name:menu_papyrus_document"
-msgid "Documents"
-msgstr "Documentos"
+msgid "Papyrus Documents"
+msgstr "Documentos Papyrus"
 
 msgctxt "model:ir.ui.menu,name:menu_papyrus_page"
 msgid "Pages"
 msgstr "Páginas"
 
 msgctxt "model:ir.ui.menu,name:menu_papyrus_queue"
-msgid "Queue"
-msgstr "Cola"
+msgid "Queues"
+msgstr "Colas"
 
 msgctxt "model:papyrus.document,string:"
 msgid "Papyrus Document"

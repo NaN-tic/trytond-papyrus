@@ -3,19 +3,21 @@
      copyright notices and license terms. -->
 <tryton>
     <data>
-        <record model="res.group" id="group_papyrus_admin">
-            <field name="name">Papyrus Administration</field>
-        </record>
-        <record model="res.user-res.group" id="user_admin_group_papyrus_admin">
-            <field name="user" ref="res.user_admin"/>
-            <field name="group" ref="group_papyrus_admin"/>
-        </record>
         <record model="res.group" id="group_papyrus">
             <field name="name">Papyrus</field>
+            <field name="parent" ref="office.group_office"/>
         </record>
         <record model="res.user-res.group" id="user_admin_group_papyrus">
             <field name="user" ref="res.user_admin"/>
             <field name="group" ref="group_papyrus"/>
+        </record>
+        <record model="res.group" id="group_papyrus_admin">
+            <field name="name">Papyrus Administration</field>
+            <field name="parent" ref="group_papyrus"/>
+        </record>
+        <record model="res.user-res.group" id="user_admin_group_papyrus_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_papyrus_admin"/>
         </record>
 
         <record model="ir.sequence.type" id="sequence_type_papyrus_page">
@@ -54,7 +56,7 @@
             <field name="name">queue_list</field>
         </record>
         <record model="ir.action.act_window" id="act_papyrus_queue">
-            <field name="name">Document Queue</field>
+            <field name="name">Document Queues</field>
             <field name="res_model">papyrus.queue</field>
         </record>
         <record model="ir.action.act_window.view" id="act_papyrus_queue_view1">
@@ -414,24 +416,20 @@
             <field name="path">icons/papyrus.svg</field>
         </record>
 
-        <menuitem id="menu_papyrus" name="Papyrus" sequence="20" icon="papyrus"/>
+        <menuitem action="act_papyrus_document" id="menu_papyrus_document"
+            parent="office.menu_office" sequence="30"
+            name="Papyrus Documents" icon="papyrus"/>
         <record model="ir.ui.menu-res.group" id="menu_papyrus_group_papyrus">
-          <field name="menu" ref="menu_papyrus"/>
+          <field name="menu" ref="menu_papyrus_document"/>
           <field name="group" ref="group_papyrus"/>
         </record>
         <record model="ir.ui.menu-res.group" id="menu_papyrus_group_papyrus_admin">
-          <field name="menu" ref="menu_papyrus"/>
+          <field name="menu" ref="menu_papyrus_document"/>
           <field name="group" ref="group_papyrus_admin"/>
         </record>
 
-        <menuitem id="menu_papyrus_configuration" parent="menu_papyrus" name="Configuration" sequence="1"/>
-        <record model="ir.ui.menu-res.group" id="menu_papyrus_configuration_group_papyrus_admin">
-          <field name="menu" ref="menu_papyrus_configuration"/>
-          <field name="group" ref="group_papyrus_admin"/>
-        </record>
-
-        <menuitem action="act_papyrus_queue" id="menu_papyrus_queue" parent="menu_papyrus_configuration" sequence="10" name="Queue"/>
-        <menuitem action="act_papyrus_document" id="menu_papyrus_document" parent="menu_papyrus" sequence="10" name="Documents"/>
+        <menuitem action="act_papyrus_queue" id="menu_papyrus_queue"
+            parent="office.menu_configuration" sequence="30" name="Queues"/>
         <menuitem action="act_papyrus_page" id="menu_papyrus_page" parent="menu_papyrus_document" sequence="10" name="Pages"/>
 
         <!-- Cron -->

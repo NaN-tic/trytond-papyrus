@@ -1,9 +1,0 @@
-<tryton>
-    <data depends="attachment_content">
-        <record model="ir.ui.view" id="attachment_view_tree_content">
-            <field name="model">ir.attachment</field>
-            <field name="inherit" ref="papyrus.attachment_view_tree"/>
-            <field name="name">attachment_list_content</field>
-        </record>
-    </data>
-</tryton>

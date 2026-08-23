@@ -27,7 +27,6 @@ def register():
         electronic_mail.ElectronicMail,
         module=module, type_='model')
     Pool.register(
-        attachment.PapyrusAttachment,
         document.DocumentSplit,
         module=module, type_='wizard')
     if common.PapyrusReportMixin:

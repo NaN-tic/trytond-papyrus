@@ -7,25 +7,13 @@
             <field name="name">Papyrus</field>
             <field name="parent" ref="office.group_office"/>
         </record>
-        <record model="res.user-res.group" id="user_admin_group_papyrus">
-            <field name="user" ref="res.user_admin"/>
-            <field name="group" ref="group_papyrus"/>
-        </record>
         <record model="res.group" id="group_papyrus_admin">
             <field name="name">Papyrus Administration</field>
             <field name="parent" ref="group_papyrus"/>
         </record>
-        <record model="res.user-res.group" id="user_admin_group_papyrus_admin">
-            <field name="user" ref="res.user_admin"/>
-            <field name="group" ref="group_papyrus_admin"/>
-        </record>
 
         <record model="ir.sequence.type" id="sequence_type_papyrus_page">
             <field name="name">Papyrus Page</field>
-        </record>
-        <record model="ir.sequence.type-res.group" id="sequence_type_papyrus_page_group_admin">
-            <field name="sequence_type" ref="sequence_type_papyrus_page"/>
-            <field name="group" ref="res.group_admin"/>
         </record>
         <record model="ir.sequence.type-res.group" id="sequence_type_papyrus_page_group_document_admin">
             <field name="sequence_type" ref="sequence_type_papyrus_page"/>
@@ -34,10 +22,6 @@
 
         <record model="ir.sequence.type" id="sequence_type_papyrus_document">
             <field name="name">Papyrus Document</field>
-        </record>
-        <record model="ir.sequence.type-res.group" id="sequence_type_papyrus_document_group_admin">
-            <field name="sequence_type" ref="sequence_type_papyrus_document"/>
-            <field name="group" ref="res.group_admin"/>
         </record>
         <record model="ir.sequence.type-res.group" id="sequence_type_papyrus_document_group_document_admin">
             <field name="sequence_type" ref="sequence_type_papyrus_document"/>

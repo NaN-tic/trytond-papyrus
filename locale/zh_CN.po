@@ -1,0 +1,770 @@
+#
+msgid ""
+msgstr ""
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "field:document.split.page,page:"
+msgid "Image"
+msgstr "图片"
+
+msgctxt "field:document.split.page,split:"
+msgid "Split"
+msgstr "拆分"
+
+msgctxt "field:document.split.start,document:"
+msgid "Document"
+msgstr "文档"
+
+msgctxt "field:document.split.start,pages:"
+msgid "Pages"
+msgstr "页面"
+
+msgctxt "field:electronic.mail,documents:"
+msgid "Documents"
+msgstr "文档"
+
+msgctxt "field:papyrus.document,boxes:"
+msgid "Boxes"
+msgstr "箱数"
+
+msgctxt "field:papyrus.document,company:"
+msgid "Company"
+msgstr "公司"
+
+msgctxt "field:papyrus.document,current_page:"
+msgid "Current Page"
+msgstr "当前页面"
+
+msgctxt "field:papyrus.document,data:"
+msgid "Data"
+msgstr "数据"
+
+msgctxt "field:papyrus.document,document_company:"
+msgid "Document Company"
+msgstr "文档公司"
+
+msgctxt "field:papyrus.document,employee:"
+msgid "Employee"
+msgstr "雇员"
+
+msgctxt "field:papyrus.document,filename:"
+msgid "File Name"
+msgstr "文件名"
+
+msgctxt "field:papyrus.document,image:"
+msgid "Image"
+msgstr "图片"
+
+msgctxt "field:papyrus.document,image_filename:"
+msgid "Image Filename"
+msgstr "图像文件名"
+
+msgctxt "field:papyrus.document,number:"
+msgid "Number"
+msgstr "编号"
+
+msgctxt "field:papyrus.document,origin:"
+msgid "Origin"
+msgstr "依据"
+
+msgctxt "field:papyrus.document,page_count:"
+msgid "Page Count"
+msgstr "页数"
+
+msgctxt "field:papyrus.document,pages:"
+msgid "Pages"
+msgstr "页面"
+
+msgctxt "field:papyrus.document,queue:"
+msgid "Queue"
+msgstr "队列"
+
+msgctxt "field:papyrus.document,reference:"
+msgid "Reference"
+msgstr "参考"
+
+msgctxt "field:papyrus.document,state:"
+msgid "State"
+msgstr "状态"
+
+msgctxt "field:papyrus.document,text:"
+msgid "Text"
+msgstr "文本"
+
+msgctxt "field:papyrus.document.box,document:"
+msgid "Document"
+msgstr "文档"
+
+msgctxt "field:papyrus.document.box,height:"
+msgid "Height"
+msgstr "高度"
+
+msgctxt "field:papyrus.document.box,page:"
+msgid "Page"
+msgstr "页面"
+
+msgctxt "field:papyrus.document.box,text:"
+msgid "Text"
+msgstr "文本"
+
+msgctxt "field:papyrus.document.box,type:"
+msgid "Type"
+msgstr "科目"
+
+msgctxt "field:papyrus.document.box,width:"
+msgid "Width"
+msgstr "宽度"
+
+msgctxt "field:papyrus.document.box,x0:"
+msgid "X0"
+msgstr "X0"
+
+msgctxt "field:papyrus.document.box,x1:"
+msgid "X1"
+msgstr "X1"
+
+msgctxt "field:papyrus.document.box,y0:"
+msgid "Y0"
+msgstr "Y0"
+
+msgctxt "field:papyrus.document.box,y1:"
+msgid "Y1"
+msgstr "Y1"
+
+msgctxt "field:papyrus.page,boxes:"
+msgid "Boxes"
+msgstr "箱数"
+
+msgctxt "field:papyrus.page,data:"
+msgid "Data"
+msgstr "数据"
+
+msgctxt "field:papyrus.page,document:"
+msgid "Document"
+msgstr "文档"
+
+msgctxt "field:papyrus.page,filename:"
+msgid "File Name"
+msgstr "文件名"
+
+msgctxt "field:papyrus.page,image:"
+msgid "Image"
+msgstr "图片"
+
+msgctxt "field:papyrus.page,origin:"
+msgid "Origin"
+msgstr "依据"
+
+msgctxt "field:papyrus.page,queue:"
+msgid "Queue"
+msgstr "队列"
+
+msgctxt "field:papyrus.page,state:"
+msgid "State"
+msgstr "状态"
+
+msgctxt "field:papyrus.page,text:"
+msgid "Text"
+msgstr "文本"
+
+msgctxt "field:papyrus.page.box,extra:"
+msgid "Extra"
+msgstr "附加"
+
+msgctxt "field:papyrus.page.box,height:"
+msgid "Height"
+msgstr "高度"
+
+msgctxt "field:papyrus.page.box,page:"
+msgid "Page"
+msgstr "页面"
+
+msgctxt "field:papyrus.page.box,text:"
+msgid "Text"
+msgstr "文本"
+
+msgctxt "field:papyrus.page.box,type:"
+msgid "Type"
+msgstr "科目"
+
+msgctxt "field:papyrus.page.box,width:"
+msgid "Width"
+msgstr "宽度"
+
+msgctxt "field:papyrus.page.box,x0:"
+msgid "X0"
+msgstr "X0"
+
+msgctxt "field:papyrus.page.box,x1:"
+msgid "X1"
+msgstr "X1"
+
+msgctxt "field:papyrus.page.box,y0:"
+msgid "Y0"
+msgstr "Y0"
+
+msgctxt "field:papyrus.page.box,y1:"
+msgid "Y1"
+msgstr "Y1"
+
+msgctxt "field:papyrus.queue,company:"
+msgid "Company"
+msgstr "公司"
+
+msgctxt "field:papyrus.queue,delay:"
+msgid "Delay"
+msgstr "延迟"
+
+msgctxt "field:papyrus.queue,discarded_inbox:"
+msgid "Discarded Inbox"
+msgstr "丢弃收件箱"
+
+msgctxt "field:papyrus.queue,document_process_auto:"
+msgid "Document Process Auto"
+msgstr "自动处理文档"
+
+msgctxt "field:papyrus.queue,document_sequence:"
+msgid "Document Sequence"
+msgstr "文档编号序列"
+
+msgctxt "field:papyrus.queue,electronic_mail_urls_blacklist:"
+msgid "URL Blacklist"
+msgstr "URL 黑名单"
+
+msgctxt "field:papyrus.queue,electronic_mail_urls_default_policy:"
+msgid "Default URL Policy"
+msgstr "默认 URL 策略"
+
+msgctxt "field:papyrus.queue,electronic_mail_urls_whitelist:"
+msgid "URL Whitelist"
+msgstr "URL 白名单"
+
+msgctxt "field:papyrus.queue,filename_blacklist:"
+msgid "Filename Blacklist"
+msgstr "文件名黑名单"
+
+msgctxt "field:papyrus.queue,filename_whitelist:"
+msgid "Filename Whitelist"
+msgstr "文件名白名单"
+
+msgctxt "field:papyrus.queue,image_dpi:"
+msgid "DPI"
+msgstr "DPI"
+
+msgctxt "field:papyrus.queue,name:"
+msgid "Name"
+msgstr "名称"
+
+msgctxt "field:papyrus.queue,page_sequence:"
+msgid "Page Sequence"
+msgstr "页面编号序列"
+
+msgctxt "field:papyrus.queue,scheduler:"
+msgid "Scheduler"
+msgstr "调度器"
+
+msgctxt "field:papyrus.queue,source_directory:"
+msgid "Source Directory"
+msgstr "来源目录"
+
+msgctxt "field:papyrus.queue,source_inbox:"
+msgid "Source Inbox"
+msgstr "来源收件箱"
+
+msgctxt "field:papyrus.queue,source_type:"
+msgid "Source"
+msgstr "来源"
+
+msgctxt "field:papyrus.queue,source_url:"
+msgid "Source URL"
+msgstr "来源 URL"
+
+msgctxt "field:papyrus.queue,storage_directory:"
+msgid "Storage Directory"
+msgstr "存储目录"
+
+msgctxt "field:papyrus.queue,storage_inbox:"
+msgid "Storage Inbox"
+msgstr "存储收件箱"
+
+msgctxt "field:papyrus.queue,type:"
+msgid "Type"
+msgstr "科目"
+
+msgctxt "help:papyrus.queue,electronic_mail_urls_blacklist:"
+msgid ""
+"List of URL prefixes (one per line) that should not be downloaded. For "
+"example, use http:// to NO download URLs starting with \"http://\""
+msgstr "不应下载的 URL 前缀列表（每行一个）。例如，使用 http:// 可禁止下载以“http://”开头的 URL。"
+
+msgctxt "help:papyrus.queue,electronic_mail_urls_default_policy:"
+msgid ""
+"The default policy to apply if URL does not match any of the whitlisted nor "
+"blacklisted prefixes."
+msgstr "URL 不匹配任何白名单或黑名单前缀时应用的默认策略。"
+
+msgctxt "help:papyrus.queue,electronic_mail_urls_whitelist:"
+msgid ""
+"List of URL prefixes (one per line) that should be downloaded. For example, "
+"use https:// to download all URLs starting with \"https://\"."
+msgstr "应下载的 URL 前缀列表（每行一个）。例如，使用 https:// 可下载所有以“https://”开头的 URL。"
+
+msgctxt "help:papyrus.queue,filename_blacklist:"
+msgid ""
+"List of filename-matching patterns (one per line). Filenames matching any of"
+" the patterns will be discarded. Valid matching expressions include: *.pdf, "
+"*.doc, invoice*.pdf"
+msgstr "文件名匹配模式列表（每行一个）。匹配任一模式的文件将被丢弃。有效模式包括：*.pdf、*.doc、invoice*.pdf"
+
+msgctxt "help:papyrus.queue,filename_whitelist:"
+msgid ""
+"List of filename-matching patterns (one per line). File names matching any "
+"of the patterns will be created as documents as long as they do not match "
+"any blacklist pattern. Valid matching expressions include: *.pdf, *.doc, "
+"invoice*.pdf"
+msgstr ""
+"文件名匹配模式列表（每行一个）。匹配任一模式且不匹配任何黑名单模式的文件将被创建为文档。有效模式包括：*.pdf、*.doc、invoice*.pdf"
+
+msgctxt "help:papyrus.queue,image_dpi:"
+msgid ""
+"DPI: This value indicates the number of pixels per inch that PDFs of "
+"documents will generate when they come from multiple pages, if the system is"
+" unable to get the value from the image on the page (usually in files in PDF"
+" format). Instead, the system respects the number of pixels on the page when"
+" they are capable of get them (typically JPEG files). Therefore, if the "
+"system must use this parameter, the resulting PDF size may be affected. That"
+" is why we recommend using JPEG files for pages."
+msgstr ""
+"DPI：当多页生成文档 PDF 且系统无法从页面图像获取分辨率（通常为 PDF 文件）时，此值指定每英寸的像素数。如果系统能获取页面像素数（通常为 "
+"JPEG 文件），则采用原有值。因此，使用此参数可能影响生成的 PDF 尺寸。建议页面使用 JPEG 文件。"
+
+msgctxt "help:papyrus.queue,source_directory:"
+msgid "Absolute path directory"
+msgstr "目录的绝对路径"
+
+msgctxt "help:papyrus.queue,source_url:"
+msgid "Google Drive shared URL of the folder to be used as source."
+msgstr "用作来源的文件夹的 Google Drive 共享 URL。"
+
+msgctxt "help:papyrus.queue,storage_directory:"
+msgid "Absolute path directory"
+msgstr "目录的绝对路径"
+
+msgctxt "model:document.split.page,string:"
+msgid "Document Split Page"
+msgstr "文档拆分页面"
+
+msgctxt "model:document.split.start,string:"
+msgid "Document Split Start"
+msgstr "文档拆分：开始"
+
+msgctxt "model:ir.action,name:act_document_pages"
+msgid "Pages"
+msgstr "页面"
+
+msgctxt "model:ir.action,name:act_papyrus_document"
+msgid "Document"
+msgstr "文档"
+
+msgctxt "model:ir.action,name:act_papyrus_page"
+msgid "Document Page"
+msgstr "文档页面"
+
+msgctxt "model:ir.action,name:act_papyrus_queue"
+msgid "Document Queues"
+msgstr "文档队列"
+
+msgctxt "model:ir.action,name:report_account_invoice_papyrus"
+msgid "Papyrus Barcode"
+msgstr "Papyrus 条形码"
+
+msgctxt "model:ir.action,name:report_purchase_papyrus"
+msgid "Papyrus Barcode"
+msgstr "Papyrus 条形码"
+
+msgctxt "model:ir.action,name:report_stock_shipment_in_papyrus"
+msgid "Papyrus Barcode"
+msgstr "Papyrus 条形码"
+
+msgctxt "model:ir.action,name:report_stock_shipment_out_return_papyrus"
+msgid "Papyrus Barcode"
+msgstr "Papyrus 条形码"
+
+msgctxt "model:ir.action,name:wizard_split"
+msgid "Split Document"
+msgstr "拆分文档"
+
+msgctxt "model:ir.action.act_window.domain,name:act_document_form_domain_all"
+msgid "All"
+msgstr "全部"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_document_form_domain_cancelled"
+msgid "Cancelled"
+msgstr "已取消"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_document_form_domain_inspected"
+msgid "Inspected"
+msgstr "已检查"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_document_form_domain_pending"
+msgid "Pending"
+msgstr "待定"
+
+msgctxt "model:ir.action.act_window.domain,name:act_page_form_domain_all"
+msgid "All"
+msgstr "全部"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_page_form_domain_inspected"
+msgid "Inspected"
+msgstr "已检查"
+
+msgctxt "model:ir.action.act_window.domain,name:act_page_form_domain_pending"
+msgid "Pending"
+msgstr "待定"
+
+#, python-format
+msgctxt "model:ir.message,text:cannot_save_file"
+msgid "Can not save \"%(filename)s\"."
+msgstr "无法保存“%(filename)s”。"
+
+msgctxt "model:ir.message,text:document_copy_forbidden"
+msgid "Papyrus Documents cannot be duplicated."
+msgstr "无法复制 Papyrus 文档。"
+
+#, python-format
+msgctxt "model:ir.message,text:msg_missing_storage_directory"
+msgid "Storage directory \"%(path)s\" does not exist."
+msgstr "存储目录“%(path)s”不存在。"
+
+msgctxt "model:ir.message,text:page_copy_forbidden"
+msgid "Papyrus Pages cannot be duplicated."
+msgstr "无法复制 Papyrus 页面。"
+
+#, python-format
+msgctxt "model:ir.message,text:split_document_confirmation"
+msgid ""
+"Are you sure you want to split this document in \"%(num_documents)s\"? With "
+"the distribution \"%(pages)s\"."
+msgstr "确定要按照“%(pages)s”的页面分配将此文档拆分为“%(num_documents)s”份吗？"
+
+msgctxt "model:ir.model.button,help:invoice_papyrus_barcode_button"
+msgid ""
+"Prints a barcode for you to stick to the paper and later process the "
+"document using Papyrus"
+msgstr "打印条形码以粘贴到纸张上，之后使用 Papyrus 处理文档"
+
+msgctxt "model:ir.model.button,help:purchase_papyrus_barcode_button"
+msgid ""
+"Prints a barcode that can be stick to the paper and later process the "
+"document using Papyrus"
+msgstr "打印可粘贴到纸张上的条形码，之后使用 Papyrus 处理文档"
+
+msgctxt "model:ir.model.button,help:shipment_in_papyrus_barcode_button"
+msgid ""
+"Prints a barcode that can be stick to the paper and later process the "
+"document using Papyrus"
+msgstr "打印可粘贴到纸张上的条形码，之后使用 Papyrus 处理文档"
+
+msgctxt ""
+"model:ir.model.button,help:shipment_out_return_papyrus_barcode_button"
+msgid ""
+"Prints a barcode that can be stick to the paper and later process the "
+"document using Papyrus"
+msgstr "打印可粘贴到纸张上的条形码，之后使用 Papyrus 处理文档"
+
+msgctxt "model:ir.model.button,string:document_cancel_button"
+msgid "Cancel"
+msgstr "取消"
+
+msgctxt "model:ir.model.button,string:document_inspect_button"
+msgid "Inspect"
+msgstr "检查"
+
+msgctxt "model:ir.model.button,string:document_reinspect_button"
+msgid "Reinspect"
+msgstr "重新检查"
+
+msgctxt "model:ir.model.button,string:document_pending_button"
+msgid "Pending"
+msgstr "待定"
+
+msgctxt "model:ir.model.button,string:document_process_button"
+msgid "Process"
+msgstr "处理"
+
+msgctxt "model:ir.model.button,string:document_split_button"
+msgid "Split"
+msgstr "拆分"
+
+msgctxt "model:ir.model.button,string:invoice_papyrus_barcode_button"
+msgid "Barcode"
+msgstr "条码"
+
+msgctxt "model:ir.model.button,string:page_inspect_button"
+msgid "Inspect"
+msgstr "检查"
+
+msgctxt "model:ir.model.button,string:page_pending_button"
+msgid "Pending"
+msgstr "待定"
+
+msgctxt "model:ir.model.button,string:page_process_button"
+msgid "Process"
+msgstr "处理"
+
+msgctxt "model:ir.model.button,string:purchase_papyrus_barcode_button"
+msgid "Barcode"
+msgstr "条码"
+
+msgctxt "model:ir.model.button,string:queue_clean_button"
+msgid "Clean"
+msgstr "清理"
+
+msgctxt "model:ir.model.button,string:queue_process_button"
+msgid "Process"
+msgstr "处理"
+
+msgctxt "model:ir.model.button,string:shipment_in_papyrus_barcode_button"
+msgid "Barcode"
+msgstr "条码"
+
+msgctxt ""
+"model:ir.model.button,string:shipment_out_return_papyrus_barcode_button"
+msgid "Barcode"
+msgstr "条码"
+
+msgctxt "model:ir.rule.group,name:rule_group_papyrus_document"
+msgid "User in company"
+msgstr "公司内用户"
+
+msgctxt "model:ir.rule.group,name:rule_group_papyrus_queue"
+msgid "User in company"
+msgstr "公司内用户"
+
+msgctxt "model:ir.sequence.type,name:sequence_type_papyrus_document"
+msgid "Papyrus Document"
+msgstr "Papyrus 文档"
+
+msgctxt "model:ir.sequence.type,name:sequence_type_papyrus_page"
+msgid "Papyrus Page"
+msgstr "Papyrus 页面"
+
+msgctxt "model:ir.ui.menu,name:menu_papyrus_document"
+msgid "Papyrus Documents"
+msgstr "Papyrus 文档"
+
+msgctxt "model:ir.ui.menu,name:menu_papyrus_page"
+msgid "Pages"
+msgstr "页面"
+
+msgctxt "model:ir.ui.menu,name:menu_papyrus_queue"
+msgid "Queues"
+msgstr "队列"
+
+msgctxt "model:papyrus.document,string:"
+msgid "Papyrus Document"
+msgstr "Papyrus 文档"
+
+msgctxt "model:papyrus.document.box,string:"
+msgid "Papyrus Document Box"
+msgstr "Papyrus 文档框"
+
+msgctxt "model:papyrus.page,string:"
+msgid "Papyrus Page"
+msgstr "Papyrus 页面"
+
+msgctxt "model:papyrus.page.box,string:"
+msgid "Papyrus Page Box"
+msgstr "Papyrus 页面框"
+
+msgctxt "model:papyrus.queue,string:"
+msgid "Papyrus Queue"
+msgstr "Papyrus 队列"
+
+msgctxt "model:res.group,name:group_papyrus"
+msgid "Papyrus"
+msgstr "Papyrus"
+
+msgctxt "model:res.group,name:group_papyrus_admin"
+msgid "Papyrus Administration"
+msgstr "Papyrus 管理"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Papyrus Clean Files"
+msgstr "Papyrus 清理文件"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Papyrus Inspect Documents"
+msgstr "Papyrus 检查文档"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Papyrus Inspect Pages"
+msgstr "Papyrus 检查页面"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Papyrus Process Documents"
+msgstr "Papyrus 处理文档"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Papyrus Process Pages"
+msgstr "Papyrus 处理页面"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Papyrus Process Queue"
+msgstr "Papyrus 处理队列"
+
+msgctxt "selection:papyrus.document,state:"
+msgid "Cancelled"
+msgstr "已取消"
+
+msgctxt "selection:papyrus.document,state:"
+msgid "Inspected"
+msgstr "已检查"
+
+msgctxt "selection:papyrus.document,state:"
+msgid "Pending"
+msgstr "待定"
+
+msgctxt "selection:papyrus.document,state:"
+msgid "Processed"
+msgstr "已处理"
+
+msgctxt "selection:papyrus.document.box,type:"
+msgid "Barcode"
+msgstr "条码"
+
+msgctxt "selection:papyrus.document.box,type:"
+msgid "Text"
+msgstr "文本"
+
+msgctxt "selection:papyrus.page,state:"
+msgid "Inspected"
+msgstr "已检查"
+
+msgctxt "selection:papyrus.page,state:"
+msgid "Pending"
+msgstr "待定"
+
+msgctxt "selection:papyrus.page,state:"
+msgid "Processed"
+msgstr "已处理"
+
+msgctxt "selection:papyrus.page.box,type:"
+msgid "Barcode"
+msgstr "条码"
+
+msgctxt "selection:papyrus.page.box,type:"
+msgid "Text"
+msgstr "文本"
+
+msgctxt "selection:papyrus.queue,electronic_mail_urls_default_policy:"
+msgid "Discard"
+msgstr "丢弃"
+
+msgctxt "selection:papyrus.queue,electronic_mail_urls_default_policy:"
+msgid "Download"
+msgstr "下载"
+
+msgctxt "selection:papyrus.queue,source_type:"
+msgid "Directory"
+msgstr "目录"
+
+msgctxt "selection:papyrus.queue,source_type:"
+msgid "Electronic mail"
+msgstr "电子邮件"
+
+msgctxt "selection:papyrus.queue,source_type:"
+msgid "Google Drive"
+msgstr "Google Drive"
+
+msgctxt "selection:papyrus.queue,type:"
+msgid "Document"
+msgstr "文档"
+
+msgctxt "selection:papyrus.queue,type:"
+msgid "Page"
+msgstr "页面"
+
+msgctxt "view:ir.attachment:"
+msgid "Last Modification Time"
+msgstr "最近更改时间"
+
+msgctxt "view:papyrus.document:"
+msgid "Extra"
+msgstr "附加"
+
+msgctxt "view:papyrus.document:"
+msgid "Image"
+msgstr "图片"
+
+msgctxt "view:papyrus.page:"
+msgid "Extra"
+msgstr "附加"
+
+msgctxt "view:papyrus.queue:"
+msgid "Directory"
+msgstr "目录"
+
+msgctxt "view:papyrus.queue:"
+msgid "Electronic Mail"
+msgstr "电子邮件"
+
+msgctxt "view:papyrus.queue:"
+msgid "Google Drive"
+msgstr "Google Drive"
+
+msgctxt "wizard_button:document.split,start,end:"
+msgid "Cancel"
+msgstr "取消"
+
+msgctxt "wizard_button:document.split,start,split_document:"
+msgid "OK"
+msgstr "确定"
+
+msgctxt "field:ir.attachment,current_page:"
+msgid "Current Page"
+msgstr "当前页面"
+
+msgctxt "field:ir.attachment,image:"
+msgid "Image"
+msgstr "图片"
+
+msgctxt "field:ir.attachment,page_count:"
+msgid "Page Count"
+msgstr "页数"
+
+msgctxt "model:document.split.page,name:"
+msgid "Document Split Page"
+msgstr "文档拆分页面"
+
+msgctxt "model:document.split.start,name:"
+msgid "Document Split Start"
+msgstr "文档拆分：开始"
+
+msgctxt "model:papyrus.document.box,name:"
+msgid "Papyrus Document Box"
+msgstr "Papyrus 文档框"
+
+msgctxt "model:papyrus.document,name:"
+msgid "Papyrus Document"
+msgstr "Papyrus 文档"
+
+msgctxt "model:papyrus.page.box,name:"
+msgid "Papyrus Page Box"
+msgstr "Papyrus 页面框"
+
+msgctxt "model:papyrus.page,name:"
+msgid "Papyrus Page"
+msgstr "Papyrus 页面"
+
+msgctxt "model:papyrus.queue,name:"
+msgid "Document Queue"
+msgstr "文档队列"

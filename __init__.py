@@ -5,7 +5,6 @@ from trytond.pool import Pool
 from . import common
 from . import document
 from . import invoice
-from . import attachment
 from . import purchase
 from . import stock
 from . import ir
@@ -15,7 +14,6 @@ module = 'papyrus'
 
 def register():
     Pool.register(
-        attachment.Attachment,
         document.Queue,
         document.Document,
         document.Page,

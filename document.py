@@ -1,26 +1,27 @@
 # This file is part papyrus module for Tryton.
 # The COPYRIGHT file at the top level of this repository contains
 # the full copyright notices and license terms.
-import glob
 import logging
 import os
-import os.path
 import re
-import shutil
-import subprocess
-import requests
-import gdown
-from gdown.exceptions import DownloadError
 from datetime import datetime
 from email import message_from_bytes
 from fnmatch import fnmatch
+from io import BytesIO
+from pathlib import Path
+
+import gdown
+import requests
+from gdown.exceptions import DownloadError
+from sql import Null
+from sql.operators import Exists
 from trytond.model import (ModelSQL, ModelView, Workflow, fields,
     sequence_ordered)
 from trytond.pool import Pool
 from trytond.pyson import Bool, Eval, If, PYSONEncoder, Id
 from trytond.i18n import gettext
 from trytond.exceptions import UserError, UserWarning
-from trytond.transaction import Transaction
+from trytond.transaction import Transaction, without_check_access
 from trytond.wizard import Wizard, StateView, Button, StateAction
 from . import tools
 from .datamanager import FileDataManager
@@ -50,6 +51,46 @@ def get_filename_from_response(response):
     return fname
 
 
+def _binary_data(record):
+    data = getattr(record, 'data', None)
+    if isinstance(data, int) and record.id is not None and record.id >= 0:
+        # The clients can request the size of a Binary together with a preview.
+        with Transaction().set_context({f'{record.__name__}.data': None}):
+            data = record.read([record.id], ['data'])[0]['data']
+    return data
+
+
+def _migrate_binary_data(Model, Queue):
+    cursor = Transaction().connection.cursor()
+    table = Model.__table__()
+    queue = Queue.__table__()
+    last_id = 0
+    while True:
+        cursor.execute(*table.join(queue, condition=table.queue == queue.id).select(
+                table.id, table.filename, queue.storage_directory,
+                where=(table.id > last_id) & (table.filename != Null)
+                & (table.filename != '') & (table.data == Null),
+                order_by=table.id, limit=100))
+        rows = cursor.fetchall()
+        if not rows:
+            break
+        for record_id, filename, directory in rows:
+            directory = Path(directory).resolve()
+            path = (directory / filename).resolve()
+            if not path.is_relative_to(directory):
+                raise RuntimeError(
+                    f'{Model.__name__} {record_id}: {path} is outside {directory}')
+            try:
+                data = path.read_bytes()
+            except OSError as exc:
+                raise RuntimeError(
+                    f'{Model.__name__} {record_id}: cannot migrate {path}') from exc
+            cursor.execute(*table.update(
+                    [table.data], [Model.data.sql_format(data)],
+                    where=table.id == record_id))
+        last_id = rows[-1][0]
+
+
 class Queue(ModelSQL, ModelView):
     'Document Queue'
     __name__ = 'papyrus.queue'
@@ -72,8 +113,6 @@ class Queue(ModelSQL, ModelView):
             'invisible': Eval('source_type') != 'directory',
             'required': Eval('source_type') == 'directory',
         })
-    storage_directory = fields.Char('Storage Directory',
-        help='Absolute path directory', required=True)
     source_url = fields.Char('Source URL', states={
             'invisible': Eval('source_type') != 'google_drive',
             'required': Eval('source_type') == 'google_drive',
@@ -153,9 +192,6 @@ class Queue(ModelSQL, ModelView):
                 'process': {
                     'icon': 'tryton-ok',
                     },
-                'clean': {
-                    'icon': 'tryton-clear',
-                    },
                 })
 
     @classmethod
@@ -188,33 +224,27 @@ class Queue(ModelSQL, ModelView):
         elif self.type == 'page':
             return '\n'.join(['*.jpg', '*.jpeg', '*.png', '*.tif'])
 
-    def get_page(self, filename):
+    def get_page(self, filename, data):
         pool = Pool()
         Page = pool.get('papyrus.page')
 
         page = Page()
         page.queue = self
         page.filename = filename
+        page.data = data
         page.sequence = self.page_sequence.get()
         return page
 
-    def get_document(self, filename):
+    def get_document(self, filename, data):
         pool = Pool()
         Document = pool.get('papyrus.document')
 
         document = Document()
         document.queue = self
         document.filename = filename
+        document.data = data
         document.company = self.company
         return document
-
-    def store_file(self, datamanager, filename):
-        'Moves the given file name from source directory to storage directory '
-        'using a FileDataManager so we ensure it is moved just after the '
-        'transaction has been commited.'
-        source = os.path.join(self.source_directory, filename)
-        destination = os.path.join(self.storage_directory, filename)
-        datamanager.put(source, destination)
 
     @classmethod
     @ModelView.button
@@ -238,8 +268,7 @@ class Queue(ModelSQL, ModelView):
 
     def process_directory(self):
         transaction = Transaction()
-        # Ensure no two processes execute this method concurrently as we would
-        # be moving files twice and there could be race conditions
+        # Prevent concurrent imports from consuming the same source files.
         self.lock()
 
         datamanager = FileDataManager()
@@ -247,41 +276,19 @@ class Queue(ModelSQL, ModelView):
 
         pages = []
         documents = []
-        for file_name in sorted(glob.glob(os.path.join(
-                        self.source_directory, '*'))):
+        for path in sorted(Path(self.source_directory).glob('*')):
+            if path.name.startswith('.') or not path.is_file():
+                continue
             if self.delay:
-                file_time = datetime.fromtimestamp(os.path.getmtime(file_name))
+                file_time = datetime.fromtimestamp(path.stat().st_mtime)
                 if file_time > datetime.now() - self.delay:
                     continue
-            # TODO: If file_name already exists as a record and file does
-            # not exist in destination it means that we can move the file
-            # directly (or just after the transaction finished and the
-            # FileDataManager is being executed)
-            fname = os.path.basename(file_name)
-            # check that file_name doesn't exist in processed directory
-            processed_fname = os.path.join(self.storage_directory, fname)
-            count = 0
-            check_file = True
-            while check_file:
-                if os.path.isfile(processed_fname):
-                    count += 1
-                    new_file = '%s-%s' % (count, fname)
-                    processed_fname = os.path.join(self.storage_directory,
-                        new_file)
-                elif count > 0:
-                    shutil.move(os.path.join(self.source_directory, fname),
-                        os.path.join(self.source_directory, new_file))
-                    fname = new_file
-                    check_file = False
-                else:
-                    check_file = False
-            self.store_file(datamanager, fname)
+            data = path.read_bytes()
             if self.type == 'page':
-                page = self.get_page(fname)
-                pages.append(page)
-            elif self.type == 'document':
-                document = self.get_document(fname)
-                documents.append(document)
+                pages.append(self.get_page(path.name, data))
+            else:
+                documents.append(self.get_document(path.name, data))
+            datamanager.put(path)
         return documents, pages
 
     def matching_filename(self, filename):
@@ -354,11 +361,6 @@ class Queue(ModelSQL, ModelView):
         pool = Pool()
         ElectronicMail = pool.get('electronic.mail')
 
-        # check if directory exists
-        if not os.path.exists(self.storage_directory):
-            raise UserError(gettext('papyrus.msg_missing_storage_directory',
-                    path=self.storage_directory))
-
         pages = []
         documents = []
         mails = ElectronicMail.search([
@@ -416,8 +418,8 @@ class Queue(ModelSQL, ModelView):
                     if not ext:
                         continue
 
-                fname = '%015d.%s' % (mail.id * 100 + count, ext)
-                processed_fname = os.path.join(self.storage_directory, fname)
+                fname = '%015d.%s' % (
+                    mail.id * 100 + count, 'pdf' if self.type == 'document' else ext)
 
                 if self.type == 'document':
                     if ext == 'pdf':
@@ -427,20 +429,15 @@ class Queue(ModelSQL, ModelView):
                             'pdf')
                     if not data:
                         continue
-                    with open(processed_fname, 'wb') as f:
-                        f.write(data)
-                    document = self.get_document(fname)
+                    document = self.get_document(fname, data)
                     document.origin = mail
                     documents.append(document)
                     mail.mailbox = self.storage_inbox
-                elif self.type == 'page':
-                    if ext in ('jpg', 'jpeg', 'png', 'tif'):
-                        with open(processed_fname, 'wb') as f:
-                            f.write(attachment['data'])
-                        page = self.get_page(fname)
-                        page.origin = mail
-                        pages.append(page)
-                        mail.mailbox = self.storage_inbox
+                elif ext in ('jpg', 'jpeg', 'png', 'tif') and attachment['data']:
+                    page = self.get_page(fname, attachment['data'])
+                    page.origin = mail
+                    pages.append(page)
+                    mail.mailbox = self.storage_inbox
 
         ElectronicMail.save(mails)
         return documents, pages
@@ -462,22 +459,31 @@ class Queue(ModelSQL, ModelView):
         except DownloadError:
             logger.exception('Google Drive folder listing failed for queue %s '
                 'and URL %s', self.rec_name, self.source_url)
-            drive_files = []
+            return documents, pages
+        Model = Page if self.type == 'page' else Document
+        existing = {record.filename for record in Model.search([
+                    ('queue', '=', self.id),
+                    ('filename', 'in', [file.path for file in drive_files]),
+                    ])}
         for drive_file in drive_files:
-            file_name = drive_file.path
-            path = os.path.join(self.storage_directory, file_name)
-            if not os.path.isfile(path):
-                url = f'https://drive.google.com/uc?id={drive_file.id}&export=download'
-                gdown.download(url=url, output=path, quiet=False)
-
+            filename = drive_file.path
+            if filename in existing:
+                continue
+            with BytesIO() as output:
+                try:
+                    gdown.download(id=drive_file.id, output=output)
+                except DownloadError:
+                    logger.exception('Google Drive download failed for %s',
+                        drive_file.id)
+                    continue
+                data = output.getvalue()
+            if not data:
+                continue
             if self.type == 'page':
-                if not Page.search([('filename', '=', file_name)], limit=1):
-                    page = self.get_page(file_name)
-                    pages.append(page)
-            elif self.type == 'document':
-                if not Document.search([('filename', '=', file_name)], limit=1):
-                    document = self.get_document(file_name)
-                    documents.append(document)
+                pages.append(self.get_page(filename, data))
+            else:
+                documents.append(self.get_document(filename, data))
+            existing.add(filename)
         return documents, pages
 
     @classmethod
@@ -488,54 +494,6 @@ class Queue(ModelSQL, ModelView):
         for queue in queues:
             with Transaction().set_context(queue_name='papyrus'):
                 cls.__queue__.process([queue])
-
-    @classmethod
-    @ModelView.button
-    def clean(cls, queues):
-        '''Removes files in storage_directory that do not have a record in
-        papyrus.document or papyrus.page. That is, the document/page has been
-        deleted but the file was not removed as we cannot do it in the delete()
-        operation because the transaction may be rolled back.
-        '''
-        transaction = Transaction()
-        connection = transaction.connection
-        database = transaction.database
-        # Ensure there's no Queue.process() being executed at the same time.
-        # Otherwise, it could happen that a file exists in the
-        # storage_directory but the transaction that created it, has not been
-        # committed yet.
-        database.lock(connection, cls._table)
-
-        pool = Pool()
-        Page = pool.get('papyrus.page')
-        Document = pool.get('papyrus.document')
-
-        for queue in queues:
-            to_delete = []
-            if queue.type == 'document':
-                Model = Document
-            else:
-                Model = Page
-
-            existing = set([x.filename for x in Model.search([
-                        ('queue', '=', queue.id)])])
-            for path in sorted(glob.glob(os.path.join(
-                            queue.storage_directory, '*'))):
-                fname = os.path.basename(path)
-                if not fname in existing:
-                    to_delete.append(path)
-
-            for path in to_delete:
-                os.unlink(path)
-
-    @classmethod
-    def cron_clean(cls):
-        'Clean method to be used by cron. It is a separate method so '
-        '"clean()" is easier to override.'
-        queues = cls.search([])
-        for queue in queues:
-            with Transaction().set_context(queue_name='papyrus'):
-                cls.__queue__.clean([queue])
 
 
 class Document(Workflow, ModelSQL, ModelView):
@@ -557,11 +515,10 @@ class Document(Workflow, ModelSQL, ModelView):
             ('cancelled', 'Cancelled'),
             ], 'State', required=True, readonly=True)
     reference = fields.Char('Reference')
-    data = fields.Function(fields.Binary('Data', filename='filename'),
-        'get_data')
+    data = fields.Binary('Data', filename='filename')
     text = fields.Text('Text', readonly=True)
     boxes = fields.One2Many('papyrus.document.box', 'document', 'Boxes')
-    filename = fields.Char('File Name', readonly=True)
+    filename = fields.Char('File Name')
     image = fields.Function(fields.Binary('Image', filename='image_filename'),
         'on_change_with_image')
     image_filename = fields.Function(fields.Char('Image Filename'),
@@ -683,37 +640,6 @@ class Document(Workflow, ModelSQL, ModelView):
                 ])
         return [(None, '')] + [(m.name, m.string) for m in models]
 
-    @fields.depends('filename', 'queue')
-    def get_full_path(self):
-        if self.filename and self.queue:
-            return os.path.join(self.queue.storage_directory, self.filename)
-
-    def get_data(self, name):
-        if self.filename:
-            fname = self.get_full_path()
-            if os.path.isfile(fname):
-                with open(fname, 'rb') as fp:
-                    return fp.read()
-            return
-
-        files = []
-        for page in self.pages:
-            if not page.data:
-                continue
-            files.append(page.get_full_path())
-
-        if files:
-            odir = self.queue.storage_directory
-            output = '%s%s.pdf' % (odir, self.number)
-            to_merge = ['convert']
-            if self.queue.image_dpi:
-                to_merge += ['-density', self.queue.image_dpi]
-            to_merge += files
-            to_merge.append(output)
-            subprocess.check_call(to_merge)
-            with open(output, "rb") as f:
-                return f.read()
-
     @fields.depends('current_page', 'page_count')
     def on_change_current_page(self):
         if not self.page_count:
@@ -723,19 +649,15 @@ class Document(Workflow, ModelSQL, ModelView):
         elif self.current_page > self.page_count:
             self.current_page = self.page_count
 
-    @fields.depends('current_page', 'filename', 'pages',
-        methods=['get_full_path'])
+    @fields.depends('id', 'current_page', 'filename', 'pages')
     def on_change_with_image(self, name=None):
-        if not self.filename:
-            pages = self.pages or []
+        if not self.filename and self.pages:
             page = (self.current_page or 1) - 1
-            if page >= 0 and page < len(pages):
+            if 0 <= page < len(self.pages):
                 return self.pages[page].image
-            return
-        path = self.get_full_path()
-        if path:
-            res = tools.page_image(path, self.current_page or 1)
-            return res
+        elif data := _binary_data(self):
+            with tools.temporary_file(data) as path:
+                return tools.page_image(path, self.current_page or 1)
 
     @fields.depends('current_page', 'filename')
     def on_change_with_image_filename(self, name=None):
@@ -756,9 +678,11 @@ class Document(Workflow, ModelSQL, ModelView):
             )
 
     def get_page_count(self, name):
-        if not self.filename:
+        if not self.filename and self.pages:
             return len(self.pages)
-        return tools.page_count(self.get_full_path())
+        if data := _binary_data(self):
+            with tools.temporary_file(data) as path:
+                return tools.page_count(path)
 
     def get_record(self):
         return
@@ -778,8 +702,8 @@ class Document(Workflow, ModelSQL, ModelView):
             attachment.mimetype = 'application/pdf'
         return attachment
 
-    def scan_text(self):
-        text = tools.pdftotext(self.get_full_path())
+    def scan_text(self, path):
+        text = tools.pdftotext(path)
         if text:
             if self.text is None:
                 self.text = ''
@@ -787,29 +711,25 @@ class Document(Workflow, ModelSQL, ModelView):
                 self.text += '\n\n'
             self.text += text
 
-    def scan_textboxes(self):
-        if not self.filename:
-            return
+    def scan_textboxes(self, path):
         Box = Pool().get('papyrus.document.box')
-        boxes = tools.pdftoboxes(self.get_full_path(), Box)
+        boxes = tools.pdftoboxes(path, Box)
         if self.boxes:
             self.boxes += tuple(boxes)
         else:
             self.boxes = boxes
 
-    def scan_datamatrix(self):
+    def scan_datamatrix(self, path):
         Box = Pool().get('papyrus.document.box')
-        filename = self.get_full_path()
-        boxes = tools.datamatrix(filename, Box)
+        boxes = tools.datamatrix(path, Box)
         if self.boxes:
             self.boxes += tuple(boxes)
         else:
             self.boxes = boxes
 
-    def scan_tesseract(self):
+    def scan_tesseract(self, path):
         Box = Pool().get('papyrus.document.box')
-        filename = self.get_full_path()
-        text, boxes = tools.tesseract(filename, Box)
+        text, boxes = tools.tesseract(path, Box)
         if text:
             if self.text is None:
                 self.text = ''
@@ -825,10 +745,11 @@ class Document(Workflow, ModelSQL, ModelView):
         return ['text', 'textboxes', 'datamatrix', 'tesseract']
 
     def scan(self):
-        if not self.filename:
-            return
-        for engine in self.scan_engines():
-            getattr(self, 'scan_%s' % engine)()
+        engines = self.scan_engines()
+        if engines and self.data:
+            with tools.temporary_file(self.data) as path:
+                for engine in engines:
+                    getattr(self, 'scan_%s' % engine)(path)
 
     @classmethod
     @ModelView.button
@@ -951,20 +872,13 @@ class DocumentSplitStart(ModelView):
     @fields.depends('document')
     def on_change_with_pages(self, name=None):
         pages = []
-        if self.document:
-            for p in range(self.document.page_count):
-                current_page = p + 1
-                page_image = None
-
-                path = self.document.get_full_path()
-                if path:
-                    page_image = tools.page_image(path, current_page or 1, width=500)
-
-                values = {
-                    'page': page_image,
-                    'split': False,
-                }
-                pages.append(values)
+        if self.document and self.document.data:
+            with tools.temporary_file(self.document.data) as path:
+                for page in range(1, tools.page_count(path) + 1):
+                    pages.append({
+                        'page': tools.page_image(path, page, width=500),
+                        'split': False,
+                        })
         return pages
 
 
@@ -987,9 +901,8 @@ class DocumentSplit(Wizard):
             'pages': [],
         }
 
-    def do_split_document(self,action):
+    def do_split_document(self, action):
         Warning = Pool().get('res.user.warning')
-        Document = Pool().get('papyrus.document')
 
         document = [0]
         documents = [document]
@@ -1007,39 +920,30 @@ class DocumentSplit(Wizard):
             raise UserWarning(key,
                 gettext('papyrus.split_document_confirmation',
                     num_documents=len(documents),
-                    pages='\n'.join([','.join(str(x) for x in documents)])))
+                    pages='\n'.join(','.join(str(p + 1) for p in pages)
+                        for pages in documents)))
 
-        #Create documents
-        with open(self.start.document.get_full_path(), 'rb') as original:
-            reader = PdfReader(original)
-            num_document = 0
-            new_document_id = []
-            for d in documents:
-                num_document += 1
-                writer = PdfWriter()
-                for p in d:
-                   writer.addPage(reader.getPage(p))
-                #Document name is like: path/name.extension
-                name = (self.start.document.get_full_path().split('.')[0]
-                    + '-' + str(num_document) + '.' +
-                    self.start.document.get_full_path().split('.')[1])
-                with open(name,'wb') as outfile:
-                    writer.write(outfile)
+        original = self.start.document
+        reader = PdfReader(BytesIO(original.data))
+        stem = Path(original.filename or original.number).stem
+        new_document_ids = []
+        for index, pages in enumerate(documents, 1):
+            writer = PdfWriter()
+            for page in pages:
+                writer.add_page(reader.pages[page])
+            with BytesIO() as output:
+                writer.write(output)
+                document = original.queue.get_document(
+                    f'{stem}-{index}.pdf', output.getvalue())
+            document.number = f'{original.number}-{index}'
+            document.company = original.company
+            document.save()
+            new_document_ids.append(document.id)
 
-                #Create new documents
-                document = Document()
-                document.queue = self.start.document.queue
-                document.number = (self.start.document.number +
-                    '-' + str(num_document))
-                document.filename = name
-                document.save()
-                new_document_id.append(document.id)
-
-        domain = [('id', 'in', new_document_id)]
+        domain = [('id', 'in', new_document_ids)]
         action['pyson_search_value'] = PYSONEncoder().encode(domain)
 
-        self.start.document.state = 'cancelled'
-        self.start.document.save()
+        type(original).cancelled([original])
 
         return action, {}
 
@@ -1075,8 +979,7 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
     'Papyrus Page'
     __name__ = 'papyrus.page'
     _rec_name = 'filename'
-    data = fields.Function(fields.Binary('Data',
-        filename='filename'), 'get_data', setter='set_data')
+    data = fields.Binary('Data', filename='filename')
     text = fields.Text('Text', readonly=True)
     boxes = fields.One2Many('papyrus.page.box', 'page', 'Boxes', readonly=True)
     document = fields.Many2One('papyrus.document', 'Document',
@@ -1126,6 +1029,85 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
                     },
                 })
 
+    @classmethod
+    def __register__(cls, module_name):
+        super().__register__(module_name)
+        pool = Pool()
+        Queue = pool.get('papyrus.queue')
+        handler = Queue.__table_handler__(module_name)
+        if handler.column_exist('storage_directory'):
+            # The document and page tables now both have a Binary column.
+            Document = pool.get('papyrus.document')
+            _migrate_binary_data(Document, Queue)
+            _migrate_binary_data(cls, Queue)
+            cursor = Transaction().connection.cursor()
+            document = Document.__table__()
+            page = cls.__table__()
+            queue = Queue.__table__()
+            last_id = 0
+            while True:
+                cursor.execute(*document.join(queue, condition=document.queue == queue.id)
+                    .select(document.id, queue.image_dpi,
+                        where=(document.id > last_id) & (document.data == Null)
+                        & ((document.filename == Null) | (document.filename == ''))
+                        & Exists(page.select(page.id, where=page.document == document.id)),
+                        order_by=document.id, limit=100))
+                documents = cursor.fetchall()
+                if not documents:
+                    break
+                for document_id, dpi in documents:
+                    cursor.execute(*page.select(page.data,
+                            where=page.document == document_id,
+                            order_by=[page.sequence, page.id]))
+                    data = tools.merge_pages((row[0] for row in cursor), dpi)
+                    cursor.execute(*document.update(
+                            [document.data], [Document.data.sql_format(data)],
+                            where=document.id == document_id))
+                last_id = documents[-1][0]
+            handler.drop_column('storage_directory')
+
+    @classmethod
+    def _sync_document_data(cls, documents):
+        documents.discard(None)
+        if not documents:
+            return
+        Document = Pool().get('papyrus.document')
+        with without_check_access():
+            for document in documents:
+                if document.filename:
+                    continue
+                pages = cls.search([('document', '=', document.id)],
+                    order=[('sequence', 'ASC'), ('id', 'ASC')])
+                data = None
+                if pages:
+                    data = tools.merge_pages(
+                        (page.data for page in pages), document.queue.image_dpi)
+                Document.write([document], {'data': data})
+
+    @classmethod
+    def create(cls, vlist):
+        pages = super().create(vlist)
+        cls._sync_document_data({page.document for page in pages})
+        return pages
+
+    @classmethod
+    def write(cls, *args):
+        actions = iter(args)
+        changed = {page for pages, values in zip(actions, actions)
+            if {'document', 'data', 'sequence'} & values.keys()
+            for page in pages}
+        documents = {page.document for page in changed}
+        super().write(*args)
+        documents.update(page.document
+            for page in cls.browse([page.id for page in changed]))
+        cls._sync_document_data(documents)
+
+    @classmethod
+    def delete(cls, pages):
+        documents = {page.document for page in pages}
+        super().delete(pages)
+        cls._sync_document_data(documents)
+
     @staticmethod
     def default_state():
         return 'pending'
@@ -1149,43 +1131,14 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
                 ])
         return [(None, '')] + [(m.name, m.string) for m in models]
 
-    @fields.depends('filename', 'queue')
-    def get_full_path(self):
-        if self.filename:
-            return os.path.join(self.queue.storage_directory, self.filename)
-
-    def get_data(self, name):
-        if not self.filename:
-            return
-        filename = self.get_full_path()
-        if not os.path.isfile(filename):
-            return
-        with open(filename, 'rb') as f:
-            return f.read()
-
-    @classmethod
-    def set_data(cls, pages, name, value):
-        if not value:
-            return
-
-        for page in pages:
-            fname = page.get_full_path()
-            if os.path.isfile(fname):
-                raise UserError(gettext('papyrus.cannot_save_file',
-                    filename=page.filename))
-            with open(fname, 'wb') as fp:
-                fp.write(value)
-
-    @fields.depends('filename', methods=['get_full_path'])
+    @fields.depends('id', 'filename')
     def on_change_with_image(self, name=None):
-        if not self.filename:
-            return
-        return tools.page_image(self.get_full_path(), 1)
+        if data := _binary_data(self):
+            with tools.temporary_file(data) as path:
+                return tools.page_image(path, 1)
 
-    def scan_text(self):
-        if not self.filename:
-            return
-        text = tools.pdftotext(self.get_full_path())
+    def scan_text(self, path):
+        text = tools.pdftotext(path)
         if text:
             if self.text is None:
                 self.text = ''
@@ -1193,29 +1146,25 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
                 self.text += '\n\n'
             self.text += text
 
-    def scan_textboxes(self):
-        if not self.filename:
-            return
+    def scan_textboxes(self, path):
         Box = Pool().get('papyrus.page.box')
-        boxes = tools.pdftoboxes(self.get_full_path(), Box)
+        boxes = tools.pdftoboxes(path, Box)
         if self.boxes:
             self.boxes += tuple(boxes)
         else:
             self.boxes = boxes
 
-    def scan_datamatrix(self):
+    def scan_datamatrix(self, path):
         Box = Pool().get('papyrus.page.box')
-        filename = self.get_full_path()
-        boxes = tools.datamatrix(filename, Box)
+        boxes = tools.datamatrix(path, Box)
         if self.boxes:
             self.boxes += tuple(boxes)
         else:
             self.boxes = boxes
 
-    def scan_tesseract(self):
+    def scan_tesseract(self, path):
         Box = Pool().get('papyrus.page.box')
-        filename = self.get_full_path()
-        text, boxes = tools.tesseract(filename, Box)
+        text, boxes = tools.tesseract(path, Box)
         if text:
             if self.text is None:
                 self.text = ''
@@ -1231,8 +1180,10 @@ class Page(sequence_ordered(), Workflow, ModelSQL, ModelView):
         return ['text', 'textboxes', 'datamatrix', 'tesseract']
 
     def scan(self):
-        for engine in self.scan_engines():
-            getattr(self, 'scan_%s' % engine)()
+        if self.data:
+            with tools.temporary_file(self.data) as path:
+                for engine in self.scan_engines():
+                    getattr(self, 'scan_%s' % engine)(path)
 
     @staticmethod
     def get_prefixes():

@@ -3,6 +3,7 @@ import os
 import shutil
 import tempfile
 import unittest
+from pathlib import Path
 
 from proteus import Model
 from trytond.modules.company.tests.tools import create_company, get_company
@@ -43,9 +44,7 @@ class Test(unittest.TestCase):
         # Create directories
         temp_dir = tempfile.mkdtemp()
         source_dir = os.path.join(temp_dir, 'source')
-        storage_dir = os.path.join(temp_dir, 'storage')
         os.mkdir(source_dir)
-        os.mkdir(storage_dir)
 
         # Create company
         _ = create_company()
@@ -57,6 +56,7 @@ class Test(unittest.TestCase):
         files = glob.glob(os.path.join(examples_dir, '*'))
         for file in files:
             _ = shutil.copy(file, source_dir)
+        data = Path(examples_dir, 'one.pdf').read_bytes()
 
         # Create page queue
         Queue = Model.get('papyrus.queue')
@@ -66,7 +66,6 @@ class Test(unittest.TestCase):
         queue.document_sequence = document_sequence
         queue.name = 'Page Queue'
         queue.source_directory = source_dir
-        queue.storage_directory = storage_dir
         queue.scheduler = True
         queue.save()
 
@@ -79,6 +78,8 @@ class Test(unittest.TestCase):
         page, = pages
         self.assertEqual(page.state, 'pending')
         self.assertEqual(page.filename, 'one.pdf')
+        self.assertEqual(page.data, data)
+        self.assertEqual(os.listdir(source_dir), [])
 
         page.click('inspect')
         self.assertEqual(page.state, 'inspected')
@@ -92,9 +93,6 @@ class Test(unittest.TestCase):
 
         # Delete pages
         Page.delete(pages)
-        queue.click('clean')
-        self.assertEqual(glob.glob(os.path.join(queue.storage_directory, '*')),
-                         [])
 
         # Add documents to source
         current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -111,7 +109,6 @@ class Test(unittest.TestCase):
         queue.document_sequence = document_sequence
         queue.name = 'Document Queue'
         queue.source_directory = source_dir
-        queue.storage_directory = storage_dir
         queue.scheduler = True
         queue.save()
 
@@ -123,6 +120,9 @@ class Test(unittest.TestCase):
         document, = documents
         self.assertEqual(document.state, 'pending')
         self.assertEqual(document.filename, 'one.pdf')
+        self.assertEqual(document.data, data)
+        self.assertEqual(document.page_count, 1)
+        self.assertEqual(os.listdir(source_dir), [])
         document.click('inspect')
         self.assertEqual(document.state, 'inspected')
         self.assertEqual('Sample Papyrus Document' in document.text, True)
@@ -134,9 +134,6 @@ class Test(unittest.TestCase):
 
         # Delete documents
         Document.delete(documents)
-        queue.click('clean')
-        self.assertEqual(glob.glob(os.path.join(queue.storage_directory, '*')),
-                         [])
 
         # Cleanup test directory
         shutil.rmtree(temp_dir)

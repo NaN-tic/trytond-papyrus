@@ -20,8 +20,6 @@
     <label name="document_process_auto"/>
     <field name="document_process_auto"/>
     <newline/>
-    <label name="storage_directory"/>
-    <field name="storage_directory" colspan="3"/>
     <label name="source_type"/>
     <field name="source_type"/>
     <label name="delay"/>
@@ -56,6 +54,5 @@
     </group>
     <group col="-1" colspan="4" id="buttons">
         <button name="process"/>
-        <button name="clean"/>
     </group>
 </form>

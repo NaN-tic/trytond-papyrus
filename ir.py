@@ -11,7 +11,6 @@ class Cron(metaclass=PoolMeta):
          super().__setup__()
          cls.method.selection += [
              ('papyrus.queue|cron_process', 'Papyrus Process Queue'),
-             ('papyrus.queue|cron_clean', 'Papyrus Clean Files'),
              ('papyrus.document|cron_inspect',
                  'Papyrus Inspect Documents'),
              ('papyrus.document|cron_process',

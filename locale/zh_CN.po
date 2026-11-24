@@ -283,10 +283,6 @@ msgctxt "field:papyrus.queue,source_url:"
 msgid "Source URL"
 msgstr "来源 URL"
 
-msgctxt "field:papyrus.queue,storage_directory:"
-msgid "Storage Directory"
-msgstr "存储目录"
-
 msgctxt "field:papyrus.queue,storage_inbox:"
 msgid "Storage Inbox"
 msgstr "存储收件箱"
@@ -349,10 +345,6 @@ msgstr "目录的绝对路径"
 msgctxt "help:papyrus.queue,source_url:"
 msgid "Google Drive shared URL of the folder to be used as source."
 msgstr "用作来源的文件夹的 Google Drive 共享 URL。"
-
-msgctxt "help:papyrus.queue,storage_directory:"
-msgid "Absolute path directory"
-msgstr "目录的绝对路径"
 
 msgctxt "model:document.split.page,string:"
 msgid "Document Split Page"
@@ -430,19 +422,9 @@ msgctxt "model:ir.action.act_window.domain,name:act_page_form_domain_pending"
 msgid "Pending"
 msgstr "待定"
 
-#, python-format
-msgctxt "model:ir.message,text:cannot_save_file"
-msgid "Can not save \"%(filename)s\"."
-msgstr "无法保存“%(filename)s”。"
-
 msgctxt "model:ir.message,text:document_copy_forbidden"
 msgid "Papyrus Documents cannot be duplicated."
 msgstr "无法复制 Papyrus 文档。"
-
-#, python-format
-msgctxt "model:ir.message,text:msg_missing_storage_directory"
-msgid "Storage directory \"%(path)s\" does not exist."
-msgstr "存储目录“%(path)s”不存在。"
 
 msgctxt "model:ir.message,text:page_copy_forbidden"
 msgid "Papyrus Pages cannot be duplicated."
@@ -524,10 +506,6 @@ msgctxt "model:ir.model.button,string:purchase_papyrus_barcode_button"
 msgid "Barcode"
 msgstr "条码"
 
-msgctxt "model:ir.model.button,string:queue_clean_button"
-msgid "Clean"
-msgstr "清理"
-
 msgctxt "model:ir.model.button,string:queue_process_button"
 msgid "Process"
 msgstr "处理"
@@ -596,10 +574,6 @@ msgstr "Papyrus"
 msgctxt "model:res.group,name:group_papyrus_admin"
 msgid "Papyrus Administration"
 msgstr "Papyrus 管理"
-
-msgctxt "selection:ir.cron,method:"
-msgid "Papyrus Clean Files"
-msgstr "Papyrus 清理文件"
 
 msgctxt "selection:ir.cron,method:"
 msgid "Papyrus Inspect Documents"

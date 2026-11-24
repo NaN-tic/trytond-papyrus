@@ -2,6 +2,9 @@ import os
 import shutil
 import tempfile
 import unittest
+from io import BytesIO
+
+from pypdf import PdfReader
 
 from proteus import Model, Report
 from trytond.modules.company.tests.tools import create_company, get_company
@@ -36,9 +39,7 @@ class Test(unittest.TestCase):
         # Create directories
         temp_dir = tempfile.mkdtemp()
         source_dir = os.path.join(temp_dir, 'source')
-        storage_dir = os.path.join(temp_dir, 'storage')
         os.mkdir(source_dir)
-        os.mkdir(storage_dir)
 
         # Create party
         Party = Model.get('party.party')
@@ -109,7 +110,6 @@ class Test(unittest.TestCase):
         queue.document_sequence = document_sequence
         queue.name = 'Page Queue'
         queue.source_directory = source_dir
-        queue.storage_directory = storage_dir
         queue.scheduler = True
         queue.save()
 
@@ -145,6 +145,19 @@ class Test(unittest.TestCase):
         attachment1, attachment2 = Attachment.find([], order=[('id', 'ASC')])
         self.assertEqual(attachment1.resource, shipment_in)
         self.assertEqual(attachment2.resource, shipment_out_return)
+
+        # A page assigned separately must update the document's stored PDF.
+        with open(os.path.join(source_dir, 'extra.jpg'), 'wb') as file:
+            file.write(page1.data)
+        queue.click('process')
+        extra, = Page.find([('filename', '=', 'extra.jpg')])
+        extra.document = document1
+        extra.save()
+        document1.reload()
+        self.assertEqual(len(PdfReader(BytesIO(document1.data)).pages), 2)
+        Page.delete([extra])
+        document1.reload()
+        self.assertEqual(len(PdfReader(BytesIO(document1.data)).pages), 1)
 
         # Cleanup test directory
         shutil.rmtree(temp_dir)

@@ -30,6 +30,20 @@ documentation:
 To use without installation, extract the archive into ``trytond/modules`` with
 the directory name papyrus.
 
+Upgrading an existing installation
+----------------------------------
+
+Back up the database and the old Papyrus storage directories before updating
+``papyrus`` and ``papyrus_model``. Keep those directories mounted and readable
+until the update finishes. The update copies existing documents and pages into
+the database and rebuilds PDFs assembled from pages. If a referenced file
+cannot be read, the update stops and reports its path; restore the file before
+retrying. The update does not delete the old files.
+
+Mail and Google Drive queues no longer require a storage directory. A directory
+queue still uses its source directory as an inbox: it removes imported files
+only after the database transaction commits.
+
 ImageMagick
 -----------
 

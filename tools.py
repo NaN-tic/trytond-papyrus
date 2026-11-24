@@ -7,19 +7,43 @@ import json
 import tempfile
 import os
 import shutil
+from contextlib import contextmanager
+from pathlib import Path
 from lxml import etree
 
 IDENTIFY_FORMATS = ['PNG', 'JPG', 'JPEG', 'GIF', 'PDF']
 
 logger = logging.getLogger(__name__)
 
+@contextmanager
+def temporary_file(data):
+    with tempfile.NamedTemporaryFile() as file:
+        file.write(data)
+        file.flush()
+        yield file.name
+
+
+def merge_pages(binaries, density):
+    with tempfile.TemporaryDirectory() as directory:
+        directory = Path(directory)
+        paths = []
+        for data in binaries:
+            if data:
+                path = directory / str(len(paths))
+                path.write_bytes(data)
+                paths.append(path)
+        if paths:
+            output = directory / 'document.pdf'
+            command = ['convert']
+            if density:
+                command += ['-density', density]
+            subprocess.check_call([*command, *paths, output])
+            return output.read_bytes()
+
+
 def page_count(path):
-    # TODO: Ensure path is a PDF. If its not a PDF return 1?
-    if not path or not os.path.exists(path):
-        # When the file has not yet been created (maybe because FileDataManager
-        # has not been commited yet, the file may not exists) better quit
-        # quitely
-        return
+    if not path:
+        return 0
     process = subprocess.Popen(['/usr/bin/pdfinfo', path],
         stdout=subprocess.PIPE, encoding='utf-8', errors='replace')
     out, err = process.communicate()
@@ -31,9 +55,8 @@ def page_count(path):
 
 def page_image(path, page, unlink=True, suffix='.jpg', alpha=False, quality=90,
         density=100, height=None, width=None):
-    if not path or not os.path.exists(path):
-        return
-    _, image_path = tempfile.mkstemp(suffix=suffix)
+    fd, image_path = tempfile.mkstemp(suffix=suffix)
+    os.close(fd)
     try:
         filename = path
         filename += '[%d]' % ((page or 1) - 1)
@@ -115,12 +138,11 @@ def tesseract(filename, Box):
         content = []
         boxes = []
         for page in range(count):
-            jpg_path = page_image(filename, page, density=300, unlink=False)
+            jpg_path = page_image(filename, page + 1, density=300, unlink=False)
             try:
                 jpg_content, jpg_boxes = tesseract(jpg_path, Box)
             finally:
                 os.unlink(jpg_path)
-                pass
             if jpg_content:
                 content.append(jpg_content)
             if jpg_boxes:
@@ -130,7 +152,8 @@ def tesseract(filename, Box):
                 boxes += jpg_boxes
         return '\n'.join(content), boxes
 
-    _, pdf_path = tempfile.mkstemp(suffix='.pdf')
+    fd, pdf_path = tempfile.mkstemp(suffix='.pdf')
+    os.close(fd)
     # Remove extension from filename because tesseract adds it again
     tess_pdf_path, _ = os.path.splitext(pdf_path)
     try:

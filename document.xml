@@ -78,15 +78,6 @@
             <field name="button" ref="queue_process_button"/>
             <field name="group" ref="group_papyrus_admin"/>
         </record>
-        <record model="ir.model.button" id="queue_clean_button">
-            <field name="name">clean</field>
-            <field name="string">Clean</field>
-            <field name="model">papyrus.queue</field>
-        </record>
-        <record model="ir.model.button-res.group" id="queue_clean_button_group_papyrus_admin">
-            <field name="button" ref="queue_clean_button"/>
-            <field name="group" ref="group_papyrus_admin"/>
-        </record>
 
         <record model="ir.rule.group" id="rule_group_papyrus_queue">
             <field name="name">User in company</field>
@@ -421,11 +412,6 @@
     <data noupdate="1">
         <record model="ir.cron" id="cron_process_queue">
             <field name="method">papyrus.queue|cron_process</field>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-        </record>
-        <record model="ir.cron" id="cron_clean_files">
-            <field name="method">papyrus.queue|cron_clean</field>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
         </record>

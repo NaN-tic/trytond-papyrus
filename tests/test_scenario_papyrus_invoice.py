@@ -58,9 +58,7 @@ class Test(unittest.TestCase):
         # Create directories
         temp_dir = tempfile.mkdtemp()
         source_dir = os.path.join(temp_dir, 'source')
-        storage_dir = os.path.join(temp_dir, 'storage')
         os.mkdir(source_dir)
-        os.mkdir(storage_dir)
 
         # Print invoice label
         invoice_label = Report('account.invoice.papyrus')
@@ -100,7 +98,6 @@ class Test(unittest.TestCase):
         queue.document_sequence = document_sequence
         queue.name = 'Page Queue'
         queue.source_directory = source_dir
-        queue.storage_directory = storage_dir
         queue.scheduler = True
         queue.save()
 
@@ -127,6 +124,8 @@ class Test(unittest.TestCase):
         Attachment = Model.get('ir.attachment')
         attachment, = Attachment.find([])
         self.assertEqual(attachment.resource, invoice)
+        self.assertTrue(document.data.startswith(b'%PDF-'))
+        self.assertEqual(attachment.data, document.data)
 
         # Cleanup test directory
         shutil.rmtree(temp_dir)

@@ -289,10 +289,6 @@ msgctxt "field:papyrus.queue,source_url:"
 msgid "Source URL"
 msgstr "URL d'origen"
 
-msgctxt "field:papyrus.queue,storage_directory:"
-msgid "Storage Directory"
-msgstr "Directori d'emmagatzematge"
-
 msgctxt "field:papyrus.queue,storage_inbox:"
 msgid "Storage Inbox"
 msgstr "Bústia d'emmagatzematge"
@@ -377,10 +373,6 @@ msgid "Google Drive shared URL of the folder to be used as source."
 msgstr ""
 "URL compartida de Google Drive de la carpeta que s'utilitzarà com a origen."
 
-msgctxt "help:papyrus.queue,storage_directory:"
-msgid "Absolute path directory"
-msgstr "Camí absolut del directori"
-
 msgctxt "model:document.split.page,string:"
 msgid "Document Split Page"
 msgstr "Pàgina de divisió del document"
@@ -456,17 +448,9 @@ msgctxt "model:ir.action.act_window.domain,name:act_page_form_domain_pending"
 msgid "Pending"
 msgstr "Pendent"
 
-msgctxt "model:ir.message,text:cannot_save_file"
-msgid "Can not save \"%(filename)s\"."
-msgstr "No s'ha pogut desar \"%(filename)s\"."
-
 msgctxt "model:ir.message,text:document_copy_forbidden"
 msgid "Papyrus Documents cannot be duplicated."
 msgstr "Els documents Papyrus no es poden duplicar."
-
-msgctxt "model:ir.message,text:msg_missing_storage_directory"
-msgid "Storage directory \"%(path)s\" does not exist."
-msgstr "El directori d'emmagatzematge \"%(path)s\" no existeix."
 
 msgctxt "model:ir.message,text:page_copy_forbidden"
 msgid "Papyrus Pages cannot be duplicated."
@@ -556,10 +540,6 @@ msgctxt "model:ir.model.button,string:purchase_papyrus_barcode_button"
 msgid "Barcode"
 msgstr "Codi de barres"
 
-msgctxt "model:ir.model.button,string:queue_clean_button"
-msgid "Clean"
-msgstr "Neteja"
-
 msgctxt "model:ir.model.button,string:queue_process_button"
 msgid "Process"
 msgstr "Processa"
@@ -628,10 +608,6 @@ msgstr "Document Papyrus"
 msgctxt "model:res.group,name:group_papyrus_admin"
 msgid "Papyrus Administration"
 msgstr "Administrador Papyrus"
-
-msgctxt "selection:ir.cron,method:"
-msgid "Papyrus Clean Files"
-msgstr "Neteja de fitxers Papyrus"
 
 msgctxt "selection:ir.cron,method:"
 msgid "Papyrus Inspect Documents"

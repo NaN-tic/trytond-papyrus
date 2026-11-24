@@ -283,10 +283,6 @@ msgctxt "field:papyrus.queue,source_url:"
 msgid "Source URL"
 msgstr "Forrás URL-je"
 
-msgctxt "field:papyrus.queue,storage_directory:"
-msgid "Storage Directory"
-msgstr "Tárolási könyvtár"
-
 msgctxt "field:papyrus.queue,storage_inbox:"
 msgid "Storage Inbox"
 msgstr "Tárolási postaláda"
@@ -365,10 +361,6 @@ msgctxt "help:papyrus.queue,source_url:"
 msgid "Google Drive shared URL of the folder to be used as source."
 msgstr "A forrásként használandó mappa megosztott Google Drive URL-je."
 
-msgctxt "help:papyrus.queue,storage_directory:"
-msgid "Absolute path directory"
-msgstr "A könyvtár abszolút elérési útja"
-
 msgctxt "model:document.split.page,string:"
 msgid "Document Split Page"
 msgstr "Dokumentum felosztása – Oldal"
@@ -445,19 +437,9 @@ msgctxt "model:ir.action.act_window.domain,name:act_page_form_domain_pending"
 msgid "Pending"
 msgstr "Függőben"
 
-#, python-format
-msgctxt "model:ir.message,text:cannot_save_file"
-msgid "Can not save \"%(filename)s\"."
-msgstr "A(z) „%(filename)s” nem menthető."
-
 msgctxt "model:ir.message,text:document_copy_forbidden"
 msgid "Papyrus Documents cannot be duplicated."
 msgstr "A Papyrus-dokumentumok nem másolhatók."
-
-#, python-format
-msgctxt "model:ir.message,text:msg_missing_storage_directory"
-msgid "Storage directory \"%(path)s\" does not exist."
-msgstr "A(z) „%(path)s” tárolási könyvtár nem létezik."
 
 msgctxt "model:ir.message,text:page_copy_forbidden"
 msgid "Papyrus Pages cannot be duplicated."
@@ -549,10 +531,6 @@ msgctxt "model:ir.model.button,string:purchase_papyrus_barcode_button"
 msgid "Barcode"
 msgstr "Vonalkód"
 
-msgctxt "model:ir.model.button,string:queue_clean_button"
-msgid "Clean"
-msgstr "Tisztítás"
-
 msgctxt "model:ir.model.button,string:queue_process_button"
 msgid "Process"
 msgstr "Feldolgozás"
@@ -621,10 +599,6 @@ msgstr "Papyrus"
 msgctxt "model:res.group,name:group_papyrus_admin"
 msgid "Papyrus Administration"
 msgstr "Papyrus-adminisztráció"
-
-msgctxt "selection:ir.cron,method:"
-msgid "Papyrus Clean Files"
-msgstr "Papyrus-fájlok törlése"
 
 msgctxt "selection:ir.cron,method:"
 msgid "Papyrus Inspect Documents"

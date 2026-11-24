@@ -289,10 +289,6 @@ msgctxt "field:papyrus.queue,source_url:"
 msgid "Source URL"
 msgstr "URL de origen"
 
-msgctxt "field:papyrus.queue,storage_directory:"
-msgid "Storage Directory"
-msgstr "Directorio de almacenamiento"
-
 msgctxt "field:papyrus.queue,storage_inbox:"
 msgid "Storage Inbox"
 msgstr "Buzón de almacenamiento"
@@ -379,10 +375,6 @@ msgid "Google Drive shared URL of the folder to be used as source."
 msgstr ""
 "URL compartida de Google Drive de la carpeta que se utilizará como origen."
 
-msgctxt "help:papyrus.queue,storage_directory:"
-msgid "Absolute path directory"
-msgstr "Camino absoluto del directorio"
-
 msgctxt "model:document.split.page,string:"
 msgid "Document Split Page"
 msgstr "Página de división del documento"
@@ -458,17 +450,9 @@ msgctxt "model:ir.action.act_window.domain,name:act_page_form_domain_pending"
 msgid "Pending"
 msgstr "Pendiente"
 
-msgctxt "model:ir.message,text:cannot_save_file"
-msgid "Can not save \"%(filename)s\"."
-msgstr "No se pudo eliminar \"%(filename)s\"."
-
 msgctxt "model:ir.message,text:document_copy_forbidden"
 msgid "Papyrus Documents cannot be duplicated."
 msgstr "Los documentos Papyrus no se pueden duplicar."
-
-msgctxt "model:ir.message,text:msg_missing_storage_directory"
-msgid "Storage directory \"%(path)s\" does not exist."
-msgstr "El directorio de almacenamiento \"%(path)s\" no existe."
 
 msgctxt "model:ir.message,text:page_copy_forbidden"
 msgid "Papyrus Pages cannot be duplicated."
@@ -558,10 +542,6 @@ msgctxt "model:ir.model.button,string:purchase_papyrus_barcode_button"
 msgid "Barcode"
 msgstr "Código de barras"
 
-msgctxt "model:ir.model.button,string:queue_clean_button"
-msgid "Clean"
-msgstr "Limpiar"
-
 msgctxt "model:ir.model.button,string:queue_process_button"
 msgid "Process"
 msgstr "Procesar"
@@ -630,10 +610,6 @@ msgstr "Documento Papyrus"
 msgctxt "model:res.group,name:group_papyrus_admin"
 msgid "Papyrus Administration"
 msgstr "Administrador Papyrus"
-
-msgctxt "selection:ir.cron,method:"
-msgid "Papyrus Clean Files"
-msgstr "Limpieza de ficheros Papyrus"
 
 msgctxt "selection:ir.cron,method:"
 msgid "Papyrus Inspect Documents"

@@ -1,20 +1,16 @@
-import os
-import shutil
 import logging
 
 
 logger = logging.getLogger(__name__)
 
 
-class FileDataManager(object):
-    'Uses Two-Phase Commit protocol to allow moving files just after the '
-    'current transaction has been commited.'
-
+class FileDataManager:
+    'Removes imported source files only after their binary data is committed.'
     def __init__(self):
         self.queue = []
 
-    def put(self, source, destination):
-        self.queue.append((source, destination))
+    def put(self, path):
+        self.queue.append(path)
 
     def __eq__(self, other):
         if not isinstance(other, FileDataManager):
@@ -34,14 +30,11 @@ class FileDataManager(object):
         pass
 
     def tpc_finish(self, trans):
-        'Moves source files to destination'
-        for source, destination in self.queue:
-            if os.path.exists(destination):
-                os.remove(destination)
+        for path in self.queue:
             try:
-                shutil.move(source, destination)
-            except (shutil.SameFileError, OSError) as error:
-                logger.exception(error)
+                path.unlink(missing_ok=True)
+            except OSError:
+                logger.exception('Could not remove imported Papyrus source %s', path)
 
         self._finish()
 
